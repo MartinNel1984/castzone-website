@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 const navLinks = [
   { label: "Forum", href: "/forum" },
@@ -12,6 +14,24 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+  }
+
+  const username = user?.user_metadata?.username ?? user?.email?.split("@")[0] ?? "Angler";
 
   return (
     <header className="bg-deep-water border-b border-surface-teal sticky top-0 z-50">
@@ -38,20 +58,33 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop auth buttons */}
+          {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-pale-water hover:text-bone-white text-sm font-medium transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
-            >
-              Join Free
-            </Link>
+            {user ? (
+              <>
+                <span className="text-pale-water text-sm font-body">
+                  Hi, <span className="text-bone-white font-medium">{username}</span>
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-storm hover:text-pale-water text-sm font-medium transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-pale-water hover:text-bone-white text-sm font-medium transition-colors">
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
+                >
+                  Join Free
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -84,15 +117,22 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-3 border-t border-surface-teal">
-              <Link href="/login" className="text-pale-water text-sm font-medium py-2">
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-3 rounded text-center transition-colors"
-              >
-                Join Free
-              </Link>
+              {user ? (
+                <>
+                  <span className="text-pale-water text-sm py-1">Hi, <strong className="text-bone-white">{username}</strong></span>
+                  <button onClick={handleSignOut} className="text-storm text-sm text-left py-2">Sign Out</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="text-pale-water text-sm font-medium py-2">Sign In</Link>
+                  <Link
+                    href="/register"
+                    className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-3 rounded text-center transition-colors"
+                  >
+                    Join Free
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
