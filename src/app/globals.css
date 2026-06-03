@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-deep-water: #1a3a3a;
+  --color-deep-water-light: #1f4545;
+  --color-cast-orange: #f26522;
+  --color-cast-orange-hover: #d9561a;
+  --color-surface-teal: #2a6e6e;
+  --color-mist: #e8f0ef;
+  --color-bone-white: #f9f7f4;
+  --color-charcoal: #1e1e1e;
+  --color-storm: #555f5f;
+  --color-pale-water: #a8c5c5;
+  --color-bass-green: #2d6a4f;
+  --color-saltwater-blue: #1d3557;
+  --color-specimen-brown: #6b4226;
+  --color-tournament-gold: #c9a84c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-heading: var(--font-barlow-condensed);
+  --font-body: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #1a3a3a;
+  color: #f9f7f4;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-barlow-condensed), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
