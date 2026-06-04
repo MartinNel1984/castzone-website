@@ -58,6 +58,14 @@ export default function Navbar() {
             ))}
           </div>
 
+          {/* Desktop search icon */}
+          <Link href="/search" aria-label="Search" className="hidden md:flex items-center text-pale-water hover:text-bone-white transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <circle cx="11" cy="11" r="8" />
+              <path strokeLinecap="round" d="M21 21l-4.35-4.35" />
+            </svg>
+          </Link>
+
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-3">
             {user ? (
@@ -116,6 +124,13 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/search"
+              onClick={() => setMobileOpen(false)}
+              className="block text-pale-water hover:text-bone-white font-medium uppercase tracking-wider text-sm py-2"
+            >
+              Search
+            </Link>
             <div className="flex flex-col gap-2 pt-3 border-t border-surface-teal">
               {user ? (
                 <>
