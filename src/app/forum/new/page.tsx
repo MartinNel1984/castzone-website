@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
@@ -13,16 +13,23 @@ const CATEGORIES = [
   { slug: "general",   name: "General Angling" },
 ];
 
+const MAX_FILES = 3;
+const MAX_SIZE_MB = 5;
+
+type ImagePreview = { file: File; preview: string };
+
 function NewThreadForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const defaultCategory = searchParams.get("category") ?? "general";
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [category, setCategory] = useState(defaultCategory);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [images, setImages] = useState<ImagePreview[]>([]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,7 +39,61 @@ function NewThreadForm() {
       setUser(data.user);
       setCheckingAuth(false);
     });
+    return () => {
+      images.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    const remaining = MAX_FILES - images.length;
+    const toAdd = files.slice(0, remaining);
+
+    const oversized = toAdd.filter((f) => f.size > MAX_SIZE_MB * 1024 * 1024);
+    if (oversized.length) {
+      setError(`Images must be under ${MAX_SIZE_MB}MB each.`);
+      e.target.value = "";
+      return;
+    }
+
+    const newPreviews: ImagePreview[] = toAdd.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...newPreviews]);
+    e.target.value = "";
+  }
+
+  function removeImage(index: number) {
+    setImages((prev) => {
+      URL.revokeObjectURL(prev[index].preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
+  async function uploadImages(userId: string): Promise<string[]> {
+    if (!images.length) return [];
+    const supabase = createClient();
+    const urls: string[] = [];
+
+    for (const { file } of images) {
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const safeName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `${userId}/${safeName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("post-images")
+        .upload(path, file, { contentType: file.type, upsert: false });
+
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+
+      const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+
+    return urls;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,49 +101,54 @@ function NewThreadForm() {
     setError("");
     setSubmitting(true);
 
-    const supabase = createClient();
+    try {
+      const supabase = createClient();
 
-    // Get category id
-    const { data: cat } = await supabase
-      .from("categories")
-      .select("id")
-      .eq("slug", category)
-      .single();
+      const { data: cat } = await supabase
+        .from("categories")
+        .select("id")
+        .eq("slug", category)
+        .single();
 
-    if (!cat) {
-      setError("Invalid category. Please try again.");
+      if (!cat) {
+        setError("Invalid category. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      const { data: thread, error: threadError } = await supabase
+        .from("threads")
+        .insert({ category_id: cat.id, author_id: user.id, title: title.trim() })
+        .select("id")
+        .single();
+
+      if (threadError || !thread) {
+        setError("Could not create thread. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      const imageUrls = await uploadImages(user.id);
+
+      const { error: postError } = await supabase.from("posts").insert({
+        thread_id: thread.id,
+        author_id: user.id,
+        content: content.trim(),
+        is_first_post: true,
+        image_urls: imageUrls,
+      });
+
+      if (postError) {
+        setError("Thread created but could not save content. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      router.push(`/forum/thread?id=${thread.id}`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubmitting(false);
-      return;
     }
-
-    // Create thread
-    const { data: thread, error: threadError } = await supabase
-      .from("threads")
-      .insert({ category_id: cat.id, author_id: user.id, title: title.trim() })
-      .select("id")
-      .single();
-
-    if (threadError || !thread) {
-      setError("Could not create thread. Please try again.");
-      setSubmitting(false);
-      return;
-    }
-
-    // Create first post
-    const { error: postError } = await supabase.from("posts").insert({
-      thread_id: thread.id,
-      author_id: user.id,
-      content: content.trim(),
-      is_first_post: true,
-    });
-
-    if (postError) {
-      setError("Thread created but could not save content. Please try again.");
-      setSubmitting(false);
-      return;
-    }
-
-    router.push(`/forum/thread?id=${thread.id}`);
   }
 
   if (checkingAuth) {
@@ -168,6 +234,57 @@ function NewThreadForm() {
             placeholder="Write your post here..."
             className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white placeholder-storm font-body focus:outline-none focus:border-cast-orange transition-colors resize-y"
           />
+
+          {/* Image picker */}
+          <div className="mt-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
+            {images.length < MAX_FILES && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-2 text-sm text-pale-water hover:text-bone-white font-body border border-surface-teal/60 hover:border-surface-teal rounded px-3 py-2 transition-colors"
+              >
+                <span>📷</span>
+                <span>Add photos ({images.length}/{MAX_FILES})</span>
+              </button>
+            )}
+
+            {/* Image previews */}
+            {images.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-3">
+                {images.map((img, i) => (
+                  <div key={i} className="relative group">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.preview}
+                      alt="preview"
+                      className="w-24 h-24 object-cover rounded border border-surface-teal"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs flex items-center justify-center leading-none transition-colors"
+                      aria-label="Remove image"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {images.length > 0 && (
+              <p className="text-storm text-xs mt-2 font-body">Max {MAX_FILES} photos, {MAX_SIZE_MB}MB each. JPEG, PNG or WEBP.</p>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-between">

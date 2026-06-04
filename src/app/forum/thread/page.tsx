@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
@@ -9,6 +9,7 @@ import type { User } from "@supabase/supabase-js";
 type Post = {
   id: string;
   content: string;
+  image_urls: string[];
   is_first_post: boolean;
   created_at: string;
   updated_at: string;
@@ -23,6 +24,11 @@ type Thread = {
   categories: { slug: string; name: string } | null;
 };
 
+type ImagePreview = { file: File; preview: string };
+
+const MAX_FILES = 3;
+const MAX_SIZE_MB = 5;
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -34,16 +40,37 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function PostImages({ urls }: { urls: string[] }) {
+  if (!urls || urls.length === 0) return null;
+  return (
+    <div className={`mt-4 grid gap-2 ${urls.length === 1 ? "grid-cols-1" : urls.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+      {urls.map((url, i) => (
+        <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded overflow-hidden border border-surface-teal/50 hover:border-cast-orange transition-colors">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={url}
+            alt={`Image ${i + 1}`}
+            className="w-full object-cover max-h-72"
+            loading="lazy"
+          />
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function ThreadContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const threadId = searchParams.get("id");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [thread, setThread] = useState<Thread | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState("");
+  const [replyImages, setReplyImages] = useState<ImagePreview[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [replyError, setReplyError] = useState("");
 
@@ -52,14 +79,11 @@ function ThreadContent() {
     const supabase = createClient();
 
     async function load() {
-      // Get current user
       const { data: userData } = await supabase.auth.getUser();
       setUser(userData.user);
 
-      // Increment view count
       await supabase.rpc("increment_view_count", { thread_id: threadId }).maybeSingle();
 
-      // Load thread
       const { data: threadData } = await supabase
         .from("threads")
         .select("id, title, is_locked, reply_count, categories(slug, name)")
@@ -67,10 +91,9 @@ function ThreadContent() {
         .single();
       if (threadData) setThread(threadData as unknown as Thread);
 
-      // Load posts
       const { data: postData } = await supabase
         .from("posts")
-        .select("id, content, is_first_post, created_at, updated_at, profiles(username, member_level)")
+        .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level)")
         .eq("thread_id", threadId)
         .order("created_at", { ascending: true });
       if (postData) setPosts(postData as unknown as Post[]);
@@ -81,32 +104,90 @@ function ThreadContent() {
     load();
   }, [threadId]);
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    const remaining = MAX_FILES - replyImages.length;
+    const toAdd = files.slice(0, remaining);
+
+    const oversized = toAdd.filter((f) => f.size > MAX_SIZE_MB * 1024 * 1024);
+    if (oversized.length) {
+      setReplyError(`Images must be under ${MAX_SIZE_MB}MB each.`);
+      e.target.value = "";
+      return;
+    }
+
+    const newPreviews: ImagePreview[] = toAdd.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setReplyImages((prev) => [...prev, ...newPreviews]);
+    e.target.value = "";
+  }
+
+  function removeReplyImage(index: number) {
+    setReplyImages((prev) => {
+      URL.revokeObjectURL(prev[index].preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
+  async function uploadImages(userId: string): Promise<string[]> {
+    if (!replyImages.length) return [];
+    const supabase = createClient();
+    const urls: string[] = [];
+
+    for (const { file } of replyImages) {
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const safeName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `${userId}/${safeName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("post-images")
+        .upload(path, file, { contentType: file.type, upsert: false });
+
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+
+      const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+
+    return urls;
+  }
+
   async function handleReply(e: React.FormEvent) {
     e.preventDefault();
     if (!reply.trim() || !user || !threadId) return;
     setSubmitting(true);
     setReplyError("");
 
-    const supabase = createClient();
-    const { error } = await supabase.from("posts").insert({
-      thread_id: threadId,
-      author_id: user.id,
-      content: reply.trim(),
-      is_first_post: false,
-    });
+    try {
+      const imageUrls = await uploadImages(user.id);
 
-    if (error) {
-      setReplyError("Could not post reply. Please try again.");
-    } else {
-      setReply("");
-      // Reload posts
-      const { data } = await supabase
-        .from("posts")
-        .select("id, content, is_first_post, created_at, updated_at, profiles(username, member_level)")
-        .eq("thread_id", threadId)
-        .order("created_at", { ascending: true });
-      if (data) setPosts(data as unknown as Post[]);
+      const supabase = createClient();
+      const { error } = await supabase.from("posts").insert({
+        thread_id: threadId,
+        author_id: user.id,
+        content: reply.trim(),
+        is_first_post: false,
+        image_urls: imageUrls,
+      });
+
+      if (error) {
+        setReplyError("Could not post reply. Please try again.");
+      } else {
+        setReply("");
+        setReplyImages([]);
+        const { data } = await supabase
+          .from("posts")
+          .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level)")
+          .eq("thread_id", threadId)
+          .order("created_at", { ascending: true });
+        if (data) setPosts(data as unknown as Post[]);
+      }
+    } catch (err: unknown) {
+      setReplyError(err instanceof Error ? err.message : "Upload failed. Please try again.");
     }
+
     setSubmitting(false);
   }
 
@@ -176,6 +257,9 @@ function ThreadContent() {
               <div className="text-bone-white font-body leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
                 {post.content}
               </div>
+
+              {/* Post images */}
+              <PostImages urls={post.image_urls} />
             </div>
           ))}
         </div>
@@ -203,7 +287,54 @@ function ThreadContent() {
               placeholder="Write your reply..."
               className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white placeholder-storm font-body focus:outline-none focus:border-cast-orange transition-colors resize-y text-sm"
             />
-            <div className="flex justify-end mt-3">
+
+            {/* Image picker */}
+            <div className="mt-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                onChange={handleFileChange}
+                className="hidden"
+              />
+
+              {replyImages.length < MAX_FILES && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 text-sm text-pale-water hover:text-bone-white font-body border border-surface-teal/60 hover:border-surface-teal rounded px-3 py-2 transition-colors"
+                >
+                  <span>📷</span>
+                  <span>Add photos ({replyImages.length}/{MAX_FILES})</span>
+                </button>
+              )}
+
+              {replyImages.length > 0 && (
+                <div className="flex flex-wrap gap-3 mt-3">
+                  {replyImages.map((img, i) => (
+                    <div key={i} className="relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={img.preview}
+                        alt="preview"
+                        className="w-20 h-20 object-cover rounded border border-surface-teal"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeReplyImage(i)}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs flex items-center justify-center leading-none transition-colors"
+                        aria-label="Remove image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-end mt-4">
               <button
                 type="submit"
                 disabled={submitting || !reply.trim()}
