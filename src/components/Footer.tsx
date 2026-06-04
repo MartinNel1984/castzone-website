@@ -20,10 +20,15 @@ export default function Footer() {
           <div>
             <h4 className="text-bone-white font-heading font-semibold uppercase tracking-wider text-sm mb-3">Forum</h4>
             <ul className="space-y-2">
-              {["Bass Fishing", "Saltwater", "Specimen/Carp", "General"].map((item) => (
-                <li key={item}>
-                  <Link href="/forum" className="text-storm hover:text-pale-water text-sm transition-colors">
-                    {item}
+              {[
+                { label: "Bass Fishing", href: "/forum/bass" },
+                { label: "Saltwater", href: "/forum/saltwater" },
+                { label: "Specimen/Carp", href: "/forum/specimen" },
+                { label: "General", href: "/forum/general" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}

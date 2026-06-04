@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase";
 
 const forumCategories = [
   {
@@ -7,8 +11,6 @@ const forumCategories = [
     description: "Tackle, techniques, dams, tournaments and reports for SA bass anglers.",
     colour: "bg-bass-green",
     icon: "🎣",
-    threads: 0,
-    posts: 0,
   },
   {
     name: "Saltwater Fishing",
@@ -16,8 +18,6 @@ const forumCategories = [
     description: "Shore, offshore, lure, kayak and ski-boat angling along the SA coast.",
     colour: "bg-saltwater-blue",
     icon: "🌊",
-    threads: 0,
-    posts: 0,
   },
   {
     name: "Specimen & Carp",
@@ -25,8 +25,6 @@ const forumCategories = [
     description: "European-style specimen carp fishing, rigs, bait and big fish stories.",
     colour: "bg-specimen-brown",
     icon: "🐟",
-    threads: 0,
-    posts: 0,
   },
   {
     name: "General Angling",
@@ -34,8 +32,6 @@ const forumCategories = [
     description: "Everything else — freshwater, fly fishing, beginner questions and more.",
     colour: "bg-surface-teal",
     icon: "🏞️",
-    threads: 0,
-    posts: 0,
   },
 ];
 
@@ -66,7 +62,33 @@ const featureCards = [
   },
 ];
 
+type Stats = { members: number; threads: number; posts: number };
+
 export default function HomePage() {
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [categories, setCategories] = useState<Record<string, { thread_count: number; post_count: number }>>({});
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    async function loadStats() {
+      const [{ count: members }, { count: threads }, { count: posts }, { data: cats }] = await Promise.all([
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("threads").select("*", { count: "exact", head: true }),
+        supabase.from("posts").select("*", { count: "exact", head: true }),
+        supabase.from("categories").select("slug,thread_count,post_count"),
+      ]);
+      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0 });
+      if (cats) {
+        const map: Record<string, { thread_count: number; post_count: number }> = {};
+        cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
+        setCategories(map);
+      }
+    }
+
+    loadStats();
+  }, []);
+
   return (
     <div>
       {/* Hero */}
@@ -104,20 +126,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats banner */}
+      {/* Live stats banner */}
       <section className="bg-deep-water-light border-b border-surface-teal">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center">
-            {[
-              { value: "Be the first", label: "to register" },
-              { value: "3 categories", label: "Bass · Saltwater · Specimen" },
-              { value: "Free forever", label: "to join and post" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <p className="text-cast-orange font-heading font-bold text-xl uppercase">{stat.value}</p>
-                <p className="text-storm text-xs uppercase tracking-wider mt-0.5">{stat.label}</p>
-              </div>
-            ))}
+            {stats ? (
+              <>
+                <div>
+                  <p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.members.toLocaleString()}</p>
+                  <p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p>
+                </div>
+                <div>
+                  <p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p>
+                  <p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p>
+                </div>
+                <div>
+                  <p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p>
+                  <p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p>
+                </div>
+                <div>
+                  <p className="text-cast-orange font-heading font-bold text-xl uppercase">3</p>
+                  <p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p>
+                </div>
+              </>
+            ) : (
+              [1, 2, 3, 4].map((i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="h-6 w-12 bg-surface-teal rounded mb-1" />
+                  <div className="h-3 w-16 bg-surface-teal/50 rounded" />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -128,30 +167,33 @@ export default function HomePage() {
           Forum Categories
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {forumCategories.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/forum/${cat.slug}`}
-              className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 flex items-start gap-4 transition-all"
-            >
-              <div className={`${cat.colour} rounded-lg w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0`}>
-                {cat.icon}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
-                  {cat.name}
-                </h3>
-                <p className="text-storm text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
-                <div className="flex gap-4 mt-3">
-                  <span className="text-pale-water text-xs">{cat.threads} threads</span>
-                  <span className="text-pale-water text-xs">{cat.posts} posts</span>
+          {forumCategories.map((cat) => {
+            const catStats = categories[cat.slug];
+            return (
+              <Link
+                key={cat.slug}
+                href={`/forum/${cat.slug}`}
+                className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 flex items-start gap-4 transition-all"
+              >
+                <div className={`${cat.colour} rounded-lg w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0`}>
+                  {cat.icon}
                 </div>
-              </div>
-              <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          ))}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
+                    {cat.name}
+                  </h3>
+                  <p className="text-storm text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
+                  <div className="flex gap-4 mt-3">
+                    <span className="text-pale-water text-xs">{catStats?.thread_count ?? 0} threads</span>
+                    <span className="text-pale-water text-xs">{catStats?.post_count ?? 0} posts</span>
+                  </div>
+                </div>
+                <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
