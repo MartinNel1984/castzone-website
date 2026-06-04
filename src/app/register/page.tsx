@@ -59,10 +59,10 @@ export default function RegisterPage() {
             You&apos;re In!
           </h1>
           <p className="text-pale-water font-body mb-6">
-            Check your email at <strong className="text-bone-white">{email}</strong> and click the confirmation link to activate your account.
+            Your account is ready and you&apos;re signed in. Tight lines, <strong className="text-bone-white">{username}</strong> — let&apos;s get you on the water.
           </p>
-          <Link href="/login" className="text-cast-orange hover:underline font-medium">
-            Go to Sign In →
+          <Link href="/forum" className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors">
+            Go to the Forum →
           </Link>
         </div>
       </div>

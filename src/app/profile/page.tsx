@@ -66,8 +66,9 @@ function ProfileContent() {
     const supabase = createClient();
 
     async function load() {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const currentUser = sessionData?.session?.user ?? null;
+      // getUser() validates against the server (same call the navbar uses,
+      // which reliably detects the logged-in user).
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -79,11 +80,26 @@ function ProfileContent() {
       setProfile(profileData as Profile);
       setBioInput((profileData as Profile).bio ?? "");
 
-      // Three-way ownership check
-      const ownById   = currentUser?.id === profileData.id;
-      const ownByMeta = currentUser?.user_metadata?.username?.toLowerCase() === profileData.username?.toLowerCase();
-      const ownByUrl  = currentUser?.user_metadata?.username?.toLowerCase() === username?.toLowerCase();
-      if (currentUser && (ownById || ownByMeta || ownByUrl)) setIsOwn(true);
+      // Ownership: this profile is mine if the auth id matches the row id, OR if
+      // my canonical username matches the viewed one. We take the username from
+      // auth metadata, falling back to my own profile row (covers accounts whose
+      // metadata has no username, and any id/row mismatch from early signups).
+      if (currentUser) {
+        let myUsername =
+          (currentUser.user_metadata?.username as string | undefined)?.toLowerCase() ?? null;
+        if (!myUsername) {
+          const { data: me } = await supabase
+            .from("profiles")
+            .select("username")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+          myUsername = me?.username?.toLowerCase() ?? null;
+        }
+        const viewed = profileData.username?.toLowerCase();
+        if (currentUser.id === profileData.id || (myUsername !== null && myUsername === viewed)) {
+          setIsOwn(true);
+        }
+      }
 
       const { data: threadData } = await supabase
         .from("threads")

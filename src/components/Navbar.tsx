@@ -71,9 +71,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
-                <span className="text-pale-water text-sm font-body">
+                <Link
+                  href={`/profile?username=${encodeURIComponent(username)}`}
+                  className="text-pale-water hover:text-bone-white text-sm font-body transition-colors"
+                >
                   Hi, <span className="text-bone-white font-medium">{username}</span>
-                </span>
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="text-storm hover:text-pale-water text-sm font-medium transition-colors"
@@ -135,7 +138,13 @@ export default function Navbar() {
             <div className="flex flex-col gap-2 pt-3 border-t border-surface-teal">
               {user ? (
                 <>
-                  <span className="text-pale-water text-sm py-1">Hi, <strong className="text-bone-white">{username}</strong></span>
+                  <Link
+                    href={`/profile?username=${encodeURIComponent(username)}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-pale-water text-sm py-1"
+                  >
+                    Hi, <strong className="text-bone-white">{username}</strong>
+                  </Link>
                   <button onClick={handleSignOut} className="text-storm text-sm text-left py-2">Sign Out</button>
                 </>
               ) : (
