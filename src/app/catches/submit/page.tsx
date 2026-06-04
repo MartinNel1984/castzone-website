@@ -9,7 +9,7 @@ import type { User } from "@supabase/supabase-js";
 type Category = "carp" | "bass" | "saltwater";
 
 const CATEGORIES = [
-  { value: "carp"      as Category, label: "Carp",      icon: "🐟" },
+  { value: "carp"      as Category, label: "Carp & Freshwater", icon: "🐟" },
   { value: "bass"      as Category, label: "Bass",       icon: "🎣" },
   { value: "saltwater" as Category, label: "Saltwater",  icon: "🌊" },
 ];

@@ -19,7 +19,7 @@ type Catch = {
 };
 
 const CATEGORIES = [
-  { value: "carp"      as Category, label: "Carp",      icon: "🐟", description: "Common, Mirror, Grass & all carp species" },
+  { value: "carp"      as Category, label: "Carp & Freshwater", icon: "🐟", description: "Carp, barbel, yellowfish, mudfish & freshwater species" },
   { value: "bass"      as Category, label: "Bass",       icon: "🎣", description: "Largemouth, Smallmouth & Spotted Bass" },
   { value: "saltwater" as Category, label: "Saltwater",  icon: "🌊", description: "Shore, offshore, kayak & ski-boat species" },
 ];
