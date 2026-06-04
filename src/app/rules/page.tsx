@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Community Rules",
+  description: "The community rules that keep CastZone a respectful, fishing-focused space for all South African anglers.",
+  alternates: { canonical: "/rules" },
+};
 
 const rules = [
   {
@@ -44,12 +51,12 @@ const rules = [
   {
     number: "09",
     title: "No doxxing or personal information",
-    body: "Do not post anyone&apos;s personal information (real name, address, phone number, workplace) without their explicit consent.",
+    body: "Do not post anyone’s personal information (real name, address, phone number, workplace) without their explicit consent.",
   },
   {
     number: "10",
     title: "Good sportsmanship",
-    body: "CastZone is a community of people who love fishing. Encourage others, share knowledge generously, and remember that we&apos;re all here because we love the same thing.",
+    body: "CastZone is a community of people who love fishing. Encourage others, share knowledge generously, and remember that we’re all here because we love the same thing.",
   },
 ];
 
@@ -70,8 +77,7 @@ export default function RulesPage() {
             </span>
             <div>
               <h2 className="text-bone-white font-heading font-bold text-lg uppercase mb-2">{rule.title}</h2>
-              <p className="text-pale-water font-body text-sm leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: rule.body }} />
+              <p className="text-pale-water font-body text-sm leading-relaxed">{rule.body}</p>
             </div>
           </div>
         ))}

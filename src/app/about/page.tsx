@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "CastZone is the modern South African fishing community — built mobile-first for bass, saltwater and specimen anglers.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (

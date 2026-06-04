@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tackle Box",
+  description: "Buy and sell fishing gear directly with SA anglers — rods, reels, boats, tackle and more. Coming soon to CastZone.",
+  alternates: { canonical: "/classifieds" },
+};
 
 const categories = [
   { icon: "🎣", name: "Rods & Reels", description: "Spinning, baitcast, fly — all tackle types" },
@@ -6,7 +13,7 @@ const categories = [
   { icon: "🚤", name: "Boats & Watercraft", description: "Bass boats, kayaks, paddle skis, motors" },
   { icon: "🧰", name: "Accessories", description: "Nets, tackle boxes, clothing, electronics" },
   { icon: "🐟", name: "Carp & Specimen", description: "Rigs, bait, bivvies, bedchairs, buzzers" },
-  { icon: "📦", name: "Other Fishing Gear", description: "Anything fishing-related that doesn&apos;t fit above" },
+  { icon: "📦", name: "Other Fishing Gear", description: "Anything fishing-related that doesn’t fit above" },
 ];
 
 export default function ClassifiedsPage() {
@@ -47,8 +54,7 @@ export default function ClassifiedsPage() {
           >
             <div className="text-3xl mb-3">{cat.icon}</div>
             <h3 className="text-bone-white font-heading font-bold text-lg uppercase mb-1">{cat.name}</h3>
-            <p className="text-storm font-body text-sm"
-              dangerouslySetInnerHTML={{ __html: cat.description }} />
+            <p className="text-storm font-body text-sm">{cat.description}</p>
           </div>
         ))}
       </div>

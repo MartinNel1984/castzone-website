@@ -47,7 +47,7 @@ const featureCards = [
   { title: "Tournaments", description: "SA tournament calendar — bass, carp, saltwater and more.", href: "/tournaments", icon: "🥇" },
 ];
 
-type Stats = { members: number; threads: number; posts: number };
+type Stats = { members: number; threads: number; posts: number; categories: number };
 
 export default function HomePage() {
   const [stats, setStats] = useState<Stats | null>(null);
@@ -67,7 +67,7 @@ export default function HomePage() {
         supabase.from("posts").select("*", { count: "exact", head: true }),
         supabase.from("categories").select("slug,thread_count,post_count"),
       ]);
-      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0 });
+      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0 });
       if (cats) {
         const map: Record<string, { thread_count: number; post_count: number }> = {};
         cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
@@ -141,7 +141,7 @@ export default function HomePage() {
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p></div>
-                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">3</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
+                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.categories.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
               </>
             ) : (
               [1, 2, 3, 4].map((i) => (

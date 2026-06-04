@@ -17,16 +17,27 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CastZone — Where South Africa Fishes",
+  metadataBase: new URL("https://castzone.co.za"),
+  title: {
+    default: "CastZone — Where South Africa Fishes",
+    template: "%s · CastZone",
+  },
   description:
     "South Africa's home for bass, saltwater, and specimen anglers. Share catches, find venues, buy and sell tackle.",
   keywords: "fishing, South Africa, bass fishing, saltwater fishing, carp, specimen, SA fishing forum",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "CastZone — Where South Africa Fishes",
     description: "South Africa's modern fishing forum. Bass, saltwater, specimen and more.",
+    url: "https://castzone.co.za",
     siteName: "CastZone",
     locale: "en_ZA",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CastZone — Where South Africa Fishes",
+    description: "South Africa's modern fishing forum. Bass, saltwater, specimen and more.",
   },
 };
 

@@ -1,7 +1,7 @@
 import VenueContent from "./VenueContent";
 
 // All seeded venue slugs — add new ones here when you add venues to the database
-const VENUE_SLUGS = [
+export const VENUE_SLUGS = [
   "vaal-dam", "rietvlei-dam", "hartbeespoort-dam", "bronkhorstspruit-dam", "roodeplaat-dam",
   "theewaterskloof-dam", "voelvlei-dam", "kalk-bay-harbour", "gansbaai-harbour", "wilderness-lagoon",
   "midmar-dam", "albert-falls-dam", "bluff-pier", "st-lucia-estuary", "chakas-rock",

@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Advertise",
+  description: "Reach South Africa's fishing community. Brand zones, display advertising and featured listings for tackle brands and retailers.",
+  alternates: { canonical: "/advertise" },
+};
 
 const adFormats = [
   {
