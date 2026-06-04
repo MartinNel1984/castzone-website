@@ -23,7 +23,8 @@ export default function LoginPage() {
     if (error) {
       setError("Incorrect email or password.");
     } else {
-      router.push("/");
+      const redirect = new URLSearchParams(window.location.search).get("redirect");
+      router.push(redirect && redirect.startsWith("/") ? redirect : "/");
     }
     setLoading(false);
   }

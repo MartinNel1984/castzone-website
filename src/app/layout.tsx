@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AuthGate from "@/components/AuthGate";
 
 const barlowCondensed = Barlow_Condensed({
   variable: "--font-barlow-condensed",
@@ -51,7 +52,7 @@ export default function RootLayout({
     <html lang="en" className={`${barlowCondensed.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-deep-water text-bone-white antialiased">
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1"><AuthGate>{children}</AuthGate></main>
         <Footer />
         {/* Cloudflare Web Analytics — privacy-first, no cookies */}
         <Script
