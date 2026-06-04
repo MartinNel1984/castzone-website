@@ -22,19 +22,77 @@ const TYPE_COLOUR: Record<string, string> = {
   saltwater: "bg-blue-900/40 text-blue-300 border-blue-700",
 };
 
+type RelatedThread = {
+  id: string;
+  title: string;
+  reply_count: number;
+  created_at: string;
+  profiles: { username: string } | null;
+  categories: { slug: string; name: string; icon: string } | null;
+};
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
+}
+
 export default function VenueContent({ slug }: { slug: string }) {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
+  const [threads, setThreads] = useState<RelatedThread[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
+
     supabase
       .from("venues")
       .select("*")
       .eq("slug", slug)
       .single()
-      .then(({ data }) => {
-        setVenue(data as Venue | null);
+      .then(async ({ data, error }) => {
+        if (error || !data) { setLoading(false); return; }
+        const v = data as Venue;
+        setVenue(v);
+
+        // Search for forum threads mentioning this venue name
+        const threadSelect = "id, title, reply_count, created_at, profiles(username), categories(slug, name, icon)";
+
+        const { data: byTitle } = await supabase
+          .from("threads")
+          .select(threadSelect)
+          .ilike("title", `%${v.name}%`)
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        const titleIds = new Set((byTitle as unknown as RelatedThread[] ?? []).map((t) => t.id));
+
+        const { data: matchedPosts } = await supabase
+          .from("posts")
+          .select("thread_id")
+          .ilike("content", `%${v.name}%`)
+          .limit(50);
+
+        const postThreadIds = [...new Set((matchedPosts ?? []).map((p: { thread_id: string }) => p.thread_id))]
+          .filter((id) => !titleIds.has(id));
+
+        let byContent: RelatedThread[] = [];
+        if (postThreadIds.length > 0) {
+          const { data: pd } = await supabase
+            .from("threads")
+            .select(threadSelect)
+            .in("id", postThreadIds)
+            .order("created_at", { ascending: false })
+            .limit(5);
+          byContent = (pd ?? []) as unknown as RelatedThread[];
+        }
+
+        setThreads([...(byTitle as unknown as RelatedThread[] ?? []), ...byContent]);
         setLoading(false);
       });
   }, [slug]);
@@ -59,6 +117,7 @@ export default function VenueContent({ slug }: { slug: string }) {
   const typeClass = TYPE_COLOUR[venue.type] ?? "";
   const typeLabel = TYPE_LABEL[venue.type] ?? venue.type;
   const gpsUrl = `https://www.google.com/maps/search/?api=1&query=${venue.lat},${venue.lng}`;
+  const newThreadUrl = `/forum/new?category=general&title=${encodeURIComponent(`Fishing at ${venue.name}`)}`;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -143,17 +202,65 @@ export default function VenueContent({ slug }: { slug: string }) {
         </div>
       )}
 
-      {/* Forum CTA */}
-      <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 text-center">
-        <p className="text-pale-water font-body mb-4">
-          Fished here? Share a report or ask a question in the forum.
-        </p>
-        <Link
-          href="/forum/new?category=general"
-          className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors"
-        >
-          Start a Thread
-        </Link>
+      {/* Forum threads about this venue */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-bone-white font-heading font-bold uppercase text-lg">
+            Forum Threads
+          </h2>
+          <Link
+            href={newThreadUrl}
+            className="text-cast-orange hover:text-bone-white text-sm font-body font-medium transition-colors"
+          >
+            + Start one
+          </Link>
+        </div>
+
+        {threads.length === 0 ? (
+          <div className="bg-deep-water-light border border-surface-teal rounded-lg p-8 text-center">
+            <p className="text-storm font-body text-sm mb-4">
+              No threads about {venue.name} yet — be the first.
+            </p>
+            <Link
+              href={newThreadUrl}
+              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            >
+              Start a Thread
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-surface-teal/50 bg-deep-water-light border border-surface-teal rounded-lg overflow-hidden">
+            {threads.map((thread) => (
+              <Link
+                key={thread.id}
+                href={`/forum/thread?id=${thread.id}`}
+                className="group flex items-center gap-4 p-4 hover:bg-deep-water transition-colors"
+              >
+                <span className="flex-shrink-0 text-lg w-7 text-center">
+                  {thread.categories?.icon ?? "🎣"}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                    {thread.title}
+                  </p>
+                  <p className="text-storm text-xs mt-0.5">
+                    by <span className="text-pale-water">{thread.profiles?.username ?? "Unknown"}</span>
+                    {" · "}{timeAgo(thread.created_at)}
+                  </p>
+                </div>
+                <span className="flex-shrink-0 text-pale-water text-xs">{thread.reply_count} replies</span>
+              </Link>
+            ))}
+            <div className="p-4 text-center">
+              <Link
+                href={newThreadUrl}
+                className="text-cast-orange hover:underline text-sm font-body"
+              >
+                + Start a new thread about {venue.name}
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-6">

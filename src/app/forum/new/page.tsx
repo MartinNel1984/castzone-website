@@ -27,7 +27,7 @@ function NewThreadForm() {
   const [user, setUser] = useState<User | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [category, setCategory] = useState(defaultCategory);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(searchParams.get("title") ?? "");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [error, setError] = useState("");
