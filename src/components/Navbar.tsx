@@ -40,8 +40,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-cast-orange text-3xl font-heading font-bold leading-none">C</span>
-            <span className="text-bone-white text-xl font-heading font-bold tracking-widest uppercase leading-none">
+            <span className="text-cast-orange text-4xl sm:text-5xl font-heading font-bold leading-none">C</span>
+            <span className="text-bone-white text-2xl sm:text-3xl font-heading font-bold tracking-widest uppercase leading-none">
               ASTZONE
             </span>
           </Link>
