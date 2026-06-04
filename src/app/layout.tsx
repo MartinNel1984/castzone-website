@@ -60,6 +60,19 @@ export default function RootLayout({
           data-cf-beacon='{"token": "f63581216ddd43f3a172437006b33bc5"}'
           strategy="afterInteractive"
         />
+        {/* Google Analytics (GA4) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-98JB2BMV96"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-98JB2BMV96');
+          `}
+        </Script>
       </body>
     </html>
   );
