@@ -6,6 +6,7 @@ export function generateStaticParams() {
   return slugs.map((slug) => ({ category: slug }));
 }
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
-  return <CategoryView category={params.category} />;
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
+  return <CategoryView category={category} />;
 }
