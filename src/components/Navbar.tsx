@@ -16,12 +16,21 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+
+    async function loadAvatar(u: User | null) {
+      if (!u) { setAvatarUrl(null); return; }
+      const { data } = await supabase.from("profiles").select("avatar_url").eq("id", u.id).maybeSingle();
+      setAvatarUrl(data?.avatar_url ?? null);
+    }
+
+    supabase.auth.getUser().then(({ data }) => { setUser(data.user); loadAvatar(data.user); });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      loadAvatar(session?.user ?? null);
     });
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -29,10 +38,21 @@ export default function Navbar() {
   async function handleSignOut() {
     const supabase = createClient();
     const { error } = await supabase.auth.signOut();
-    if (!error) setUser(null);
+    if (!error) { setUser(null); setAvatarUrl(null); }
   }
 
   const username = user?.user_metadata?.username ?? user?.email?.split("@")[0] ?? "Angler";
+
+  const avatarBadge = (
+    <span className="w-7 h-7 rounded-full bg-surface-teal overflow-hidden flex items-center justify-center text-bone-white text-xs font-heading font-bold flex-shrink-0">
+      {avatarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={avatarUrl} alt={username} className="w-full h-full object-cover" />
+      ) : (
+        username[0]?.toUpperCase()
+      )}
+    </span>
+  );
 
   return (
     <header className="bg-deep-water border-b border-surface-teal sticky top-0 z-50">
@@ -73,9 +93,10 @@ export default function Navbar() {
               <>
                 <Link
                   href={`/profile?username=${encodeURIComponent(username)}`}
-                  className="text-pale-water hover:text-bone-white text-sm font-body transition-colors"
+                  className="flex items-center gap-2 text-pale-water hover:text-bone-white text-sm font-body transition-colors"
                 >
-                  Hi, <span className="text-bone-white font-medium">{username}</span>
+                  {avatarBadge}
+                  <span>Hi, <span className="text-bone-white font-medium">{username}</span></span>
                 </Link>
                 <button
                   onClick={handleSignOut}
@@ -141,9 +162,10 @@ export default function Navbar() {
                   <Link
                     href={`/profile?username=${encodeURIComponent(username)}`}
                     onClick={() => setMobileOpen(false)}
-                    className="text-pale-water text-sm py-1"
+                    className="flex items-center gap-2 text-pale-water text-sm py-1"
                   >
-                    Hi, <strong className="text-bone-white">{username}</strong>
+                    {avatarBadge}
+                    <span>Hi, <strong className="text-bone-white">{username}</strong></span>
                   </Link>
                   <button onClick={handleSignOut} className="text-storm text-sm text-left py-2">Sign Out</button>
                 </>
