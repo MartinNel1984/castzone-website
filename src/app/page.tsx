@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import ShareButtons from "@/components/ShareButtons";
+import BiteTimes from "@/components/BiteTimes";
 
 const forumCategories = [
   {
@@ -154,6 +155,11 @@ export default function HomePage() {
             )}
           </div>
         </div>
+      </section>
+
+      {/* Bite forecast widget */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" />
       </section>
 
       {/* Forum categories with photos */}

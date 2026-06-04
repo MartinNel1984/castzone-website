@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import BiteTimes from "@/components/BiteTimes";
 import type { Venue } from "@/components/VenueMap";
 
 const VenueMapPin = dynamic(() => import("@/components/VenueMapPin"), { ssr: false });
@@ -182,6 +183,9 @@ export default function VenueContent() {
           Open in Maps
         </a>
       </div>
+
+      {/* Best bite times (solunar) */}
+      <BiteTimes lat={venue.lat} lng={venue.lng} name={venue.name} />
 
       {/* Info grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
