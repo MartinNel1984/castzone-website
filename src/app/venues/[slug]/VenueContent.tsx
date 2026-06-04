@@ -74,13 +74,17 @@ export default function VenueContent() {
         const v = data as Venue;
         setVenue(v);
 
-        // Search for forum threads mentioning this venue name
+        // Search for forum threads mentioning this venue. For names with a
+        // qualifier (e.g. "Vaal River – Parys") match the distinctive place
+        // name ("Parys") so natural threads link up too.
+        const dash = v.name.indexOf("–");
+        const searchTerm = dash !== -1 ? v.name.slice(dash + 1).trim() : v.name;
         const threadSelect = "id, title, reply_count, created_at, profiles(username), categories(slug, name, icon)";
 
         const { data: byTitle } = await supabase
           .from("threads")
           .select(threadSelect)
-          .ilike("title", `%${v.name}%`)
+          .ilike("title", `%${searchTerm}%`)
           .order("created_at", { ascending: false })
           .limit(10);
 
@@ -89,7 +93,7 @@ export default function VenueContent() {
         const { data: matchedPosts } = await supabase
           .from("posts")
           .select("thread_id")
-          .ilike("content", `%${v.name}%`)
+          .ilike("content", `%${searchTerm}%`)
           .limit(50);
 
         const postThreadIds = [...new Set((matchedPosts ?? []).map((p: { thread_id: string }) => p.thread_id))]
