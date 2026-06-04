@@ -123,14 +123,16 @@ export default function SubmitCatchPage() {
       const imageUrl = await uploadPhoto(user.id);
       const supabase = createClient();
       const { error: dbError } = await supabase.from("catches").insert({
-        user_id:    user.id,
+        user_id:     user.id,
         category,
-        species:    species.trim(),
-        weight_kg:  weight,
-        catch_date: catchDate,
-        venue:      venue.trim() || null,
-        notes:      notes.trim() || null,
-        image_url:  imageUrl,
+        species:     species.trim(),
+        weight_kg:   weight,
+        catch_date:  catchDate,
+        venue:       venue.trim() || null,
+        notes:       notes.trim() || null,
+        image_url:   imageUrl,
+        approved:    true,
+        approved_at: new Date().toISOString(),
       });
 
       if (dbError) throw new Error(dbError.message);
@@ -176,10 +178,10 @@ export default function SubmitCatchPage() {
           Catch Submitted!
         </h1>
         <p className="text-pale-water font-body mb-2">
-          Your catch is pending review. Once approved it will appear on the leaderboard.
+          Your catch is live on the leaderboard!
         </p>
         <p className="text-storm text-sm font-body mb-8">
-          This usually happens within 24 hours.
+          Head to the Trophy Room to see where you rank.
         </p>
         <div className="flex justify-center gap-3">
           <Link

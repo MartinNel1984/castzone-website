@@ -124,7 +124,7 @@ export default function TrophyRoomPage() {
         </Link>
       </div>
       <p className="text-storm font-body text-sm mb-8">
-        All catches are reviewed before appearing on the leaderboard. A photo is required.
+        Submit your catch with a photo and go straight onto the leaderboard.
       </p>
 
       {/* Category tabs */}
