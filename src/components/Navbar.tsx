@@ -28,8 +28,8 @@ export default function Navbar() {
 
   async function handleSignOut() {
     const supabase = createClient();
-    await supabase.auth.signOut();
-    setUser(null);
+    const { error } = await supabase.auth.signOut();
+    if (!error) setUser(null);
   }
 
   const username = user?.user_metadata?.username ?? user?.email?.split("@")[0] ?? "Angler";

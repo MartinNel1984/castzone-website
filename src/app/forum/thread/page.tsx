@@ -156,7 +156,7 @@ function ThreadContent() {
 
   async function handleReply(e: React.FormEvent) {
     e.preventDefault();
-    if (!reply.trim() || !user || !threadId) return;
+    if (submitting || !reply.trim() || !user || !threadId) return;
     setSubmitting(true);
     setReplyError("");
 

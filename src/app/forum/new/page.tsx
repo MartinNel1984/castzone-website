@@ -116,6 +116,9 @@ function NewThreadForm() {
         return;
       }
 
+      // Upload images before creating the thread so a failed upload doesn't leave an orphaned thread
+      const imageUrls = await uploadImages(user.id);
+
       const { data: thread, error: threadError } = await supabase
         .from("threads")
         .insert({ category_id: cat.id, author_id: user.id, title: title.trim() })
@@ -128,8 +131,6 @@ function NewThreadForm() {
         return;
       }
 
-      const imageUrls = await uploadImages(user.id);
-
       const { error: postError } = await supabase.from("posts").insert({
         thread_id: thread.id,
         author_id: user.id,
@@ -139,7 +140,7 @@ function NewThreadForm() {
       });
 
       if (postError) {
-        setError("Thread created but could not save content. Please try again.");
+        setError("Could not save post. Please try again.");
         setSubmitting(false);
         return;
       }

@@ -164,7 +164,7 @@ export default function TrophyRoomPage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={champion.image_url}
-                  alt={`${champion.profiles?.username ?? "Angler"}'s trophy catch`}
+                  alt={`${champion.species} caught by ${champion.profiles?.username ?? "Angler"} — ${Number(champion.weight_kg).toFixed(2)} kg`}
                   className="w-full sm:w-72 h-60 sm:h-auto object-cover flex-shrink-0"
                 />
               ) : (
@@ -196,9 +196,9 @@ export default function TrophyRoomPage() {
             <div className="bg-deep-water-light border border-surface-teal rounded-xl overflow-hidden mb-8">
               <div className="px-6 py-3 border-b border-surface-teal flex items-center gap-2">
                 <span className="text-pale-water font-heading font-bold uppercase text-sm tracking-wider">
-                  Leaderboard
+                  All-Time Leaderboard
                 </span>
-                <span className="text-storm text-sm font-body">— top {catches.length} approved catches</span>
+                <span className="text-storm text-sm font-body">— top {catches.length}</span>
               </div>
               <div className="divide-y divide-surface-teal/50">
                 {rest.map((c, i) => {
