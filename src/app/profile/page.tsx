@@ -80,14 +80,11 @@ function ProfileContent() {
       setProfile(profileData as Profile);
       setBioInput((profileData as Profile).bio ?? "");
 
-      // Match by ID or by username (fallback if metadata username differs)
-      if (
-        currentUser &&
-        (currentUser.id === profileData.id ||
-          currentUser.user_metadata?.username === profileData.username)
-      ) {
-        setIsOwn(true);
-      }
+      // Three-way ownership check
+      const ownById   = currentUser?.id === profileData.id;
+      const ownByMeta = currentUser?.user_metadata?.username?.toLowerCase() === profileData.username?.toLowerCase();
+      const ownByUrl  = currentUser?.user_metadata?.username?.toLowerCase() === username?.toLowerCase();
+      if (currentUser && (ownById || ownByMeta || ownByUrl)) setIsOwn(true);
 
       const { data: threadData } = await supabase
         .from("threads")
@@ -152,6 +149,9 @@ function ProfileContent() {
         <span className="mx-2">›</span>
         <span className="text-pale-water">{profile.username}</span>
       </nav>
+
+      {/* DEBUG — remove after testing */}
+      <p className="text-xs text-storm mb-4">isOwn: {String(isOwn)}</p>
 
       {/* Profile header */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 sm:p-8 mb-8">
