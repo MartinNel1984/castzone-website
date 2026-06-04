@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
+import ShareButtons from "@/components/ShareButtons";
 
 const forumCategories = [
   {
@@ -209,6 +210,15 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Share */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
+        <h2 className="text-2xl sm:text-3xl font-heading font-bold text-bone-white uppercase mb-2">Know an Angler? Reel Them In</h2>
+        <p className="text-storm font-body mb-7 max-w-xl mx-auto">
+          Help build South Africa&apos;s fishing community — share CastZone with your fishing mates.
+        </p>
+        <ShareButtons />
       </section>
 
       {/* Bottom CTA — hide for logged-in users */}
