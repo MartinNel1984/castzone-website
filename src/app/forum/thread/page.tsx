@@ -13,7 +13,7 @@ type Post = {
   is_first_post: boolean;
   created_at: string;
   updated_at: string;
-  profiles: { username: string; member_level: string } | null;
+  profiles: { username: string; member_level: string; avatar_url: string | null } | null;
 };
 
 type Thread = {
@@ -94,7 +94,7 @@ function ThreadContent() {
 
       const { data: postData } = await supabase
         .from("posts")
-        .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level)")
+        .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
         .eq("thread_id", threadId)
         .order("created_at", { ascending: true });
       if (postData) setPosts(postData as unknown as Post[]);
@@ -180,7 +180,7 @@ function ThreadContent() {
         setReplyImages([]);
         const { data } = await supabase
           .from("posts")
-          .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level)")
+          .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
           .eq("thread_id", threadId)
           .order("created_at", { ascending: true });
         if (data) {
@@ -243,9 +243,17 @@ function ThreadContent() {
               {/* Post header */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-surface-teal/40">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-surface-teal flex items-center justify-center text-bone-white font-heading font-bold text-sm flex-shrink-0">
-                    {post.profiles?.username?.[0]?.toUpperCase() ?? "?"}
-                  </div>
+                  <Link
+                    href={`/profile?username=${encodeURIComponent(post.profiles?.username ?? "")}`}
+                    className="w-9 h-9 rounded-full bg-surface-teal overflow-hidden flex items-center justify-center text-bone-white font-heading font-bold text-sm flex-shrink-0"
+                  >
+                    {post.profiles?.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={post.profiles.avatar_url} alt={post.profiles.username} loading="lazy" className="w-full h-full object-cover" />
+                    ) : (
+                      post.profiles?.username?.[0]?.toUpperCase() ?? "?"
+                    )}
+                  </Link>
                   <div>
                     <Link
                       href={`/profile?username=${encodeURIComponent(post.profiles?.username ?? "")}`}
