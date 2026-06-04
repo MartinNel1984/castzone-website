@@ -243,7 +243,12 @@ function ThreadContent() {
                     {post.profiles?.username?.[0]?.toUpperCase() ?? "?"}
                   </div>
                   <div>
-                    <p className="text-bone-white font-body font-semibold text-sm">{post.profiles?.username ?? "Unknown"}</p>
+                    <Link
+                      href={`/profile?username=${post.profiles?.username}`}
+                      className="text-bone-white hover:text-cast-orange font-body font-semibold text-sm transition-colors"
+                    >
+                      {post.profiles?.username ?? "Unknown"}
+                    </Link>
                     <p className="text-storm text-xs">{post.profiles?.member_level ?? "First Cast"}</p>
                   </div>
                 </div>
