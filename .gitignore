@@ -15,7 +15,7 @@
 
 # next.js
 /.next/
-/out/
+# /out/ — committed so Cloudflare serves pre-built files directly
 
 # production
 /build
