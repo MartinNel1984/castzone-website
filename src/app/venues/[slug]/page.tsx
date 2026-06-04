@@ -11,6 +11,7 @@ export const VENUE_SLUGS = [
   "gariep-dam", "sterkfontein-dam",
   "nahoon-dam", "kowie-river",
   "vanderkloof-dam", "boegoeberg-dam",
+  "vaal-river-parys", "vaal-barrage", "vaal-river-vereeniging",
 ];
 
 export function generateStaticParams() {
