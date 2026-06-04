@@ -191,58 +191,54 @@ export default function TrophyRoomPage() {
             </div>
           </div>
 
-          {/* ── Leaderboard ── */}
+          {/* ── Leaderboard (cards, ~half the champion's size) ── */}
           {rest.length > 0 && (
-            <div className="bg-deep-water-light border border-surface-teal rounded-xl overflow-hidden mb-8">
-              <div className="px-6 py-3 border-b border-surface-teal flex items-center gap-2">
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
                 <span className="text-pale-water font-heading font-bold uppercase text-sm tracking-wider">
                   All-Time Leaderboard
                 </span>
                 <span className="text-storm text-sm font-body">— top {catches.length}</span>
               </div>
-              <div className="divide-y divide-surface-teal/50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {rest.map((c, i) => {
                   const rank = i + 2;
                   return (
-                    <div key={c.id} className="flex items-center gap-4 px-6 py-4">
-                      {/* Rank */}
-                      <div className="w-8 text-center flex-shrink-0">
-                        {rank <= 3 ? (
-                          <span className={`text-xl ${MEDAL_COLOURS[rank - 1]}`}>{MEDALS[rank - 1]}</span>
-                        ) : (
-                          <span className="text-storm font-heading font-bold text-sm">#{rank}</span>
-                        )}
-                      </div>
-
-                      {/* Thumbnail */}
+                    <div key={c.id} className="bg-deep-water-light border border-surface-teal rounded-xl overflow-hidden flex">
+                      {/* Image — roughly half the champion card */}
                       {c.image_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={c.image_url}
-                          alt=""
-                          className="w-12 h-12 rounded object-cover flex-shrink-0 border border-surface-teal"
+                          alt={`${c.species} caught by ${c.profiles?.username ?? "Angler"} — ${formatWeight(c.weight_kg)}`}
+                          className="w-32 h-32 sm:w-36 sm:h-36 object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded bg-surface-teal/20 flex items-center justify-center flex-shrink-0 border border-surface-teal">
-                          <span className="text-lg">{cat.icon}</span>
+                        <div className="w-32 h-32 sm:w-36 sm:h-36 bg-surface-teal/10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-5xl opacity-30">{cat.icon}</span>
                         </div>
                       )}
 
-                      {/* Name + details */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-bone-white font-body font-semibold truncate">
-                          {c.profiles?.username ?? "Angler"}
+                      {/* Details */}
+                      <div className="p-4 flex flex-col justify-center gap-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          {rank <= 3 ? (
+                            <span className={`text-xl flex-shrink-0 ${MEDAL_COLOURS[rank - 1]}`}>{MEDALS[rank - 1]}</span>
+                          ) : (
+                            <span className="text-storm font-heading font-bold text-sm flex-shrink-0">#{rank}</span>
+                          )}
+                          <p className="text-bone-white font-heading font-bold text-lg truncate">
+                            {c.profiles?.username ?? "Angler"}
+                          </p>
+                        </div>
+                        <p className="text-cast-orange font-heading font-bold text-3xl leading-none">
+                          {formatWeight(c.weight_kg)}
                         </p>
-                        <p className="text-storm text-sm font-body truncate">
-                          {c.species} · {formatDate(c.catch_date)}
-                          {c.venue ? ` · ${c.venue}` : ""}
+                        <p className="text-pale-water font-body text-sm truncate">{c.species}</p>
+                        <p className="text-storm text-xs font-body truncate">
+                          {formatDate(c.catch_date)}{c.venue ? ` · ${c.venue}` : ""}
                         </p>
                       </div>
-
-                      {/* Weight */}
-                      <p className="text-cast-orange font-heading font-bold text-lg flex-shrink-0">
-                        {formatWeight(c.weight_kg)}
-                      </p>
                     </div>
                   );
                 })}
