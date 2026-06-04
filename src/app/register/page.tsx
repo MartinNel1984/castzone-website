@@ -24,7 +24,7 @@ export default function RegisterPage() {
     }
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { username } },
@@ -32,9 +32,21 @@ export default function RegisterPage() {
 
     if (error) {
       setError(error.message);
-    } else {
-      setSuccess(true);
+      setLoading(false);
+      return;
     }
+
+    // If the trigger didn't auto-create the profile, do it from the app
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .upsert({ id: data.user.id, username }, { onConflict: "id" });
+      if (profileError && !profileError.message.includes("duplicate")) {
+        console.warn("Profile creation skipped:", profileError.message);
+      }
+    }
+
+    setSuccess(true);
     setLoading(false);
   }
 
