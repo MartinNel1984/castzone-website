@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
@@ -42,7 +43,10 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
 }
 
-export default function VenueContent({ slug }: { slug: string }) {
+export default function VenueContent() {
+  const params = useParams();
+  const slug = params.slug as string;
+
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [threads, setThreads] = useState<RelatedThread[]>([]);

@@ -17,6 +17,6 @@ export function generateStaticParams() {
   return VENUE_SLUGS.map((slug) => ({ slug }));
 }
 
-export default function VenuePage({ params }: { params: { slug: string } }) {
-  return <VenueContent slug={params.slug} />;
+export default function VenuePage() {
+  return <VenueContent />;
 }
