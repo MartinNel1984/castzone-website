@@ -6,6 +6,7 @@ export const alt = "CastZone — Where South Africa Fishes";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Clean, centred, logo-focused share card.
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -15,43 +16,44 @@ export default function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#1a3a3a",
           backgroundImage:
-            "radial-gradient(circle at 75% 50%, rgba(242,101,34,0.25) 0%, transparent 55%)",
-          padding: "80px",
+            "radial-gradient(circle at 50% 38%, rgba(242,101,34,0.22) 0%, transparent 60%)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
-          <span style={{ color: "#f26522", fontSize: "84px", fontWeight: 700 }}>C</span>
+        {/* Logo wordmark */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span style={{ color: "#f26522", fontSize: 200, fontWeight: 700, lineHeight: 1 }}>C</span>
           <span
             style={{
               color: "#f9f7f4",
-              fontSize: "60px",
+              fontSize: 140,
               fontWeight: 700,
-              letterSpacing: "0.18em",
+              letterSpacing: "0.14em",
+              lineHeight: 1,
             }}
           >
             ASTZONE
           </span>
         </div>
+
+        {/* Divider */}
+        <div style={{ display: "flex", width: 360, height: 4, backgroundColor: "#f26522", marginTop: 48, marginBottom: 40 }} />
+
+        {/* Tagline */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            color: "#f9f7f4",
-            fontSize: "88px",
-            fontWeight: 700,
-            lineHeight: 1.05,
+            color: "#a8c5c5",
+            fontSize: 46,
+            fontWeight: 600,
+            letterSpacing: "0.34em",
             textTransform: "uppercase",
           }}
         >
-          <span>Where South</span>
-          <span>Africa Fishes</span>
-        </div>
-        <div style={{ color: "#a8c5c5", fontSize: "34px", marginTop: "28px" }}>
-          Bass · Saltwater · Specimen — the modern SA fishing community
+          Where South Africa Fishes
         </div>
       </div>
     ),
