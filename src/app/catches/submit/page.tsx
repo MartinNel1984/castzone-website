@@ -18,6 +18,7 @@ const SPECIES: Record<Category, string[]> = {
   carp: [
     "Common Carp", "Mirror Carp", "Grass Carp", "Bighead Carp",
     "Crucian Carp", "F1 Carp", "Leather Carp", "Ghost Carp",
+    "Barbel", "Mudfish", "Yellowfish",
   ],
   bass: [
     "Largemouth Bass", "Smallmouth Bass", "Spotted Bass",

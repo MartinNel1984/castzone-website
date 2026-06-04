@@ -1,7 +1,14 @@
 -- ============================================================
 -- CastZone Phase 4: Tackle Box (buy/sell classifieds)
--- Run this in: Supabase Dashboard → SQL Editor → New Query
+-- Run in: Supabase Dashboard → SQL Editor → New Query
+-- Idempotent: safe to run more than once.
+--
+-- BLOCK A = table + RLS + policies (run this first).
+-- BLOCK B = storage policies (run AFTER creating the "listing-images" bucket).
 -- ============================================================
+
+
+-- ========================= BLOCK A =========================
 
 -- 1. Listings table
 create table if not exists listings (
@@ -27,25 +34,25 @@ create index if not exists listings_seller_idx          on listings (seller_id);
 -- 2. RLS
 alter table listings enable row level security;
 
--- Anyone can see active listings; sellers can also see their own (e.g. sold ones)
+drop policy if exists "listings_select" on listings;
 create policy "listings_select"
   on listings for select
   using (status = 'active' or auth.uid() = seller_id);
 
--- Only authenticated members can post, and only as themselves
+drop policy if exists "listings_insert" on listings;
 create policy "listings_insert"
   on listings for insert
   to authenticated
   with check (auth.uid() = seller_id);
 
--- Sellers can edit / mark sold on their own listings
+drop policy if exists "listings_update" on listings;
 create policy "listings_update"
   on listings for update
   to authenticated
   using (auth.uid() = seller_id)
   with check (auth.uid() = seller_id);
 
--- Sellers can delete their own listings
+drop policy if exists "listings_delete" on listings;
 create policy "listings_delete"
   on listings for delete
   to authenticated
@@ -54,21 +61,22 @@ create policy "listings_delete"
 grant select on listings to anon, authenticated;
 grant insert, update, delete on listings to authenticated;
 
--- ============================================================
--- 3. Storage bucket for listing photos
--- Do this manually in the Supabase Dashboard:
---   Storage → New bucket → Name: "listing-images" → toggle Public ON → Create
--- Then run the policies below.
--- ============================================================
 
+-- ========================= BLOCK B =========================
+-- Run this ONLY after you have created the public bucket "listing-images"
+-- (Storage → New bucket → name: listing-images → Public ON → Create).
+
+drop policy if exists "listing_images_insert" on storage.objects;
 create policy "listing_images_insert"
   on storage.objects for insert
   with check (bucket_id = 'listing-images' and auth.role() = 'authenticated');
 
+drop policy if exists "listing_images_select" on storage.objects;
 create policy "listing_images_select"
   on storage.objects for select
   using (bucket_id = 'listing-images');
 
+drop policy if exists "listing_images_delete" on storage.objects;
 create policy "listing_images_delete"
   on storage.objects for delete
   using (bucket_id = 'listing-images' and auth.role() = 'authenticated');

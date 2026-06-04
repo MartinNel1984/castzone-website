@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
@@ -61,6 +61,11 @@ function ProfileContent() {
   const [saving, setSaving]       = useState(false);
   const [saveError, setSaveError] = useState("");
 
+  // Avatar edit state
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [avatarFile, setAvatarFile]       = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
   useEffect(() => {
     if (!username) { setNotFound(true); setLoading(false); return; }
     const supabase = createClient();
@@ -115,22 +120,60 @@ function ProfileContent() {
     load();
   }, [username]);
 
-  async function handleSaveBio() {
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setSaveError("Profile picture must be under 5MB.");
+      e.target.value = "";
+      return;
+    }
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+    setSaveError("");
+    e.target.value = "";
+  }
+
+  function cancelEdit() {
+    if (!profile) return;
+    setEditing(false);
+    setBioInput(profile.bio ?? "");
+    setSaveError("");
+    setAvatarFile(null);
+    if (avatarPreview) { URL.revokeObjectURL(avatarPreview); setAvatarPreview(null); }
+  }
+
+  async function handleSave() {
     if (!profile) return;
     setSaving(true);
     setSaveError("");
     const supabase = createClient();
-    const { error } = await supabase
-      .from("profiles")
-      .update({ bio: bioInput.trim() || null })
-      .eq("id", profile.id);
+    try {
+      let avatarUrl = profile.avatar_url;
+      if (avatarFile) {
+        const ext = avatarFile.name.split(".").pop() ?? "jpg";
+        const path = `${profile.id}/avatar_${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("avatars")
+          .upload(path, avatarFile, { contentType: avatarFile.type, upsert: true });
+        if (upErr) throw new Error(upErr.message);
+        avatarUrl = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      }
 
-    if (error) {
-      setSaveError("Could not save. Please try again.");
-      setSaving(false);
-    } else {
-      setProfile((p) => p ? { ...p, bio: bioInput.trim() || null } : p);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ bio: bioInput.trim() || null, avatar_url: avatarUrl })
+        .eq("id", profile.id);
+      if (error) throw new Error(error.message);
+
+      setProfile((p) => p ? { ...p, bio: bioInput.trim() || null, avatar_url: avatarUrl } : p);
       setEditing(false);
+      setAvatarFile(null);
+      if (avatarPreview) { URL.revokeObjectURL(avatarPreview); setAvatarPreview(null); }
+    } catch {
+      setSaveError("Could not save. Please try again.");
+    } finally {
       setSaving(false);
     }
   }
@@ -169,8 +212,35 @@ function ProfileContent() {
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 sm:p-8 mb-8">
         <div className="flex items-start gap-6">
           {/* Avatar */}
-          <div className="w-20 h-20 rounded-full bg-surface-teal flex items-center justify-center text-bone-white font-heading font-bold text-3xl flex-shrink-0">
-            {initial}
+          <div className="relative flex-shrink-0">
+            <div className="w-20 h-20 rounded-full bg-surface-teal overflow-hidden flex items-center justify-center text-bone-white font-heading font-bold text-3xl">
+              {avatarPreview || profile.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarPreview ?? profile.avatar_url!} alt={profile.username} className="w-full h-full object-cover" />
+              ) : (
+                initial
+              )}
+            </div>
+            {editing && (
+              <>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => avatarInputRef.current?.click()}
+                  className="absolute -bottom-1 -right-1 bg-cast-orange hover:bg-cast-orange-hover text-white w-7 h-7 rounded-full flex items-center justify-center text-sm border-2 border-deep-water-light transition-colors"
+                  aria-label="Change profile picture"
+                  title="Change profile picture"
+                >
+                  📷
+                </button>
+              </>
+            )}
           </div>
 
           {/* Info */}
@@ -205,6 +275,7 @@ function ProfileContent() {
         {/* Bio */}
         {editing ? (
           <div className="mt-5">
+            <p className="text-storm text-xs font-body mb-3">Tap the 📷 on your photo to upload a profile picture (JPEG, PNG or WEBP, max 5MB).</p>
             <textarea
               value={bioInput}
               onChange={(e) => setBioInput(e.target.value)}
@@ -220,14 +291,14 @@ function ProfileContent() {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => { setEditing(false); setBioInput(profile.bio ?? ""); setSaveError(""); }}
+                  onClick={cancelEdit}
                   disabled={saving}
                   className="text-storm hover:text-pale-water text-sm font-body transition-colors px-3 py-1.5"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleSaveBio}
+                  onClick={handleSave}
                   disabled={saving}
                   className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                 >
