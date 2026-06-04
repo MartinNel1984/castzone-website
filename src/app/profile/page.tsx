@@ -66,9 +66,8 @@ function ProfileContent() {
     const supabase = createClient();
 
     async function load() {
-      // Auth first — ensures session is ready before comparing IDs
-      const { data: authData } = await supabase.auth.getUser();
-      const currentUser = authData?.user ?? null;
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUser = sessionData?.session?.user ?? null;
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -149,9 +148,6 @@ function ProfileContent() {
         <span className="mx-2">›</span>
         <span className="text-pale-water">{profile.username}</span>
       </nav>
-
-      {/* DEBUG — remove after testing */}
-      <p className="text-xs text-storm mb-4">isOwn: {String(isOwn)}</p>
 
       {/* Profile header */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 sm:p-8 mb-8">
