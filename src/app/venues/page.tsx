@@ -57,11 +57,19 @@ export default function VenuesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">The Map</h1>
-        <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
-          SA Venues &amp; Dam Database
-        </p>
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">The Map</h1>
+          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+            SA Venues &amp; Dam Database
+          </p>
+        </div>
+        <Link
+          href="/venues/suggest"
+          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors mt-1"
+        >
+          + Suggest a Venue
+        </Link>
       </div>
 
       {/* Legend */}

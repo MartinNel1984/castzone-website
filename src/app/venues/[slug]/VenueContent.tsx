@@ -23,6 +23,14 @@ const TYPE_COLOUR: Record<string, string> = {
   saltwater: "bg-blue-900/40 text-blue-300 border-blue-700",
 };
 
+type NearbyVenue = {
+  id: string;
+  name: string;
+  slug: string;
+  type: string;
+  species: string[];
+};
+
 type RelatedThread = {
   id: string;
   title: string;
@@ -50,6 +58,7 @@ export default function VenueContent() {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [threads, setThreads] = useState<RelatedThread[]>([]);
+  const [nearby, setNearby] = useState<NearbyVenue[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -97,6 +106,16 @@ export default function VenueContent() {
         }
 
         setThreads([...(byTitle as unknown as RelatedThread[] ?? []), ...byContent]);
+
+        // Other venues in the same province
+        const { data: nearbyData } = await supabase
+          .from("venues")
+          .select("id, name, slug, type, species")
+          .eq("province", v.province)
+          .neq("slug", slug)
+          .limit(4);
+        setNearby((nearbyData ?? []) as NearbyVenue[]);
+
         setLoading(false);
       });
   }, [slug]);
@@ -267,7 +286,51 @@ export default function VenueContent() {
         )}
       </div>
 
-      <div className="mt-6">
+      {/* More in this province */}
+      {nearby.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-4">
+            More in {venue.province}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {nearby.map((v) => (
+              <Link
+                key={v.id}
+                href={`/venues/${v.slug}`}
+                className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors block"
+              >
+                <p className="text-bone-white font-heading font-bold uppercase text-sm group-hover:text-cast-orange transition-colors leading-tight mb-1">
+                  {v.name}
+                </p>
+                <p className="text-storm text-xs font-body capitalize mb-2">{v.type}</p>
+                <div className="flex flex-wrap gap-1">
+                  {v.species.slice(0, 3).map((s) => (
+                    <span key={s} className="bg-surface-teal/20 text-pale-water text-xs font-body px-2 py-0.5 rounded-full">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Suggest a venue */}
+      <div className="bg-surface-teal/10 border border-surface-teal/40 rounded-lg p-5 mb-6 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-bone-white font-body font-medium text-sm">Know a great fishing spot not on The Map?</p>
+          <p className="text-storm font-body text-xs mt-0.5">Submit it and we&apos;ll review it.</p>
+        </div>
+        <Link
+          href="/venues/suggest"
+          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+        >
+          Suggest
+        </Link>
+      </div>
+
+      <div className="mt-2">
         <Link href="/venues" className="text-storm hover:text-pale-water text-sm font-body transition-colors">
           ← Back to The Map
         </Link>
