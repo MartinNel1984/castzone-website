@@ -10,6 +10,7 @@ type Props = {
   lng: number;
   name?: string;
   variant?: "full" | "compact";
+  locationLabel?: string;
 };
 
 function barColor(v: number): string {
@@ -21,7 +22,7 @@ function barColor(v: number): string {
 
 const clamp = (v: number) => Math.max(0, Math.min(100, v));
 
-export default function BiteTimes({ lat, lng, name, variant = "full" }: Props) {
+export default function BiteTimes({ lat, lng, name, variant = "full", locationLabel }: Props) {
   // Computed on mount only (client-side) so the current time doesn't get baked
   // into the prerendered HTML and cause a hydration mismatch.
   const [state, setState] = useState<{ days: BiteDay[]; nowMin: number; nowMs: number } | null>(null);
@@ -70,24 +71,40 @@ export default function BiteTimes({ lat, lng, name, variant = "full" }: Props) {
         href="/venues"
         className="group block bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors"
       >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">Today&apos;s Bite Forecast</p>
-            <div className="flex items-baseline gap-2">
-              <span className="font-heading font-bold text-3xl" style={{ color }}>{score}%</span>
-              <span className="font-heading font-bold uppercase text-sm" style={{ color }}>{rating}</span>
-            </div>
-            <p className="text-pale-water text-xs font-body mt-1">
-              {today.moon.emoji} {today.moon.name}
-              {nextMajor && <> · next prime <span className="text-bone-white">{fmtTime(nextMajor.start)}–{fmtTime(nextMajor.end)}</span></>}
-            </p>
-          </div>
-          <div className="flex items-end gap-[2px] h-12 flex-shrink-0" aria-hidden>
-            {hourly.filter((_, i) => i % 2 === 0).map((v, i) => (
-              <div key={i} className="w-[3px] rounded-sm" style={{ height: `${Math.max(6, v)}%`, backgroundColor: barColor(v) }} />
-            ))}
-          </div>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <p className="text-storm text-xs font-body uppercase tracking-wider">Today&apos;s Bite Forecast</p>
+          {locationLabel && (
+            <span className="text-pale-water text-xs font-body flex items-center gap-1">📍 {locationLabel}</span>
+          )}
         </div>
+
+        <div className="flex items-baseline gap-2">
+          <span className="font-heading font-bold text-4xl leading-none" style={{ color }}>{score}%</span>
+          <span className="font-heading font-bold uppercase text-base" style={{ color }}>{rating}</span>
+        </div>
+        <p className="text-pale-water text-xs font-body mt-1 mb-3">
+          {today.moon.emoji} {today.moon.name}
+          {nextMajor && <> · next prime <span className="text-bone-white">{fmtTime(nextMajor.start)}–{fmtTime(nextMajor.end)}</span></>}
+        </p>
+
+        {/* full-width 24h graph */}
+        <div className="flex items-end gap-[2px] h-24 bg-deep-water rounded-md p-2" aria-hidden>
+          {hourly.map((v, i) => {
+            const isNow = i === nowIdx;
+            return (
+              <div key={i} className="flex-1 flex items-end h-full">
+                <div
+                  className="w-full rounded-sm"
+                  style={{ height: `${Math.max(4, v)}%`, backgroundColor: isNow ? "#f9f7f4" : barColor(v) }}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex justify-between text-storm text-[10px] font-body mt-1 px-1">
+          <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>12am</span>
+        </div>
+
         <p className="text-cast-orange text-xs font-body mt-3 group-hover:underline">See best bite times for your spot →</p>
       </Link>
     );
