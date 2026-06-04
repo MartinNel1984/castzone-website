@@ -66,20 +66,28 @@ function ProfileContent() {
     const supabase = createClient();
 
     async function load() {
-      const [{ data: profileData }, { data: authData }] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id, username, avatar_url, bio, member_level, post_count, created_at")
-          .eq("username", username)
-          .single(),
-        supabase.auth.getUser(),
-      ]);
+      // Auth first — ensures session is ready before comparing IDs
+      const { data: authData } = await supabase.auth.getUser();
+      const currentUser = authData?.user ?? null;
+
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("id, username, avatar_url, bio, member_level, post_count, created_at")
+        .eq("username", username)
+        .single();
 
       if (!profileData) { setNotFound(true); setLoading(false); return; }
       setProfile(profileData as Profile);
-      setBioInput(profileData.bio ?? "");
+      setBioInput((profileData as Profile).bio ?? "");
 
-      if (authData.user?.id === profileData.id) setIsOwn(true);
+      // Match by ID or by username (fallback if metadata username differs)
+      if (
+        currentUser &&
+        (currentUser.id === profileData.id ||
+          currentUser.user_metadata?.username === profileData.username)
+      ) {
+        setIsOwn(true);
+      }
 
       const { data: threadData } = await supabase
         .from("threads")
