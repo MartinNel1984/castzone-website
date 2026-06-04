@@ -61,7 +61,7 @@ export default function VenuesPage() {
         <div>
           <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">The Map</h1>
           <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
-            SA Venues &amp; Dam Database
+            {venues.length > 0 ? `${venues.length} SA Venues & Dams` : "SA Venues & Dam Database"}
           </p>
         </div>
         <Link
@@ -90,7 +90,7 @@ export default function VenuesPage() {
             <p className="text-storm font-body">Loading map...</p>
           </div>
         ) : (
-          <VenueMap venues={filtered} />
+          <VenueMap venues={filtered} key={province ?? "all"} />
         )}
       </div>
 

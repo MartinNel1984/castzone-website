@@ -127,7 +127,7 @@ function SearchContent() {
           disabled={!inputValue.trim() || loading}
           className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors flex-shrink-0"
         >
-          Search
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 

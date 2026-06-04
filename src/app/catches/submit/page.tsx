@@ -52,6 +52,7 @@ export default function SubmitCatchPage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+  const [reviewing, setReviewing]   = useState(false);
   const [error, setError]           = useState("");
   const [done, setDone]             = useState(false);
 
@@ -103,11 +104,9 @@ export default function SubmitCatchPage() {
     return data.publicUrl;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleReview(e: React.FormEvent) {
     e.preventDefault();
-    if (!user) return;
     setError("");
-
     if (!photoFile) {
       setError("A photo is required — trophy catches need proof!");
       return;
@@ -117,7 +116,12 @@ export default function SubmitCatchPage() {
       setError("Please enter a valid weight.");
       return;
     }
+    setReviewing(true);
+  }
 
+  async function handleConfirmSubmit() {
+    if (!user) return;
+    setError("");
     setSubmitting(true);
     try {
       const imageUrl = await uploadPhoto(user.id);
@@ -126,7 +130,7 @@ export default function SubmitCatchPage() {
         user_id:     user.id,
         category,
         species:     species.trim(),
-        weight_kg:   weight,
+        weight_kg:   parseFloat(weightKg),
         catch_date:  catchDate,
         venue:       venue.trim() || null,
         notes:       notes.trim() || null,
@@ -134,10 +138,10 @@ export default function SubmitCatchPage() {
         approved:    true,
         approved_at: new Date().toISOString(),
       });
-
       if (dbError) throw new Error(dbError.message);
       setDone(true);
     } catch (err: unknown) {
+      setReviewing(false);
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
@@ -228,7 +232,7 @@ export default function SubmitCatchPage() {
         we&apos;ll review it. A photo is required — no proof, no crown.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleReview} className="space-y-6">
         {error && (
           <div className="bg-red-900/30 border border-red-700 text-red-300 rounded px-4 py-3 text-sm font-body">
             {error}
@@ -402,13 +406,64 @@ export default function SubmitCatchPage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting || !species.trim() || !weightKg || !catchDate || !photoFile}
+            disabled={!species.trim() || !weightKg || !catchDate || !photoFile}
             className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
-            {submitting ? "Submitting..." : "Submit Catch"}
+            Review Catch →
           </button>
         </div>
       </form>
+
+      {/* ── Review / Confirm modal ── */}
+      {reviewing && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
+          <div className="bg-deep-water-light border border-surface-teal rounded-xl max-w-md w-full overflow-hidden">
+            <div className="bg-cast-orange/10 border-b border-cast-orange/30 px-6 py-4">
+              <h2 className="text-bone-white font-heading font-bold uppercase text-lg">Confirm Your Catch</h2>
+              <p className="text-storm text-sm font-body mt-0.5">Check everything looks right before submitting.</p>
+            </div>
+            {photoPreview && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={photoPreview} alt="Trophy catch" className="w-full h-52 object-cover" />
+            )}
+            <div className="px-6 py-5 space-y-3">
+              {error && (
+                <div className="bg-red-900/30 border border-red-700 text-red-300 rounded px-4 py-3 text-sm font-body">
+                  {error}
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-body">
+                <span className="text-storm uppercase tracking-wider text-xs">Category</span>
+                <span className="text-bone-white">{CATEGORIES.find(c => c.value === category)?.icon} {CATEGORIES.find(c => c.value === category)?.label}</span>
+                <span className="text-storm uppercase tracking-wider text-xs">Species</span>
+                <span className="text-bone-white">{species}</span>
+                <span className="text-storm uppercase tracking-wider text-xs">Weight</span>
+                <span className="text-cast-orange font-bold">{parseFloat(weightKg).toFixed(2)} kg</span>
+                <span className="text-storm uppercase tracking-wider text-xs">Date</span>
+                <span className="text-bone-white">{new Date(catchDate + "T00:00:00").toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })}</span>
+                {venue && <><span className="text-storm uppercase tracking-wider text-xs">Venue</span><span className="text-bone-white">{venue}</span></>}
+                {notes && <><span className="text-storm uppercase tracking-wider text-xs">Notes</span><span className="text-pale-water">{notes}</span></>}
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button
+                onClick={() => { setReviewing(false); setError(""); }}
+                disabled={submitting}
+                className="flex-1 border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider py-3 rounded transition-colors text-sm"
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleConfirmSubmit}
+                disabled={submitting}
+                className="flex-1 bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider py-3 rounded transition-colors text-sm"
+              >
+                {submitting ? "Submitting..." : "Confirm & Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

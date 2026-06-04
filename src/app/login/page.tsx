@@ -85,12 +85,17 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
 
-          <p className="text-center text-storm text-sm font-body">
-            Not a member yet?{" "}
-            <Link href="/register" className="text-cast-orange hover:underline">
-              Join free
+          <div className="flex items-center justify-between text-sm font-body text-storm">
+            <Link href="/forgot-password" className="hover:text-pale-water transition-colors">
+              Forgot password?
             </Link>
-          </p>
+            <span>
+              Not a member?{" "}
+              <Link href="/register" className="text-cast-orange hover:underline">
+                Join free
+              </Link>
+            </span>
+          </div>
         </form>
       </div>
     </div>

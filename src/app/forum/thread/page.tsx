@@ -65,6 +65,7 @@ function ThreadContent() {
   const threadId = searchParams.get("id");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const postsEndRef = useRef<HTMLDivElement>(null);
   const [thread, setThread] = useState<Thread | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [user, setUser] = useState<User | null>(null);
@@ -182,7 +183,10 @@ function ThreadContent() {
           .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level)")
           .eq("thread_id", threadId)
           .order("created_at", { ascending: true });
-        if (data) setPosts(data as unknown as Post[]);
+        if (data) {
+          setPosts(data as unknown as Post[]);
+          setTimeout(() => postsEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+        }
       }
     } catch (err: unknown) {
       setReplyError(err instanceof Error ? err.message : "Upload failed. Please try again.");
@@ -244,7 +248,7 @@ function ThreadContent() {
                   </div>
                   <div>
                     <Link
-                      href={`/profile?username=${post.profiles?.username}`}
+                      href={`/profile?username=${encodeURIComponent(post.profiles?.username ?? "")}`}
                       className="text-bone-white hover:text-cast-orange font-body font-semibold text-sm transition-colors"
                     >
                       {post.profiles?.username ?? "Unknown"}
@@ -267,6 +271,7 @@ function ThreadContent() {
               <PostImages urls={post.image_urls} />
             </div>
           ))}
+          <div ref={postsEndRef} />
         </div>
       )}
 
@@ -364,14 +369,15 @@ function ThreadContent() {
         )}
       </div>
 
-      {/* Back link */}
-      {category && (
-        <div className="mt-6">
-          <Link href={`/forum/${category.slug}`} className="text-storm hover:text-pale-water text-sm font-body transition-colors">
-            ← Back to {category.name}
-          </Link>
-        </div>
-      )}
+      {/* Back link — always visible */}
+      <div className="mt-6">
+        <Link
+          href={category ? `/forum/${category.slug}` : "/forum"}
+          className="text-storm hover:text-pale-water text-sm font-body transition-colors"
+        >
+          ← Back to {category ? category.name : "Forum"}
+        </Link>
+      </div>
     </div>
   );
 }
