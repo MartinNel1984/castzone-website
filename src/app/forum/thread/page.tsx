@@ -40,8 +40,20 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
 }
 
-function PostImages({ urls }: { urls: string[] }) {
+function PostImages({ urls, locked }: { urls: string[]; locked: boolean }) {
   if (!urls || urls.length === 0) return null;
+  if (locked) {
+    return (
+      <div className="mt-4 bg-deep-water border border-surface-teal/60 rounded-lg px-5 py-4 flex items-center gap-3">
+        <span className="text-2xl flex-shrink-0">🔒</span>
+        <p className="text-pale-water font-body text-sm">
+          {urls.length === 1 ? "1 photo" : `${urls.length} photos`} in this post —{" "}
+          <Link href="/register" className="text-cast-orange hover:underline font-medium">join free</Link> or{" "}
+          <Link href="/login" className="text-cast-orange hover:underline font-medium">sign in</Link> to view.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className={`mt-4 grid gap-2 ${urls.length === 1 ? "grid-cols-1" : urls.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
       {urls.map((url, i) => (
@@ -275,8 +287,8 @@ function ThreadContent() {
                 {post.content}
               </div>
 
-              {/* Post images */}
-              <PostImages urls={post.image_urls} />
+              {/* Post images — gated for logged-out visitors */}
+              <PostImages urls={post.image_urls} locked={!user} />
             </div>
           ))}
           <div ref={postsEndRef} />
