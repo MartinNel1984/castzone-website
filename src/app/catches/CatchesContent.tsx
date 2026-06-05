@@ -84,19 +84,20 @@ export default function TrophyRoomPage() {
   }, []);
 
   useEffect(() => {
-    const supabase = createClient();
-    setLoading(true);
-    supabase
-      .from("catches")
-      .select("id, species, weight_kg, catch_date, venue, image_url, approved_at, profiles(username, avatar_url)")
-      .eq("category", activeCategory)
-      .eq("approved", true)
-      .order("weight_kg", { ascending: false })
-      .limit(10)
-      .then(({ data }) => {
-        setCatches((data as unknown as Catch[]) ?? []);
-        setLoading(false);
-      });
+    async function load() {
+      setLoading(true);
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("catches")
+        .select("id, species, weight_kg, catch_date, venue, image_url, approved_at, profiles(username, avatar_url)")
+        .eq("category", activeCategory)
+        .eq("approved", true)
+        .order("weight_kg", { ascending: false })
+        .limit(10);
+      setCatches((data as unknown as Catch[]) ?? []);
+      setLoading(false);
+    }
+    load();
   }, [activeCategory]);
 
   const champion = catches[0] ?? null;

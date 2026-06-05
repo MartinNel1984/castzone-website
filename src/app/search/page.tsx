@@ -36,18 +36,6 @@ function SearchContent() {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const q = searchParams.get("q") ?? "";
-    setInputValue(q);
-    if (q.trim().length >= 2) {
-      runSearch(q.trim());
-    } else {
-      setResults([]);
-      setSearched(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
   async function runSearch(q: string) {
     setLoading(true);
     setSearched(false);
@@ -55,7 +43,6 @@ function SearchContent() {
 
     const threadSelect = "id, title, reply_count, last_post_at, created_at, profiles(username), categories(slug, name, icon)";
 
-    // Search threads by title
     const { data: byTitle } = await supabase
       .from("threads")
       .select(threadSelect)
@@ -65,7 +52,6 @@ function SearchContent() {
 
     const titleIds = new Set((byTitle ?? []).map((t) => t.id));
 
-    // Search posts by content → find their threads
     const { data: matchedPosts } = await supabase
       .from("posts")
       .select("thread_id")
@@ -76,21 +62,31 @@ function SearchContent() {
       (id) => !titleIds.has(id)
     );
 
-    let byContent: ThreadResult[] = [];
-    if (postThreadIds.length > 0) {
-      const { data } = await supabase
-        .from("threads")
-        .select(threadSelect)
-        .in("id", postThreadIds)
-        .order("last_post_at", { ascending: false })
-        .limit(20);
-      byContent = (data ?? []) as unknown as ThreadResult[];
-    }
+    const { data: byContentData } = postThreadIds.length > 0
+      ? await supabase.from("threads").select(threadSelect).in("id", postThreadIds).order("last_post_at", { ascending: false }).limit(20)
+      : { data: null };
 
-    setResults([...(byTitle as unknown as ThreadResult[] ?? []), ...byContent]);
+    setResults([
+      ...(byTitle as unknown as ThreadResult[] ?? []),
+      ...((byContentData as unknown as ThreadResult[]) ?? []),
+    ]);
     setSearched(true);
     setLoading(false);
   }
+
+  useEffect(() => {
+    async function syncSearch() {
+      const q = searchParams.get("q") ?? "";
+      setInputValue(q);
+      if (q.trim().length >= 2) {
+        await runSearch(q.trim());
+      } else {
+        setResults([]);
+        setSearched(false);
+      }
+    }
+    syncSearch();
+  }, [searchParams]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

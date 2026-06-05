@@ -38,13 +38,13 @@ function ListingDetail() {
   const id = searchParams.get("id");
 
   const [listing, setListing] = useState<Listing | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(id));
   const [isOwner, setIsOwner] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [working, setWorking] = useState(false);
 
   useEffect(() => {
-    if (!id) { setLoading(false); return; }
+    if (!id) return;
     const supabase = createClient();
 
     async function load() {

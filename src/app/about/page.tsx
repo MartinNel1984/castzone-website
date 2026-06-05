@@ -41,13 +41,26 @@ export default function AboutPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">What&apos;s Coming</h2>
-          <p className="mb-4">CastZone is growing. On the roadmap:</p>
+          <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">What&apos;s Live</h2>
+          <p className="mb-4">CastZone is already packed with features built for SA anglers:</p>
           <ul className="space-y-2 ml-4">
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Forum</strong> — bass, saltwater, specimen and general angling — all in one place</span></li>
             <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Tackle Box</strong> — buy and sell fishing gear directly with other SA anglers</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">The Map</strong> — a searchable database of SA dams and venues, with species, permits and GPS</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Trophy Room</strong> — log your catches, track personal bests, share your fish</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Tournament Hub</strong> — the SA angling calendar, results and registrations in one place</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">The Map</strong> — 67 SA dams and venues across all 9 provinces, with species, permits and GPS</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Water Conditions</strong> — live DWS dam levels for ~196 dams, Vaal system gate alerts updated daily</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Trophy Room</strong> — log your catches, track personal bests, compete on the leaderboard</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Tournaments</strong> — the SA angling calendar: bass, saltwater, specimen, fly fishing</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Best Bite Times</strong> — solunar forecast and 7-day outlook for any venue</span></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">What&apos;s Coming</h2>
+          <p className="mb-4">We&apos;re building CastZone for the long haul. On the roadmap:</p>
+          <ul className="space-y-2 ml-4">
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Sponsored brand zones</strong> — dedicated spaces for SA tackle brands to reach their people</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Featured Tackle Box listings</strong> — paid promotion for retailers and serious sellers</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Premium membership</strong> — perks for the most active community members</span></li>
           </ul>
         </section>
 

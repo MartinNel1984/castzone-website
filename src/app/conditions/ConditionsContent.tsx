@@ -21,14 +21,6 @@ function levelTextClass(pct: number) {
   return "text-red-400";
 }
 
-function levelBadgeClass(pct: number) {
-  if (pct > 100) return "bg-purple-900/40 border-purple-600 text-purple-300";
-  if (pct >= 80)  return "bg-green-900/40 border-green-700 text-green-300";
-  if (pct >= 60)  return "bg-amber-900/40 border-amber-600 text-amber-300";
-  if (pct >= 30)  return "bg-orange-900/40 border-orange-600 text-orange-300";
-  return "bg-red-900/40 border-red-700 text-red-300";
-}
-
 function levelBarColor(pct: number) {
   if (pct > 100) return "#a855f7";
   if (pct >= 80)  return "#22c55e";
@@ -67,6 +59,21 @@ const PROVINCES = [
 
 type SortKey = "name" | "pct" | "fsc";
 
+function SortTh({ col, label, sortKey, sortAsc, onSort }: {
+  col: SortKey; label: string; sortKey: SortKey; sortAsc: boolean; onSort: (k: SortKey) => void;
+}) {
+  const active = sortKey === col;
+  return (
+    <th
+      onClick={() => onSort(col)}
+      className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
+    >
+      {label}{" "}
+      {active ? (sortAsc ? "↑" : "↓") : <span className="opacity-30">↕</span>}
+    </th>
+  );
+}
+
 // ─── component ────────────────────────────────────────────────────────────
 
 export default function ConditionsContent() {
@@ -100,23 +107,7 @@ export default function ConditionsContent() {
   }
 
   const summary = provinceSummary(displayedDams.length === activeDams.length ? activeDams : displayedDams);
-  const nationalSummary = provinceSummary(ALL_DAMS);
-
-  const latestNotices  = GATE_NOTICES.filter((n) => n.latest);
   const visibleNotices = showAllNotices ? GATE_NOTICES : GATE_NOTICES.slice(0, 6);
-
-  function SortTh({ col, label }: { col: SortKey; label: string }) {
-    const active = sortKey === col;
-    return (
-      <th
-        onClick={() => toggleSort(col)}
-        className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
-      >
-        {label}{" "}
-        {active ? (sortAsc ? "↑" : "↓") : <span className="opacity-30">↕</span>}
-      </th>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -353,10 +344,10 @@ export default function ConditionsContent() {
             <table className="w-full min-w-[640px] border-collapse">
               <thead>
                 <tr className="bg-deep-water border-b border-surface-teal">
-                  <SortTh col="name" label="Dam" />
+                  <SortTh col="name" label="Dam"        sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                   <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">River</th>
-                  <SortTh col="fsc"  label="FSC (Mm³)" />
-                  <SortTh col="pct"  label="This Week" />
+                  <SortTh col="fsc"  label="FSC (Mm³)" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
+                  <SortTh col="pct"  label="This Week"  sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                   <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">Last Wk</th>
                   <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">Last Yr</th>
                   <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">vs Last Yr</th>

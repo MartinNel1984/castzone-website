@@ -51,8 +51,8 @@ function ProfileContent() {
 
   const [profile, setProfile]     = useState<Profile | null>(null);
   const [threads, setThreads]     = useState<Thread[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [notFound, setNotFound]   = useState(false);
+  const [loading, setLoading]     = useState(Boolean(username));
+  const [notFound, setNotFound]   = useState(!username);
   const [isOwn, setIsOwn]         = useState(false);
 
   // Edit state
@@ -67,7 +67,7 @@ function ProfileContent() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!username) { setNotFound(true); setLoading(false); return; }
+    if (!username) return;
     const supabase = createClient();
 
     async function load() {

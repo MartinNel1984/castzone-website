@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -73,7 +73,6 @@ function PostImages({ urls, locked }: { urls: string[]; locked: boolean }) {
 
 function ThreadContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const threadId = searchParams.get("id");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -81,14 +80,14 @@ function ThreadContent() {
   const [thread, setThread] = useState<Thread | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(threadId));
   const [reply, setReply] = useState("");
   const [replyImages, setReplyImages] = useState<ImagePreview[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [replyError, setReplyError] = useState("");
 
   useEffect(() => {
-    if (!threadId) { setLoading(false); return; }
+    if (!threadId) return;
     const supabase = createClient();
 
     async function load() {

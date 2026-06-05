@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
@@ -36,7 +35,6 @@ const MAX_SIZE_MB = 8;
 const today = new Date().toISOString().split("T")[0];
 
 export default function SubmitCatchPage() {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [user, setUser]               = useState<User | null>(null);
