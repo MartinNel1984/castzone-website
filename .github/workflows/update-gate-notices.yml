@@ -1,0 +1,35 @@
+name: Update Gate Notices
+
+on:
+  schedule:
+    # 07:00 SAST daily (05:00 UTC)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Scrape DWS gate notices
+        run: python scripts/update_gate_notices.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "CastZone Bot"
+          git config user.email "bot@castzone.co.za"
+          git diff --quiet src/data/gateNotices.json || (
+            git add src/data/gateNotices.json &&
+            git commit -m "Update gate notices $(date +'%Y-%m-%d') [skip ci]" &&
+            git push
+          )

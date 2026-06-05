@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import BiteTimes from "@/components/BiteTimes";
+import { VENUE_WATER_LEVELS, GATE_NOTICES } from "@/data/waterConditions";
 import type { Venue } from "@/components/VenueMap";
 
 const VenueMapPin = dynamic(() => import("@/components/VenueMapPin"), { ssr: false });
@@ -147,6 +148,34 @@ export default function VenueContent() {
   const gpsUrl = `https://www.google.com/maps/search/?api=1&query=${venue.lat},${venue.lng}`;
   const newThreadUrl = `/forum/new?category=general&title=${encodeURIComponent(`Fishing at ${venue.name}`)}`;
 
+  // Water conditions data for this venue
+  const waterData = VENUE_WATER_LEVELS[slug];
+  const latestNotices = GATE_NOTICES.filter((n) => n.latest);
+  const isVaalRiver = ["vaal-river-parys", "vaal-river-vereeniging"].includes(slug);
+  const isBarrage  = slug === "vaal-barrage";
+
+  function levelTextClass(pct: number) {
+    if (pct > 100) return "text-purple-400";
+    if (pct >= 80)  return "text-green-400";
+    if (pct >= 60)  return "text-amber-400";
+    if (pct >= 30)  return "text-orange-400";
+    return "text-red-400";
+  }
+  function levelBarColor(pct: number) {
+    if (pct > 100) return "#a855f7";
+    if (pct >= 80)  return "#22c55e";
+    if (pct >= 60)  return "#f59e0b";
+    if (pct >= 30)  return "#f97316";
+    return "#ef4444";
+  }
+  function levelLabel(pct: number) {
+    if (pct > 100) return "Overflow";
+    if (pct >= 80)  return "Full";
+    if (pct >= 60)  return "Moderate";
+    if (pct >= 30)  return "Low";
+    return "Critical";
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
@@ -187,6 +216,80 @@ export default function VenueContent() {
           Open in Maps
         </a>
       </div>
+
+      {/* ── Water Conditions card ── */}
+      {(waterData || isVaalRiver || isBarrage) && (
+        <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-pale-water text-xs font-body uppercase tracking-wider">Water Conditions</h2>
+            <Link href="/conditions" className="text-xs font-body text-cast-orange hover:text-bone-white transition-colors">
+              All dam levels →
+            </Link>
+          </div>
+
+          {/* Dam level bar — shown for dam venues */}
+          {waterData && (
+            <div className="mb-4">
+              <div className="flex items-end justify-between mb-1">
+                <span className={`text-3xl font-heading font-bold ${levelTextClass(waterData.pct)}`}>
+                  {waterData.pct}%
+                </span>
+                <span className={`text-sm font-body font-medium ${levelTextClass(waterData.pct)}`}>
+                  {levelLabel(waterData.pct)}
+                </span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-surface-teal/20 overflow-hidden mb-2">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${Math.min(waterData.pct, 100)}%`,
+                    backgroundColor: levelBarColor(waterData.pct),
+                  }}
+                />
+              </div>
+              <div className="flex gap-4 text-xs font-body text-storm">
+                <span>
+                  vs last year:{" "}
+                  <span className={waterData.pct >= waterData.lastYear ? "text-green-400" : "text-orange-400"}>
+                    {waterData.pct >= waterData.lastYear ? "▲" : "▼"}{" "}
+                    {Math.abs(waterData.pct - waterData.lastYear).toFixed(1)}%
+                  </span>
+                  {" "}({waterData.lastYear}% this time last year)
+                </span>
+              </div>
+              <p className="text-xs font-body text-storm mt-1">Source: DWS · Updated weekly</p>
+            </div>
+          )}
+
+          {/* Gate / river status — shown for Vaal system venues */}
+          {(isVaalRiver || isBarrage || slug === "vaal-dam" || slug === "bloemhof-dam") && (
+            <div className={`border rounded-lg p-3 mt-2 ${
+              isVaalRiver
+                ? "border-amber-700/50 bg-amber-900/10"
+                : "border-green-700/50 bg-green-900/10"
+            }`}>
+              <p className="text-xs font-body font-bold uppercase tracking-wider mb-2 text-pale-water">
+                Vaal System Gate Status
+              </p>
+              {latestNotices.map((n, i) => (
+                <div key={i} className="text-xs font-body text-storm mb-1 last:mb-0">
+                  <span className={`font-bold mr-1 ${
+                    n.dam === "vaal" ? "text-green-400" : "text-amber-400"
+                  }`}>
+                    {n.dam === "vaal" ? "Vaal Dam:" : n.dam === "bloemhof" ? "Bloemhof:" : "Barrage:"}
+                  </span>
+                  {n.text}
+                </div>
+              ))}
+              {(isVaalRiver) && (
+                <p className="text-amber-300 text-xs mt-2 font-body">
+                  ⚠ Bloemhof releasing 250 m³/s — exercise caution near banks.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Best bite times (solunar) */}
       <BiteTimes lat={venue.lat} lng={venue.lng} name={venue.name} />

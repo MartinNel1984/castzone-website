@@ -1,7 +1,9 @@
 // DWS Hydrological data — updated manually each Monday after DWS publishes.
 // Source: https://www.dws.gov.za/Hydrology/Weekly/Province.aspx
-// Gate notices: https://mobi.reservoir.org.za/dws-comms/
-// Last updated: 2026-06-01 (dams) · 2026-05-19 (gate notices)
+// Gate notices: auto-updated daily by .github/workflows/update-gate-notices.yml
+// Last updated: 2026-06-01 (dams) · see gateNotices.json for gate notice date
+
+import gateNoticesData from "./gateNotices.json";
 
 export type DamLevel = {
   name: string;
@@ -108,27 +110,6 @@ export const VENUE_WATER_LEVELS: Record<string, { pct: number; lastYear: number;
   );
 
 // ─── Vaal System gate notices ─────────────────────────────────────────────
-// Source: DWS Flood Monitoring & Forecasting via mobi.reservoir.org.za/dws-comms/
-export const GATE_NOTICES: GateNotice[] = [
-  { date: "19 May 2026", dam: "vaal",     latest: true, text: "Season Reporting closed. Close the one (1) gate at 12:00." },
-  { date: "19 May 2026", dam: "bloemhof", latest: true, text: "Maintain the discharge at 250 m³/s." },
-  { date: "17 May 2026", dam: "vaal",     text: "Keep one (1) gate open." },
-  { date: "17 May 2026", dam: "bloemhof", text: "Reduce the discharge to 250 m³/s at 10:00." },
-  { date: "12 May 2026", dam: "vaal",     text: "Keep one (1) gate open." },
-  { date: "12 May 2026", dam: "bloemhof", text: "Reduce the discharge to 700 m³/s at 10:00." },
-  { date: "9 May 2026",  dam: "vaal",     text: "Keep one (1) gate open." },
-  { date: "9 May 2026",  dam: "bloemhof", text: "Keep the discharge at 900 m³/s." },
-  { date: "8 May 2026",  dam: "vaal",     text: "Open one (1) gate at 09:00." },
-  { date: "8 May 2026",  dam: "bloemhof", text: "Maintain the discharge at 900 m³/s." },
-  { date: "10 Mar 2026", dam: "vaal",     text: "Close all valves and open one (1) gate." },
-  { date: "10 Mar 2026", dam: "bloemhof", text: "Increase the discharge to 150 m³/s at 10:00." },
-  { date: "20 Feb 2026", dam: "vaal",     text: "River valves closed 8:00–16:00 from 23–27 Feb 2026 for mechanical maintenance." },
-  { date: "7 Feb 2026",  dam: "vaal",     text: "Operate on valve discharge only." },
-  { date: "7 Feb 2026",  dam: "bloemhof", text: "Maintain the discharge at 50 m³/s." },
-  { date: "19 Jan 2026", dam: "vaal",     text: "Close the last gate at 10:00 and operate on valve discharge only." },
-  { date: "30 Nov 2025", dam: "barrage",  text: "Switching from free flow to controlled releases from 14:00 today." },
-  { date: "29 Nov 2025", dam: "vaal",     text: "Keep 10 gates open." },
-  { date: "27 Nov 2025", dam: "vaal",     text: "Open 3 gates — Gate 8 at 10:00; Gate 9 at 12:00; Gate 10 at 14:00." },
-  { date: "26 Nov 2025", dam: "vaal",     text: "Open 4 gates — Gate 4 at 10:00; Gate 5 at 11:00; Gate 6 at 12:00; Gate 7 at 13:00." },
-  { date: "17 Nov 2025", dam: "vaal",     text: "Close all valves. Open sluice gates — Gate 1 at 09:00, Gate 2 at 10:00, Gate 3 at 11:00, Gate 4 at 12:00, Gate 5 at 13:00." },
-];
+// Auto-updated daily from mobi.reservoir.org.za/dws-comms/
+// via .github/workflows/update-gate-notices.yml
+export const GATE_NOTICES: GateNotice[] = gateNoticesData as GateNotice[];
