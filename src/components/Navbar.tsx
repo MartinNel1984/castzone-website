@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-import NotificationBell from "@/components/NotificationBell";
 
 const navLinks = [
   { label: "Forum",        href: "/forum" },
@@ -93,7 +92,6 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <>
-                <NotificationBell userId={user.id} />
                 <Link
                   href={`/profile?username=${encodeURIComponent(username)}`}
                   className="flex items-center gap-2 text-pale-water hover:text-bone-white text-sm font-body transition-colors"
@@ -123,23 +121,20 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile: notification bell + hamburger */}
-          <div className="lg:hidden flex items-center gap-1">
-            {user && <NotificationBell userId={user.id} />}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-pale-water hover:text-bone-white p-2"
-              aria-label="Toggle menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden text-pale-water hover:text-bone-white p-2"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
 
         {/* Mobile menu */}
