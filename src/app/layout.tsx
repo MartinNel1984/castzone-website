@@ -60,6 +60,13 @@ export default function RootLayout({
           data-cf-beacon='{"token": "f63581216ddd43f3a172437006b33bc5"}'
           strategy="afterInteractive"
         />
+        {/* Google AdSense — Auto Ads */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9454815992418505"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         {/* Google Analytics (GA4) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-98JB2BMV96"
