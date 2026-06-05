@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -72,11 +72,66 @@ function EmptyState({ cat, user }: { cat: typeof CATEGORIES[number]; user: User 
   );
 }
 
+function CatchModal({ c, cat, onClose }: { c: Catch; cat: typeof CATEGORIES[number]; onClose: () => void }) {
+  const close = useCallback(onClose, [onClose]);
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) { if (e.key === "Escape") close(); }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [close]);
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-deep-water-light border border-cast-orange/60 rounded-xl overflow-hidden w-full max-w-lg max-h-[92vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-surface-teal/40 flex-shrink-0">
+          <span className="text-cast-orange font-heading font-bold uppercase tracking-wider text-sm">{cat.icon} {cat.label}</span>
+          <button onClick={onClose} className="text-storm hover:text-bone-white text-3xl leading-none transition-colors" aria-label="Close">×</button>
+        </div>
+
+        {/* Image */}
+        <div className="bg-black overflow-auto flex-shrink-0">
+          {c.image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={c.image_url}
+              alt={`${c.species} by ${c.profiles?.username ?? "Angler"} — ${formatWeight(c.weight_kg)}`}
+              className="w-full max-h-[55vh] object-contain"
+            />
+          ) : (
+            <div className="w-full h-48 flex items-center justify-center text-7xl opacity-30">{cat.icon}</div>
+          )}
+        </div>
+
+        {/* Details */}
+        <div className="p-5 overflow-y-auto">
+          <p className="text-bone-white font-heading font-bold text-2xl leading-tight mb-1">
+            {c.profiles?.username ?? "Angler"}
+          </p>
+          <p className="text-cast-orange font-heading font-bold text-4xl leading-none mb-3">
+            {formatWeight(c.weight_kg)}
+          </p>
+          <p className="text-pale-water font-body mb-1">{c.species}</p>
+          <p className="text-storm font-body text-sm">Caught {formatDate(c.catch_date)}</p>
+          {c.venue && <p className="text-storm font-body text-sm mt-0.5">📍 {c.venue}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TrophyRoomPage() {
   const [activeCategory, setActiveCategory] = useState<Category>("carp");
   const [catches, setCatches] = useState<Catch[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [selectedCatch, setSelectedCatch] = useState<Catch | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -166,7 +221,8 @@ export default function TrophyRoomPage() {
                 <img
                   src={champion.image_url}
                   alt={`${champion.species} caught by ${champion.profiles?.username ?? "Angler"} — ${Number(champion.weight_kg).toFixed(2)} kg`}
-                  className="w-full sm:w-72 h-60 sm:h-auto object-cover flex-shrink-0"
+                  onClick={() => setSelectedCatch(champion)}
+                  className="w-full sm:w-72 h-60 sm:h-auto object-cover flex-shrink-0 cursor-zoom-in"
                 />
               ) : (
                 <div className="w-full sm:w-72 h-60 sm:h-auto bg-surface-teal/10 flex items-center justify-center flex-shrink-0">
@@ -205,7 +261,7 @@ export default function TrophyRoomPage() {
                 {rest.map((c, i) => {
                   const rank = i + 2;
                   return (
-                    <div key={c.id} className="bg-deep-water-light border border-surface-teal rounded-xl overflow-hidden flex">
+                    <div key={c.id} onClick={() => setSelectedCatch(c)} className="bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-xl overflow-hidden flex cursor-pointer transition-colors">
                       {/* Image — roughly half the champion card */}
                       {c.image_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -247,6 +303,11 @@ export default function TrophyRoomPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* Lightbox modal */}
+      {selectedCatch && (
+        <CatchModal c={selectedCatch} cat={cat} onClose={() => setSelectedCatch(null)} />
       )}
 
       {/* Mobile submit CTA */}
