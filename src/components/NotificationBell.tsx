@@ -27,38 +27,37 @@ function timeAgo(dateStr: string) {
 export default function NotificationBell({ userId }: { userId: string }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
+  const [failed, setFailed] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const unread = notifications.filter((n) => !n.read).length;
 
   useEffect(() => {
-    const supabase = createClient();
+    let cancelled = false;
 
-    supabase
-      .from("notifications")
-      .select("id, type, title, body, url, read, created_at")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(20)
-      .then(({ data }) => setNotifications((data as Notification[]) ?? []));
+    async function load() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("notifications")
+          .select("id, type, title, body, url, read, created_at")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(20);
+        if (cancelled) return;
+        if (error) return;
+        setNotifications((data as Notification[]) ?? []);
+      } catch {
+        if (!cancelled) setFailed(true);
+      }
+    }
 
-    const channel = supabase
-      .channel(`notifications:${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    load();
+    const interval = setInterval(load, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [userId]);
 
   const handleOutsideClick = useCallback((e: MouseEvent) => {
@@ -76,15 +75,22 @@ export default function NotificationBell({ userId }: { userId: string }) {
     const next = !open;
     setOpen(next);
     if (next && unread > 0) {
-      const supabase = createClient();
-      await supabase
-        .from("notifications")
-        .update({ read: true })
-        .eq("user_id", userId)
-        .eq("read", false);
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      try {
+        const supabase = createClient();
+        await supabase
+          .from("notifications")
+          .update({ read: true })
+          .eq("user_id", userId)
+          .eq("read", false);
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      } catch {
+        // fail silently
+      }
     }
   }
+
+  // If the notifications table isn't ready yet, hide the bell rather than crash
+  if (failed) return null;
 
   return (
     <div ref={dropdownRef} className="relative">

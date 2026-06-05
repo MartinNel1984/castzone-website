@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-// NotificationBell temporarily disabled — crashes page post-login (Realtime/RLS issue under investigation)
-// import NotificationBell from "@/components/NotificationBell";
+import NotificationBell from "@/components/NotificationBell";
 
 const navLinks = [
   { label: "Forum",        href: "/forum" },
@@ -94,6 +93,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <>
+                <NotificationBell userId={user.id} />
                 <Link
                   href={`/profile?username=${encodeURIComponent(username)}`}
                   className="flex items-center gap-2 text-pale-water hover:text-bone-white text-sm font-body transition-colors"
@@ -125,7 +125,7 @@ export default function Navbar() {
 
           {/* Mobile: notification bell + hamburger */}
           <div className="lg:hidden flex items-center gap-1">
-            {/* NotificationBell disabled temporarily */}
+            {user && <NotificationBell userId={user.id} />}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="text-pale-water hover:text-bone-white p-2"
