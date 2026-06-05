@@ -190,67 +190,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Bite forecast widget */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" locationLabel="Johannesburg area" />
-      </section>
-
-      {/* Forum categories with photos */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">Forum Categories</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {forumCategories.map((cat) => {
-            const catStats = categories[cat.slug];
-            return (
-              <Link
-                key={cat.slug}
-                href={`/forum/${cat.slug}`}
-                className="group relative border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-all"
-              >
-                {/* Background photo */}
-                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${cat.photo}')` }} />
-                <div className="absolute inset-0 bg-deep-water/80 group-hover:bg-deep-water/70 transition-colors" />
-
-                <div className="relative p-5 flex items-start gap-4">
-                  <div className={`${cat.colour} rounded-lg w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0`}>
-                    {cat.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
-                      {cat.name}
-                    </h3>
-                    <p className="text-pale-water/80 text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
-                    <div className="flex gap-4 mt-3">
-                      <span className="text-pale-water text-xs">{catStats?.thread_count ?? 0} threads</span>
-                      <span className="text-pale-water text-xs">{catStats?.post_count ?? 0} posts</span>
-                    </div>
-                  </div>
-                  <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Feature cards */}
-      <section className="bg-deep-water-light border-t border-b border-surface-teal py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">More Than a Forum</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featureCards.map((card) => (
-              <Link key={card.title} href={card.href} className="group bg-deep-water border border-surface-teal hover:border-cast-orange rounded-lg p-6 transition-all">
-                <div className="text-3xl mb-3">{card.icon}</div>
-                <h3 className="text-bone-white font-heading font-bold text-lg uppercase mb-2 group-hover:text-cast-orange transition-colors">{card.title}</h3>
-                <p className="text-storm text-sm leading-relaxed font-body">{card.description}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Angler Safety — Vaal River */}
       {(() => {
         const latestVaal      = GATE_NOTICES.find((n) => n.dam === "vaal"     && n.latest);
@@ -346,6 +285,67 @@ export default function HomePage() {
           </section>
         );
       })()}
+
+      {/* Bite forecast widget */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" locationLabel="Johannesburg area" />
+      </section>
+
+      {/* Forum categories with photos */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">Forum Categories</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {forumCategories.map((cat) => {
+            const catStats = categories[cat.slug];
+            return (
+              <Link
+                key={cat.slug}
+                href={`/forum/${cat.slug}`}
+                className="group relative border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-all"
+              >
+                {/* Background photo */}
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${cat.photo}')` }} />
+                <div className="absolute inset-0 bg-deep-water/80 group-hover:bg-deep-water/70 transition-colors" />
+
+                <div className="relative p-5 flex items-start gap-4">
+                  <div className={`${cat.colour} rounded-lg w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0`}>
+                    {cat.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
+                      {cat.name}
+                    </h3>
+                    <p className="text-pale-water/80 text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
+                    <div className="flex gap-4 mt-3">
+                      <span className="text-pale-water text-xs">{catStats?.thread_count ?? 0} threads</span>
+                      <span className="text-pale-water text-xs">{catStats?.post_count ?? 0} posts</span>
+                    </div>
+                  </div>
+                  <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Feature cards */}
+      <section className="bg-deep-water-light border-t border-b border-surface-teal py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">More Than a Forum</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {featureCards.map((card) => (
+              <Link key={card.title} href={card.href} className="group bg-deep-water border border-surface-teal hover:border-cast-orange rounded-lg p-6 transition-all">
+                <div className="text-3xl mb-3">{card.icon}</div>
+                <h3 className="text-bone-white font-heading font-bold text-lg uppercase mb-2 group-hover:text-cast-orange transition-colors">{card.title}</h3>
+                <p className="text-storm text-sm leading-relaxed font-body">{card.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Recent Forum Activity */}
       {recentThreads.length > 0 && (
