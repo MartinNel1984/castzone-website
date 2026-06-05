@@ -28,6 +28,7 @@ export default function MembersContent() {
       const { data } = await supabase
         .from("profiles")
         .select("id, username, avatar_url, member_level, post_count, created_at")
+        .eq("is_seed", false)
         .order(sortBy, { ascending: false })
         .limit(200);
       setMembers((data as unknown as Member[]) ?? []);
