@@ -61,6 +61,11 @@ function ProfileContent() {
   const [saving, setSaving]       = useState(false);
   const [saveError, setSaveError] = useState("");
 
+  // Username change state
+  const [usernameInput, setUsernameInput]   = useState("");
+  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const usernameCheckRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Avatar edit state
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const [avatarFile, setAvatarFile]       = useState<File | null>(null);
@@ -135,10 +140,32 @@ function ProfileContent() {
     e.target.value = "";
   }
 
+  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value.trim();
+    setUsernameInput(val);
+    if (usernameCheckRef.current) clearTimeout(usernameCheckRef.current);
+    if (!profile) return;
+    if (val === profile.username) { setUsernameStatus("idle"); return; }
+    if (val.length < 3 || !/^[a-zA-Z0-9_]{3,30}$/.test(val)) { setUsernameStatus("invalid"); return; }
+    setUsernameStatus("checking");
+    usernameCheckRef.current = setTimeout(async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("profiles")
+        .select("id")
+        .ilike("username", val)
+        .neq("id", profile.id)
+        .maybeSingle();
+      setUsernameStatus(data ? "taken" : "available");
+    }, 600);
+  }
+
   function cancelEdit() {
     if (!profile) return;
     setEditing(false);
     setBioInput(profile.bio ?? "");
+    setUsernameInput(profile.username);
+    setUsernameStatus("idle");
     setSaveError("");
     setAvatarFile(null);
     if (avatarPreview) { URL.revokeObjectURL(avatarPreview); setAvatarPreview(null); }
@@ -146,6 +173,10 @@ function ProfileContent() {
 
   async function handleSave() {
     if (!profile) return;
+    const newUsername     = usernameInput.trim();
+    const usernameChanged = newUsername !== profile.username;
+    if (usernameChanged && usernameStatus !== "available") return;
+
     setSaving(true);
     setSaveError("");
     const supabase = createClient();
@@ -161,11 +192,21 @@ function ProfileContent() {
         avatarUrl = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
       }
 
+      const updates: Record<string, unknown> = { bio: bioInput.trim() || null, avatar_url: avatarUrl };
+      if (usernameChanged) updates.username = newUsername;
+
       const { error } = await supabase
         .from("profiles")
-        .update({ bio: bioInput.trim() || null, avatar_url: avatarUrl })
+        .update(updates)
         .eq("id", profile.id);
       if (error) throw new Error(error.message);
+
+      if (usernameChanged) {
+        await supabase.auth.updateUser({ data: { username: newUsername } });
+        // Redirect to new profile URL — hard navigate so everything reloads with new name
+        window.location.href = `/profile?username=${encodeURIComponent(newUsername)}`;
+        return;
+      }
 
       setProfile((p) => p ? { ...p, bio: bioInput.trim() || null, avatar_url: avatarUrl } : p);
       setEditing(false);
@@ -251,7 +292,7 @@ function ProfileContent() {
               </h1>
               {isOwn && !editing && (
                 <button
-                  onClick={() => setEditing(true)}
+                  onClick={() => { setEditing(true); setUsernameInput(profile.username); setUsernameStatus("idle"); }}
                   className="flex-shrink-0 text-storm hover:text-pale-water text-xs font-body border border-surface-teal hover:border-pale-water/50 rounded px-3 py-1.5 transition-colors"
                 >
                   Edit Profile
@@ -275,7 +316,38 @@ function ProfileContent() {
         {/* Bio */}
         {editing ? (
           <div className="mt-5">
-            <p className="text-storm text-xs font-body mb-3">Tap the 📷 on your photo to upload a profile picture (JPEG, PNG or WEBP, max 5MB).</p>
+            <p className="text-storm text-xs font-body mb-4">Tap the 📷 on your photo to upload a profile picture (JPEG, PNG or WEBP, max 5MB).</p>
+
+            {/* Username */}
+            <div className="mb-4">
+              <label className="block text-xs font-body text-storm uppercase tracking-wider mb-1.5">Username</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  value={usernameInput}
+                  onChange={handleUsernameChange}
+                  maxLength={30}
+                  className="flex-1 bg-deep-water border border-surface-teal rounded px-4 py-2.5 text-bone-white font-body text-sm focus:outline-none focus:border-cast-orange transition-colors"
+                />
+                <span className="text-xs font-body flex-shrink-0 w-24">
+                  {usernameInput === profile.username ? (
+                    <span className="text-storm">Current name</span>
+                  ) : usernameStatus === "checking" ? (
+                    <span className="text-storm">Checking…</span>
+                  ) : usernameStatus === "available" ? (
+                    <span className="text-green-400">✓ Available</span>
+                  ) : usernameStatus === "taken" ? (
+                    <span className="text-red-400">✗ Already taken</span>
+                  ) : usernameStatus === "invalid" ? (
+                    <span className="text-red-400">✗ Invalid</span>
+                  ) : null}
+                </span>
+              </div>
+              <p className="text-storm text-xs font-body mt-1.5">3–30 characters · letters, numbers and underscores only · no spaces</p>
+            </div>
+
+            {/* Bio */}
+            <label className="block text-xs font-body text-storm uppercase tracking-wider mb-1.5">Bio</label>
             <textarea
               value={bioInput}
               onChange={(e) => setBioInput(e.target.value)}
@@ -299,7 +371,7 @@ function ProfileContent() {
                 </button>
                 <button
                   onClick={handleSave}
-                  disabled={saving}
+                  disabled={saving || (usernameInput !== profile.username && usernameStatus !== "available")}
                   className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                 >
                   {saving ? "Saving..." : "Save"}
@@ -314,7 +386,7 @@ function ProfileContent() {
         ) : isOwn ? (
           <p className="mt-4 text-storm font-body text-sm italic border-t border-surface-teal/40 pt-4">
             No bio yet.{" "}
-            <button onClick={() => setEditing(true)} className="text-cast-orange hover:underline not-italic">
+            <button onClick={() => { setEditing(true); setUsernameInput(profile.username); setUsernameStatus("idle"); }} className="text-cast-orange hover:underline not-italic">
               Add one →
             </button>
           </p>
