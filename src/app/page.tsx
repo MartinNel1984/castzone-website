@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import ShareButtons from "@/components/ShareButtons";
 import BiteTimes from "@/components/BiteTimes";
+import { GATE_NOTICES } from "@/data/waterConditions";
 
 const forumCategories = [
   {
@@ -51,9 +52,39 @@ const featureCards = [
 
 type Stats = { members: number; threads: number; posts: number; categories: number };
 
+type RecentThread = {
+  id: string;
+  title: string;
+  reply_count: number;
+  created_at: string;
+  profiles: { username: string } | null;
+  categories: { slug: string; name: string; icon: string } | null;
+};
+
+function threadTimeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString("en-ZA", { day: "numeric", month: "short" });
+}
+
+function vaalAlertLevel(text: string): "danger" | "caution" | "normal" {
+  const m = text.match(/(\d[\d\s]*)\s*m³\/s/i);
+  if (!m) return "normal";
+  const cms = parseInt(m[1].replace(/\s/g, ""), 10);
+  if (cms >= 500) return "danger";
+  if (cms >= 100) return "caution";
+  return "normal";
+}
+
 export default function HomePage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [categories, setCategories] = useState<Record<string, { thread_count: number; post_count: number }>>({});
+  const [recentThreads, setRecentThreads] = useState<RecentThread[]>([]);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
 
   useEffect(() => {
@@ -63,11 +94,12 @@ export default function HomePage() {
     const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
 
     async function loadStats() {
-      const [{ count: members }, { count: threads }, { count: posts }, { data: cats }] = await Promise.all([
+      const [{ count: members }, { count: threads }, { count: posts }, { data: cats }, { data: latest }] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("threads").select("*", { count: "exact", head: true }),
         supabase.from("posts").select("*", { count: "exact", head: true }),
         supabase.from("categories").select("slug,thread_count,post_count"),
+        supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
       ]);
       setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0 });
       if (cats) {
@@ -75,6 +107,7 @@ export default function HomePage() {
         cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
         setCategories(map);
       }
+      setRecentThreads((latest ?? []) as unknown as RecentThread[]);
     }
 
     loadStats();
@@ -217,6 +250,148 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Angler Safety — Vaal River */}
+      {(() => {
+        const latestVaal      = GATE_NOTICES.find((n) => n.dam === "vaal"     && n.latest);
+        const latestBloemhof  = GATE_NOTICES.find((n) => n.dam === "bloemhof" && n.latest);
+        const latestBarrage   = GATE_NOTICES.find((n) => n.dam === "barrage"  && n.latest);
+        const bloemhofLevel   = latestBloemhof ? vaalAlertLevel(latestBloemhof.text) : "normal";
+        const bannerColour =
+          bloemhofLevel === "danger"  ? "border-red-600/60 bg-red-900/10"   :
+          bloemhofLevel === "caution" ? "border-amber-600/60 bg-amber-900/10" :
+          "border-surface-teal bg-deep-water-light";
+        const titleColour =
+          bloemhofLevel === "danger"  ? "text-red-400"    :
+          bloemhofLevel === "caution" ? "text-amber-400"  :
+          "text-pale-water";
+        const icon = bloemhofLevel === "danger" ? "🚨" : bloemhofLevel === "caution" ? "⚠️" : "ℹ️";
+        return (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">
+                {icon} Angler Safety — Vaal River
+              </h2>
+              <Link href="/conditions" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
+                Full dam levels →
+              </Link>
+            </div>
+
+            {/* Gate status cards */}
+            <div className={`border rounded-lg p-5 mb-5 ${bannerColour}`}>
+              <p className={`font-heading font-bold uppercase text-sm mb-3 ${titleColour}`}>
+                Latest Gate Notices — Updated by DWS
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { label: "Vaal Dam",  notice: latestVaal,     colour: "text-blue-300"  },
+                  { label: "Bloemhof",  notice: latestBloemhof, colour: titleColour       },
+                  { label: "Barrage",   notice: latestBarrage,  colour: "text-teal-300"  },
+                ].map(({ label, notice, colour }) => (
+                  <div key={label} className="bg-black/20 rounded p-3">
+                    <p className={`text-xs font-body font-bold uppercase tracking-wider mb-1 ${colour}`}>{label}</p>
+                    {notice ? (
+                      <>
+                        <p className="text-bone-white text-sm font-body leading-snug">{notice.text}</p>
+                        <p className="text-storm text-xs mt-1">{notice.date}</p>
+                      </>
+                    ) : (
+                      <p className="text-storm text-sm font-body">No recent notice</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {bloemhofLevel !== "normal" && (
+                <p className={`mt-4 text-sm font-body font-medium ${titleColour}`}>
+                  {bloemhofLevel === "danger"
+                    ? "⚠ Bloemhof releasing at high volume — avoid all Vaal River banks. Strong current and rising water levels expected downstream."
+                    : "⚠ Bloemhof releasing water — exercise caution near Vaal River banks. Current stronger than normal downstream of Parys."}
+                </p>
+              )}
+            </div>
+
+            {/* Vaal sections guide */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                {
+                  section: "Upper Vaal",
+                  stretch: "Vaal Dam → Parys (~150 km)",
+                  slug: "vaal-river-parys",
+                  tip: "Responds to Vaal Dam gate openings within 24–48 hours. Check the Vaal Dam gate notice before fishing the Parys banks.",
+                },
+                {
+                  section: "Middle Vaal",
+                  stretch: "Parys → Vereeniging / Barrage (~180 km)",
+                  slug: "vaal-barrage",
+                  tip: "Affected by Bloemhof releases 3–5 days after discharge. When Bloemhof is releasing over 300 m³/s, bank levels rise significantly.",
+                },
+                {
+                  section: "Lower Vaal",
+                  stretch: "Barrage → Boegoeberg (~400 km)",
+                  slug: "vaal-river-vereeniging",
+                  tip: "Barrage controls flow into the lower reach. Controlled releases make this section more predictable — but always check current notices.",
+                },
+              ].map(({ section, stretch, slug, tip }) => (
+                <Link
+                  key={section}
+                  href={`/venues/${slug}`}
+                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors"
+                >
+                  <p className="text-cast-orange font-heading font-bold uppercase text-sm group-hover:text-bone-white transition-colors mb-1">{section}</p>
+                  <p className="text-pale-water text-xs font-body mb-2">{stretch}</p>
+                  <p className="text-storm text-xs font-body leading-relaxed">{tip}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* Recent Forum Activity */}
+      {recentThreads.length > 0 && (
+        <section className="bg-deep-water-light border-t border-b border-surface-teal py-14">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">Latest from the Community</h2>
+              <Link href="/forum" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
+                All threads →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {recentThreads.map((thread) => (
+                <Link
+                  key={thread.id}
+                  href={`/forum/thread?id=${thread.id}`}
+                  className="group flex items-center gap-4 bg-deep-water border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors"
+                >
+                  <span className="flex-shrink-0 text-2xl w-9 text-center">
+                    {thread.categories?.icon ?? "🎣"}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate text-sm">
+                      {thread.title}
+                    </p>
+                    <p className="text-storm text-xs mt-0.5">
+                      <span className="text-pale-water">{thread.profiles?.username ?? "Angler"}</span>
+                      {" · "}{thread.categories?.name ?? "General"}
+                      {" · "}{threadTimeAgo(thread.created_at)}
+                    </p>
+                  </div>
+                  <span className="flex-shrink-0 text-storm text-xs whitespace-nowrap">{thread.reply_count} replies</span>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-5 text-center">
+              <Link
+                href="/forum/new"
+                className="inline-block border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-2.5 rounded text-sm transition-colors"
+              >
+                + Start a Thread
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Share */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
