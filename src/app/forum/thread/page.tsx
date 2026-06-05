@@ -89,6 +89,9 @@ function ThreadContent() {
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [editSaving, setEditSaving] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkWorking, setBookmarkWorking] = useState(false);
+  const [bookmarkFlash, setBookmarkFlash] = useState(false);
 
   useEffect(() => {
     if (!threadId) return;
@@ -97,6 +100,16 @@ function ThreadContent() {
     async function load() {
       const { data: userData } = await supabase.auth.getUser();
       setUser(userData.user);
+
+      if (userData.user) {
+        const { data: bmData } = await supabase
+          .from("bookmarks")
+          .select("id")
+          .eq("user_id", userData.user.id)
+          .eq("thread_id", threadId)
+          .maybeSingle();
+        setBookmarked(!!bmData);
+      }
 
       await supabase.rpc("increment_view_count", { thread_id: threadId }).maybeSingle();
 
@@ -168,6 +181,23 @@ function ThreadContent() {
     }
 
     return urls;
+  }
+
+  async function handleBookmarkToggle() {
+    if (!user || !threadId || bookmarkWorking) return;
+    setBookmarkWorking(true);
+    const supabase = createClient();
+    if (bookmarked) {
+      await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("thread_id", threadId);
+      setBookmarked(false);
+      setBookmarkFlash(false);
+    } else {
+      await supabase.from("bookmarks").insert({ user_id: user.id, thread_id: threadId });
+      setBookmarked(true);
+      setBookmarkFlash(true);
+      setTimeout(() => setBookmarkFlash(false), 5000);
+    }
+    setBookmarkWorking(false);
   }
 
   async function handleEditSave(postId: string) {
@@ -256,9 +286,27 @@ function ThreadContent() {
       </nav>
 
       {/* Thread title */}
-      <h1 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase mb-8 leading-tight">
-        {loading ? <span className="animate-pulse bg-surface-teal rounded h-8 block w-3/4" /> : thread?.title}
-      </h1>
+      <div className="flex items-start justify-between gap-3 mb-8">
+        <h1 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase leading-tight flex-1">
+          {loading ? <span className="animate-pulse bg-surface-teal rounded h-8 block w-3/4" /> : thread?.title}
+        </h1>
+        {user && !loading && (
+          <button
+            onClick={handleBookmarkToggle}
+            disabled={bookmarkWorking}
+            title={bookmarked ? "Remove bookmark" : "Save this thread"}
+            className={`flex-shrink-0 mt-1 text-2xl leading-none transition-colors ${bookmarked ? "text-cast-orange" : "text-storm hover:text-pale-water"}`}
+          >
+            {bookmarked ? "★" : "☆"}
+          </button>
+        )}
+      </div>
+      {bookmarkFlash && (
+        <p className="text-xs text-storm -mt-5 mb-6">
+          Thread saved ·{" "}
+          <Link href="/saved" className="text-cast-orange hover:underline">View all saved threads</Link>
+        </p>
+      )}
 
       {/* Posts */}
       {loading ? (

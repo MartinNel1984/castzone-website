@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 import BiteTimes from "@/components/BiteTimes";
 import { VENUE_WATER_LEVELS, GATE_NOTICES } from "@/data/waterConditions";
 import type { Venue } from "@/components/VenueMap";
@@ -42,6 +43,15 @@ type RelatedThread = {
   categories: { slug: string; name: string; icon: string } | null;
 };
 
+type Review = {
+  id: string;
+  user_id: string;
+  rating: number;
+  body: string | null;
+  created_at: string;
+  profiles: { username: string } | null;
+};
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -61,6 +71,14 @@ export default function VenueContent() {
   const [loading, setLoading] = useState(true);
   const [threads, setThreads] = useState<RelatedThread[]>([]);
   const [nearby, setNearby] = useState<NearbyVenue[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [avgRating, setAvgRating] = useState<number | null>(null);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [myReview, setMyReview] = useState<Review | null>(null);
+  const [draftRating, setDraftRating] = useState(0);
+  const [draftBody, setDraftBody] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -122,6 +140,34 @@ export default function VenueContent() {
           .limit(4);
         setNearby((nearbyData ?? []) as NearbyVenue[]);
 
+        // Load reviews + auth in parallel
+        const [{ data: { user: authUser } }, { data: reviewData }] = await Promise.all([
+          supabase.auth.getUser(),
+          supabase
+            .from("venue_reviews")
+            .select("id, user_id, rating, body, created_at, profiles(username)")
+            .eq("venue_slug", slug)
+            .order("created_at", { ascending: false })
+            .limit(20),
+        ]);
+        if (authUser) setCurrentUser(authUser);
+        if (reviewData) {
+          const revs = reviewData as unknown as Review[];
+          setReviews(revs);
+          setReviewCount(revs.length);
+          if (revs.length > 0) {
+            setAvgRating(revs.reduce((sum, r) => sum + r.rating, 0) / revs.length);
+          }
+          if (authUser) {
+            const existing = revs.find((r) => r.user_id === authUser.id);
+            if (existing) {
+              setMyReview(existing);
+              setDraftRating(existing.rating);
+              setDraftBody(existing.body ?? "");
+            }
+          }
+        }
+
         setLoading(false);
       });
   }, [slug]);
@@ -141,6 +187,55 @@ export default function VenueContent() {
         <Link href="/venues" className="text-cast-orange hover:underline font-body text-sm">← Back to The Map</Link>
       </div>
     );
+  }
+
+  async function reloadReviews() {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("venue_reviews")
+      .select("id, user_id, rating, body, created_at, profiles(username)")
+      .eq("venue_slug", slug)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (data) {
+      const revs = data as unknown as Review[];
+      setReviews(revs);
+      setReviewCount(revs.length);
+      setAvgRating(revs.length > 0 ? revs.reduce((s, r) => s + r.rating, 0) / revs.length : null);
+    }
+  }
+
+  async function handleSubmitReview() {
+    if (!currentUser || draftRating === 0 || reviewSubmitting) return;
+    setReviewSubmitting(true);
+    const supabase = createClient();
+    const payload = { venue_slug: slug, user_id: currentUser.id, rating: draftRating, body: draftBody.trim() || null };
+    if (myReview) {
+      await supabase.from("venue_reviews").update(payload).eq("id", myReview.id);
+    } else {
+      await supabase.from("venue_reviews").insert(payload);
+    }
+    await reloadReviews();
+    const updated = reviews.find((r) => r.user_id === currentUser.id);
+    if (updated) setMyReview(updated);
+    setReviewSubmitting(false);
+  }
+
+  async function handleDeleteReview() {
+    if (!currentUser || !myReview || reviewSubmitting) return;
+    if (!confirm("Remove your review?")) return;
+    setReviewSubmitting(true);
+    const supabase = createClient();
+    await supabase.from("venue_reviews").delete().eq("id", myReview.id);
+    setMyReview(null);
+    setDraftRating(0);
+    setDraftBody("");
+    await reloadReviews();
+    setReviewSubmitting(false);
+  }
+
+  function Stars({ n }: { n: number }) {
+    return <span className="text-cast-orange">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
   }
 
   const typeClass = TYPE_COLOUR[venue.type] ?? "";
@@ -405,6 +500,96 @@ export default function VenueContent() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Angler Reviews */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-bone-white font-heading font-bold uppercase text-lg">Angler Reviews</h2>
+          {reviewCount > 0 && avgRating !== null && (
+            <span className="text-sm font-body text-storm">
+              <span className="text-cast-orange">{"★".repeat(Math.round(avgRating))}</span>
+              {" "}{avgRating.toFixed(1)} · {reviewCount} review{reviewCount !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+
+        {/* Leave / edit a review */}
+        {currentUser ? (
+          <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-4">
+            <p className="text-pale-water text-sm font-body font-medium mb-3">
+              {myReview ? "Your review" : "Leave a review"}
+            </p>
+            <div className="flex gap-1 mb-3">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button key={star} type="button" onClick={() => setDraftRating(star)}
+                  className={`text-2xl leading-none transition-colors ${star <= draftRating ? "text-cast-orange" : "text-storm hover:text-pale-water"}`}>
+                  ★
+                </button>
+              ))}
+              {draftRating > 0 && (
+                <span className="ml-2 text-storm text-sm font-body self-center">
+                  {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][draftRating]}
+                </span>
+              )}
+            </div>
+            <textarea
+              value={draftBody}
+              onChange={(e) => setDraftBody(e.target.value)}
+              rows={3}
+              placeholder="Share your experience — species caught, water clarity, facilities, access..."
+              className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white placeholder-storm font-body text-sm focus:outline-none focus:border-cast-orange transition-colors resize-y"
+            />
+            <div className="flex items-center justify-between mt-3">
+              {myReview && (
+                <button onClick={handleDeleteReview} disabled={reviewSubmitting}
+                  className="text-storm hover:text-red-400 text-xs font-body transition-colors">
+                  Remove review
+                </button>
+              )}
+              <button
+                onClick={handleSubmitReview}
+                disabled={draftRating === 0 || reviewSubmitting}
+                className="ml-auto bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
+              >
+                {reviewSubmitting ? "Saving…" : myReview ? "Update Review" : "Post Review"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-deep-water-light border border-surface-teal rounded-lg p-4 mb-4 text-center">
+            <p className="text-storm font-body text-sm">
+              <Link href="/login" className="text-cast-orange hover:underline">Sign in</Link> to leave a review.
+            </p>
+          </div>
+        )}
+
+        {/* Reviews list — exclude logged-in user's own (shown in form above) */}
+        {reviews.filter((r) => r.user_id !== currentUser?.id).length > 0 ? (
+          <div className="space-y-3">
+            {reviews
+              .filter((r) => r.user_id !== currentUser?.id)
+              .map((r) => (
+                <div key={r.id} className="bg-deep-water-light border border-surface-teal/50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <Link
+                      href={`/profile?username=${encodeURIComponent(r.profiles?.username ?? "")}`}
+                      className="text-pale-water hover:text-cast-orange font-body font-semibold text-sm transition-colors"
+                    >
+                      {r.profiles?.username ?? "Angler"}
+                    </Link>
+                    <Stars n={r.rating} />
+                  </div>
+                  {r.body && <p className="text-storm font-body text-sm leading-relaxed mt-1">{r.body}</p>}
+                  <p className="text-storm/60 text-xs mt-2">
+                    {new Date(r.created_at).toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })}
+                  </p>
+                </div>
+              ))}
+          </div>
+        ) : reviewCount === 0 && !currentUser ? (
+          <p className="text-storm font-body text-sm">No reviews yet — be the first!</p>
+        ) : null}
       </div>
 
       {/* More in this province */}

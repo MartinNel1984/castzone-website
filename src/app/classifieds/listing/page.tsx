@@ -13,6 +13,14 @@ import {
   toWhatsAppNumber,
 } from "@/lib/tackleBox";
 
+type OtherListing = {
+  id: string;
+  title: string;
+  price: number;
+  category: string;
+  image_urls: string[];
+};
+
 type Listing = {
   id: string;
   seller_id: string;
@@ -43,6 +51,7 @@ function ListingDetail() {
   const [isOwner, setIsOwner] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [working, setWorking] = useState(false);
+  const [otherListings, setOtherListings] = useState<OtherListing[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -56,8 +65,20 @@ function ListingDetail() {
         .eq("id", id)
         .single();
       if (data) {
-        setListing(data as unknown as Listing);
-        setIsOwner(!!user && user.id === (data as unknown as Listing).seller_id);
+        const lData = data as unknown as Listing;
+        setListing(lData);
+        setIsOwner(!!user && user.id === lData.seller_id);
+
+        const cutoff = new Date(Date.now() - LISTING_EXPIRY_DAYS * 86400000).toISOString();
+        const { data: others } = await supabase
+          .from("listings")
+          .select("id, title, price, category, image_urls")
+          .eq("seller_id", lData.seller_id)
+          .eq("status", "active")
+          .gte("created_at", cutoff)
+          .neq("id", id)
+          .limit(4);
+        setOtherListings((others as unknown as OtherListing[]) ?? []);
       }
       setLoading(false);
     }
@@ -216,6 +237,40 @@ function ListingDetail() {
           </div>
         </div>
       </div>
+
+      {/* More from this seller */}
+      {otherListings.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-4">
+            More from {listing.profiles?.username ?? "this seller"}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {otherListings.map((l) => (
+              <Link
+                key={l.id}
+                href={`/classifieds/listing?id=${l.id}`}
+                className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors"
+              >
+                <div className="aspect-square bg-deep-water overflow-hidden">
+                  {l.image_urls?.[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={l.image_urls[0]} alt={l.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-3xl opacity-40">
+                      {categoryIcon(l.category)}
+                    </div>
+                  )}
+                </div>
+                <div className="p-2.5">
+                  <p className="text-cast-orange font-heading font-bold text-sm leading-none mb-1">{formatPrice(l.price)}</p>
+                  <p className="text-bone-white font-body text-xs line-clamp-2 group-hover:text-cast-orange transition-colors">{l.title}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Description */}
       <div className="mt-8 bg-deep-water-light border border-surface-teal rounded-lg p-6">
