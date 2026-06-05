@@ -52,6 +52,16 @@ const featureCards = [
 
 type Stats = { members: number; threads: number; posts: number; categories: number };
 
+type RecentCatch = {
+  id: string;
+  species: string;
+  weight_kg: number;
+  category: string;
+  venue: string | null;
+  image_url: string | null;
+  profiles: { username: string } | null;
+};
+
 type RecentThread = {
   id: string;
   title: string;
@@ -85,6 +95,7 @@ export default function HomePage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [categories, setCategories] = useState<Record<string, { thread_count: number; post_count: number }>>({});
   const [recentThreads, setRecentThreads] = useState<RecentThread[]>([]);
+  const [recentCatches, setRecentCatches] = useState<RecentCatch[]>([]);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
 
   useEffect(() => {
@@ -94,12 +105,20 @@ export default function HomePage() {
     const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
 
     async function loadStats() {
-      const [{ count: members }, { count: threads }, { count: posts }, { data: cats }, { data: latest }] = await Promise.all([
+      const [
+        { count: members },
+        { count: threads },
+        { count: posts },
+        { data: cats },
+        { data: latest },
+        { data: latestCatches },
+      ] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("threads").select("*", { count: "exact", head: true }),
         supabase.from("posts").select("*", { count: "exact", head: true }),
         supabase.from("categories").select("slug,thread_count,post_count"),
         supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
+        supabase.from("catches").select("id,species,weight_kg,category,venue,image_url,profiles(username)").eq("approved", true).order("approved_at", { ascending: false }).limit(3),
       ]);
       setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0 });
       if (cats) {
@@ -108,6 +127,7 @@ export default function HomePage() {
         setCategories(map);
       }
       setRecentThreads((latest ?? []) as unknown as RecentThread[]);
+      setRecentCatches((latestCatches as unknown as RecentCatch[]) ?? []);
     }
 
     loadStats();
@@ -173,7 +193,7 @@ export default function HomePage() {
           <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center">
             {stats ? (
               <>
-                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></div>
+                <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></Link>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.categories.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
@@ -389,6 +409,48 @@ export default function HomePage() {
                 + Start a Thread
               </Link>
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Latest Catches */}
+      {recentCatches.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">Latest Catches</h2>
+            <Link href="/catches" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
+              Trophy Room →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {recentCatches.map((c) => (
+              <Link
+                key={c.id}
+                href="/catches"
+                className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors"
+              >
+                {c.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={c.image_url}
+                    alt={`${c.species} by ${c.profiles?.username ?? "Angler"}`}
+                    className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-44 bg-surface-teal/10 flex items-center justify-center text-5xl opacity-40">🐟</div>
+                )}
+                <div className="p-4">
+                  <p className="text-cast-orange font-heading font-bold text-xl leading-none mb-1">
+                    {Number(c.weight_kg).toFixed(2)} kg
+                  </p>
+                  <p className="text-bone-white font-body font-medium">{c.species}</p>
+                  <p className="text-storm text-xs mt-1">
+                    by <span className="text-pale-water">{c.profiles?.username ?? "Angler"}</span>
+                    {c.venue ? ` · ${c.venue}` : ""}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       )}

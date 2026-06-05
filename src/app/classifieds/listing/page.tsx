@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import {
+  LISTING_EXPIRY_DAYS,
   categoryIcon,
   categoryLabel,
   conditionLabel,
@@ -100,6 +101,9 @@ function ListingDetail() {
   const wa = toWhatsAppNumber(listing.contact_phone);
   const isSold = listing.status === "sold";
   const images = listing.image_urls ?? [];
+  const daysUntilExpiry = Math.ceil(
+    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - Date.now()) / 86400000
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -199,6 +203,16 @@ function ListingDetail() {
               </Link>
             ) : "a member"}
             {" · "}{postedDate(listing.created_at)}
+            {!isSold && (
+              <>
+                {" · "}
+                <span className={daysUntilExpiry > 7 ? "" : daysUntilExpiry > 0 ? "text-amber-400" : "text-red-400"}>
+                  {daysUntilExpiry > 0
+                    ? `Expires in ${daysUntilExpiry} day${daysUntilExpiry !== 1 ? "s" : ""}`
+                    : "Listing expired"}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>

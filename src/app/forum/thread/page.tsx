@@ -8,6 +8,7 @@ import type { User } from "@supabase/supabase-js";
 
 type Post = {
   id: string;
+  author_id: string;
   content: string;
   image_urls: string[];
   is_first_post: boolean;
@@ -85,6 +86,9 @@ function ThreadContent() {
   const [replyImages, setReplyImages] = useState<ImagePreview[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [replyError, setReplyError] = useState("");
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
+  const [editSaving, setEditSaving] = useState(false);
 
   useEffect(() => {
     if (!threadId) return;
@@ -105,7 +109,7 @@ function ThreadContent() {
 
       const { data: postData } = await supabase
         .from("posts")
-        .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
+        .select("id, author_id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
         .eq("thread_id", threadId)
         .order("created_at", { ascending: true });
       if (postData) setPosts(postData as unknown as Post[]);
@@ -166,6 +170,25 @@ function ThreadContent() {
     return urls;
   }
 
+  async function handleEditSave(postId: string) {
+    if (!editContent.trim() || editSaving || !user) return;
+    setEditSaving(true);
+    const supabase = createClient();
+    const now = new Date().toISOString();
+    const { error } = await supabase
+      .from("posts")
+      .update({ content: editContent.trim(), updated_at: now })
+      .eq("id", postId)
+      .eq("author_id", user.id);
+    if (!error) {
+      setPosts((prev) =>
+        prev.map((p) => p.id === postId ? { ...p, content: editContent.trim(), updated_at: now } : p)
+      );
+      setEditingPostId(null);
+    }
+    setEditSaving(false);
+  }
+
   async function handleReply(e: React.FormEvent) {
     e.preventDefault();
     if (submitting || !reply.trim() || !user || !threadId) return;
@@ -191,7 +214,7 @@ function ThreadContent() {
         setReplyImages([]);
         const { data } = await supabase
           .from("posts")
-          .select("id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
+          .select("id, author_id, content, image_urls, is_first_post, created_at, updated_at, profiles(username, member_level, avatar_url)")
           .eq("thread_id", threadId)
           .order("created_at", { ascending: true });
         if (data) {
@@ -278,13 +301,54 @@ function ThreadContent() {
                 <div className="text-right">
                   <p className="text-storm text-xs">#{index + 1}</p>
                   <p className="text-storm text-xs">{timeAgo(post.created_at)}</p>
+                  {user && post.author_id === user.id &&
+                    Date.now() - new Date(post.created_at).getTime() < 86400000 &&
+                    editingPostId !== post.id && (
+                    <button
+                      onClick={() => { setEditingPostId(post.id); setEditContent(post.content); }}
+                      className="text-storm hover:text-pale-water text-xs mt-1 font-body underline underline-offset-2 transition-colors"
+                    >
+                      Edit
+                    </button>
+                  )}
                 </div>
               </div>
 
               {/* Post content */}
-              <div className="text-bone-white font-body leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
-                {post.content}
-              </div>
+              {editingPostId === post.id ? (
+                <div>
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    rows={6}
+                    className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white font-body text-sm focus:outline-none focus:border-cast-orange transition-colors resize-y"
+                  />
+                  <div className="flex items-center justify-end gap-2 mt-2">
+                    <button
+                      onClick={() => setEditingPostId(null)}
+                      className="text-storm hover:text-pale-water text-sm font-body px-3 py-1.5 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => handleEditSave(post.id)}
+                      disabled={editSaving || !editContent.trim()}
+                      className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
+                    >
+                      {editSaving ? "Saving…" : "Save Edit"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="text-bone-white font-body leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
+                    {post.content}
+                  </div>
+                  {new Date(post.updated_at).getTime() - new Date(post.created_at).getTime() > 5000 && (
+                    <p className="text-storm text-xs mt-2 italic">Edited</p>
+                  )}
+                </>
+              )}
 
               {/* Post images — gated for logged-out visitors */}
               <PostImages urls={post.image_urls} locked={!user} />

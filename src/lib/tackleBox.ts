@@ -1,5 +1,7 @@
 // Shared constants for the Tackle Box (classifieds marketplace).
 
+export const LISTING_EXPIRY_DAYS = 60;
+
 export type ListingCategory =
   | "rods-reels"
   | "terminal-tackle"

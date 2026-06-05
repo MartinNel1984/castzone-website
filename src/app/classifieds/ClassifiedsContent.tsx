@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import {
   CATEGORIES,
+  LISTING_EXPIRY_DAYS,
   categoryIcon,
   categoryLabel,
   conditionLabel,
@@ -38,6 +39,9 @@ function timeAgo(dateStr: string) {
 
 function ListingCard({ listing }: { listing: Listing }) {
   const cover = listing.image_urls?.[0] ?? null;
+  const daysLeft = Math.ceil(
+    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - Date.now()) / 86400000
+  );
   return (
     <Link
       href={`/classifieds/listing?id=${listing.id}`}
@@ -70,7 +74,12 @@ function ListingCard({ listing }: { listing: Listing }) {
         </h3>
         <div className="mt-auto pt-3 flex items-center justify-between text-xs text-storm font-body">
           <span>{conditionLabel(listing.condition)} · {listing.province}</span>
-          <span>{timeAgo(listing.created_at)}</span>
+          <div className="flex flex-col items-end gap-0.5">
+            <span>{timeAgo(listing.created_at)}</span>
+            {daysLeft <= 7 && (
+              <span className="text-amber-400">{daysLeft}d left</span>
+            )}
+          </div>
         </div>
       </div>
     </Link>
@@ -88,10 +97,12 @@ export default function ClassifiedsContent() {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
+    const cutoff = new Date(Date.now() - LISTING_EXPIRY_DAYS * 86400000).toISOString();
     supabase
       .from("listings")
       .select("id, title, price, category, condition, province, image_urls, created_at, profiles(username)")
       .eq("status", "active")
+      .gte("created_at", cutoff)
       .order("created_at", { ascending: false })
       .limit(100)
       .then(({ data }) => {
