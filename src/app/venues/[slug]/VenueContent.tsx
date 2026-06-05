@@ -336,6 +336,16 @@ export default function VenueContent() {
         </div>
       )}
 
+      {/* General access disclaimer — shown on all venues */}
+      <div className="bg-surface-teal/5 border border-surface-teal/30 rounded-lg p-4 mb-6 flex gap-3">
+        <span className="text-storm text-base flex-shrink-0">ℹ</span>
+        <p className="text-storm font-body text-xs leading-relaxed">
+          Fishing regulations, permit requirements, and access conditions change regularly.
+          Always verify current rules with the relevant provincial conservation authority
+          before visiting. CastZone data is for reference only.
+        </p>
+      </div>
+
       {/* Forum threads about this venue */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
