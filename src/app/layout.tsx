@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     "South Africa's home for bass, saltwater, and specimen anglers. Share catches, find venues, buy and sell tackle.",
   keywords: "fishing, South Africa, bass fishing, saltwater fishing, carp, specimen, SA fishing forum",
   alternates: { canonical: "/" },
+  other: { "google-adsense-account": "ca-pub-9454815992418505" },
   openGraph: {
     title: "CastZone — Where South Africa Fishes",
     description: "South Africa's modern fishing forum. Bass, saltwater, specimen and more.",
