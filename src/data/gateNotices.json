@@ -2,13 +2,13 @@
   {
     "date": "19 May 2026",
     "dam": "vaal",
-    "text": "Season Reporting closed. Close the one (1) gate at 12:00.",
+    "text": "Close the one (1) gate at 12:00.",
     "latest": true
   },
   {
     "date": "19 May 2026",
     "dam": "bloemhof",
-    "text": "Maintain the discharge at 250 m³/s.",
+    "text": "Maintain the discharge at 250m³/s.",
     "latest": true
   },
   {
@@ -19,7 +19,7 @@
   {
     "date": "17 May 2026",
     "dam": "bloemhof",
-    "text": "Reduce the discharge to 250 m³/s at 10:00."
+    "text": "Reduce the discharge to 250m³/s at 10:00."
   },
   {
     "date": "12 May 2026",
@@ -29,7 +29,7 @@
   {
     "date": "12 May 2026",
     "dam": "bloemhof",
-    "text": "Reduce the discharge to 700 m³/s at 10:00."
+    "text": "Reduce the discharge to 700m³/s at 10:00."
   },
   {
     "date": "9 May 2026",
@@ -39,7 +39,7 @@
   {
     "date": "9 May 2026",
     "dam": "bloemhof",
-    "text": "Keep the discharge at 900 m³/s."
+    "text": "Keep the discharge to 900m³/s."
   },
   {
     "date": "8 May 2026",
@@ -49,22 +49,22 @@
   {
     "date": "8 May 2026",
     "dam": "bloemhof",
-    "text": "Maintain the discharge at 900 m³/s."
+    "text": "Maintain the discharge at 900m³/s."
   },
   {
     "date": "10 Mar 2026",
     "dam": "vaal",
-    "text": "Close all valves and open one (1) gate."
+    "text": "Close all valves and open one (1) gate. No time has been set for this."
   },
   {
     "date": "10 Mar 2026",
     "dam": "bloemhof",
-    "text": "Increase the discharge to 150 m³/s at 10:00."
+    "text": "Increase the discharge to 150m³/s at 10:00."
   },
   {
     "date": "20 Feb 2026",
     "dam": "vaal",
-    "text": "River valves closed 8:00–16:00 from 23–27 Feb 2026 for mechanical maintenance."
+    "text": "From Mon 23 to Fri 27 Feb 2026, the river valves at Vaal Dam will be closed from 8:00 to 16:00 for mechanical maintanence. No water will be released from Vaal Dam into the river during this time. If maintanence is completed earlier, a notification to this effect will be sent out."
   },
   {
     "date": "7 Feb 2026",
@@ -74,36 +74,571 @@
   {
     "date": "7 Feb 2026",
     "dam": "bloemhof",
-    "text": "Maintain the discharge at 50 m³/s."
+    "text": "Maintain the discharge at 50m³/s."
+  },
+  {
+    "date": "22 Jan 2026",
+    "dam": "vaal",
+    "text": "Operate on valve discharge only."
+  },
+  {
+    "date": "22 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 50m³/s at 10:00."
+  },
+  {
+    "date": "21 Jan 2026",
+    "dam": "vaal",
+    "text": "Operate on valve discharge only."
+  },
+  {
+    "date": "21 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Maintain the discharge at 100m³/s."
   },
   {
     "date": "19 Jan 2026",
     "dam": "vaal",
-    "text": "Close the last gate at 10:00 and operate on valve discharge only."
+    "text": "Close the last gate at 10:00 and thereafter to operature on valve discharge only."
   },
   {
-    "date": "30 Nov 2025",
+    "date": "19 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 100m³/s at 10:00."
+  },
+  {
+    "date": "16 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "16 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge to 150m³/s."
+  },
+  {
+    "date": "12 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "12 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 150m³/s at 10:00."
+  },
+  {
+    "date": "11 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "11 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 150m³/s at 10:00."
+  },
+  {
+    "date": "10 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "10 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 200m³/s."
+  },
+  {
+    "date": "9 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "9 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 200m³/s at 10:00."
+  },
+  {
+    "date": "8 Jan 2026",
+    "dam": "vaal",
+    "text": "Close one (1) gate at 10:00 and keep one (1) gate open."
+  },
+  {
+    "date": "8 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "7 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "7 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "6 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "6 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "5 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "5 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "4 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "4 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "3 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "3 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "2 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "2 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "3 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "3 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "1 Jan 2026",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "1 Jan 2026",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "31 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "31 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "30 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep two (2) gates open."
+  },
+  {
+    "date": "30 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "29 Dec 2025",
+    "dam": "vaal",
+    "text": "Open another gate at 10:00. Two gates will then be open."
+  },
+  {
+    "date": "29 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "27 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "27 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "25 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "25 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "24 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "24 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Increase the discharge to 300m³/s at 10:00."
+  },
+  {
+    "date": "22 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "22 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 250m³/s."
+  },
+  {
+    "date": "21 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "21 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 250m³/s."
+  },
+  {
+    "date": "18 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "18 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 250m³/s."
+  },
+  {
+    "date": "17 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "17 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 250m³/s."
+  },
+  {
+    "date": "16 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "16 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 250m³/s."
+  },
+  {
+    "date": "15 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "15 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 250m³/s at 10:00."
+  },
+  {
+    "date": "14 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "14 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "13 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "13 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 300m³/s."
+  },
+  {
+    "date": "12 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "12 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce discharge to 300m³/s at 10:00."
+  },
+  {
+    "date": "11 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "11 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce discharge to 400m³/s at 10:00."
+  },
+  {
+    "date": "10 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep one (1) gate open."
+  },
+  {
+    "date": "10 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 600m³/s."
+  },
+  {
+    "date": "9 Dec 2025",
+    "dam": "vaal",
+    "text": "Close one (1) gate at 10:00. One (1) gate will remain open."
+  },
+  {
+    "date": "9 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 600m³/s."
+  },
+  {
+    "date": "8 Dec 2025",
+    "dam": "vaal",
+    "text": "Close one (1) gate at 10:00 and close a second (2) gate at 12:00. Two (2) gates will remain open."
+  },
+  {
+    "date": "8 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 600m³/s at 10:00."
+  },
+  {
+    "date": "7 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep four (4) gates open."
+  },
+  {
+    "date": "7 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 800m³/s."
+  },
+  {
+    "date": "6 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep four (4) gates open."
+  },
+  {
+    "date": "6 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the discharge at 800m³/s."
+  },
+  {
+    "date": "5 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep four (4) gates open."
+  },
+  {
+    "date": "5 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 800m³/s at 10:00."
+  },
+  {
+    "date": "4 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep four (4) gates open."
+  },
+  {
+    "date": "4 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 1,000m³/s at 10:00."
+  },
+  {
+    "date": "3 Dec 2025",
+    "dam": "vaal",
+    "text": "Keep four (4) gates open."
+  },
+  {
+    "date": "3 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Reduce the discharge to 1,200m³/s at 10:00."
+  },
+  {
+    "date": "2 Dec 2025",
+    "dam": "vaal",
+    "text": "Close 1 gate at 10:00 and another gate at 12:00. Four (4) gates will remain open."
+  },
+  {
+    "date": "2 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the status quo with a discharge of 1,400m³/s."
+  },
+  {
+    "date": "1 Dec 2025",
+    "dam": "vaal",
+    "text": "Close 1 gate at 10:00 and another gate at 12:00. Six (6) gates will remain open."
+  },
+  {
+    "date": "1 Dec 2025",
+    "dam": "bloemhof",
+    "text": "Keep the status quo with a discharge of 1,400m³/s."
+  },
+  {
+    "date": "Sunday 30 November 2025",
+    "dam": "vaal",
+    "text": "Close 1 gate at 10:00 and another gate at 12:00. Eight gates will remain open."
+  },
+  {
+    "date": "Sunday 30 November 2025",
+    "dam": "bloemhof",
+    "text": "Increase the discharge to 1,400m³/s at 10:00."
+  },
+  {
+    "date": "Sunday 30 November 2025",
     "dam": "barrage",
-    "text": "Switching from free flow to controlled releases from 14:00 today."
+    "text": "The operations can start switching from free flow to controlled releases from 14:00 today."
   },
   {
-    "date": "29 Nov 2025",
+    "date": "Saturday 29 November 2025",
     "dam": "vaal",
     "text": "Keep 10 gates open."
   },
   {
-    "date": "27 Nov 2025",
-    "dam": "vaal",
-    "text": "Open 3 gates — Gate 8 at 10:00; Gate 9 at 12:00; Gate 10 at 14:00."
+    "date": "Saturday 29 November 2025",
+    "dam": "bloemhof",
+    "text": "Increase the discharge to 1,300m³/s at 10:00."
   },
   {
-    "date": "26 Nov 2025",
+    "date": "Friday 28 November 2025",
     "dam": "vaal",
-    "text": "Open 4 gates — Gate 4 at 10:00; Gate 5 at 11:00; Gate 6 at 12:00; Gate 7 at 13:00."
+    "text": "Keep 10 gates open."
   },
   {
-    "date": "17 Nov 2025",
+    "date": "Friday 28 November 2025",
+    "dam": "bloemhof",
+    "text": "Increase the discharge to 1,200m³/s at 10:00."
+  },
+  {
+    "date": "Thursday 27 November 2025",
     "dam": "vaal",
-    "text": "Close all valves. Open sluice gates — Gate 1 at 09:00, Gate 2 at 10:00, Gate 3 at 11:00, Gate 4 at 12:00, Gate 5 at 13:00."
+    "text": "Open 3 gates at the following times: Gate 8 &#8211; 10:00; Gate 9 &#8211; 12:00 and Gate 10- 14:00."
+  },
+  {
+    "date": "Thursday 27 November 2025",
+    "dam": "bloemhof",
+    "text": "Keep the status quo with a discharge of 1,000m³/s."
+  },
+  {
+    "date": "Wednesday 26 November 2025",
+    "dam": "vaal",
+    "text": "Open 4 gates at the following times: Gate 4 &#8211; 10:00; Gate 5 &#8211; 11:00, Gate 6 &#8211; 12:00 and Gate 7- 13:00."
+  },
+  {
+    "date": "Wednesday 26 November 2025",
+    "dam": "bloemhof",
+    "text": "Keep the status quo with a discharge of 1,000m³/s."
+  },
+  {
+    "date": "Tuesday 25 November 2025",
+    "dam": "vaal",
+    "text": "Keep the status quo with 3 gates open. There is a likelihood of additional gates being opened again tomorrow."
+  },
+  {
+    "date": "Tuesday 25 November 2025",
+    "dam": "bloemhof",
+    "text": "Keep the status quo with a discharge of 1,000m³/s."
+  },
+  {
+    "date": "Monday 24 November 2025",
+    "dam": "vaal",
+    "text": "Close 1 sluice gate at the following time: 10:00 with 3 gates remaining open."
+  },
+  {
+    "date": "Monday 24 November 2025",
+    "dam": "bloemhof",
+    "text": "The status quo to remain in effect today."
+  },
+  {
+    "date": "Sunday 23 November 2025",
+    "dam": "vaal",
+    "text": "Close 2 sluice gates at the following times: 10:00 and 12:00."
+  },
+  {
+    "date": "Sunday 23 November 2025",
+    "dam": "bloemhof",
+    "text": "The status quo to remain in effect today."
+  },
+  {
+    "date": "Saturday 22 November 2025",
+    "dam": "vaal",
+    "text": "Close 2 sluice gates at the following times: 10:00 and 14:00."
+  },
+  {
+    "date": "Friday 21 November 2025",
+    "dam": "vaal",
+    "text": "Please note that there are plans to close 4 gates over Sat &#038; Sun this weekend as per the published flood routing results on the hydrology website."
+  },
+  {
+    "date": "Thursday 20 November 2025",
+    "dam": "vaal",
+    "text": "The status quo to remain in effect at Vaal Dam and Bloemhof Dam today."
+  },
+  {
+    "date": "Wednesday 19 November 2025",
+    "dam": "vaal",
+    "text": "The status quo to remain in effect at Vaal Dam today."
+  },
+  {
+    "date": "Tuesday 18 November 2025",
+    "dam": "vaal",
+    "text": "At Vaal Dam:"
+  },
+  {
+    "date": "Tuesday 18 November 2025",
+    "dam": "bloemhof",
+    "text": "At Bloemhof Dam:"
+  },
+  {
+    "date": "Monday 17 November 2025",
+    "dam": "vaal",
+    "text": "Close all valves at Vaal Dam. Then open sluice gates as follows:"
+  },
+  {
+    "date": "Saturday 15 November 2025",
+    "dam": "vaal",
+    "text": "Discharge from Vaal Dam to be increased to 60m³/s tommorow 16 November at 08:00."
+  },
+  {
+    "date": "Monday 29 September",
+    "dam": "vaal",
+    "text": "Valves at Vaal Dam to be closed today at 08:00 this morning. Discharge will return to 16.765m³/s."
+  },
+  {
+    "date": "Tuesday 16 September",
+    "dam": "vaal",
+    "text": "We recommend that dilution releases should be made of 40m³/s in addition to the current discharge from Vaal Dam for 48 hours."
   }
 ]
