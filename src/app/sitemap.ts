@@ -20,6 +20,7 @@ const STATIC_ROUTES = [
   "/tournaments",
   "/venues",
   "/venues/suggest",
+  "/conditions",
 ];
 
 const FORUM_CATEGORIES = ["bass", "saltwater", "specimen", "general"];
