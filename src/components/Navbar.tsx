@@ -68,7 +68,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -81,7 +81,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop search icon */}
-          <Link href="/search" aria-label="Search" className="hidden md:flex items-center text-pale-water hover:text-bone-white transition-colors">
+          <Link href="/search" aria-label="Search" className="hidden lg:flex items-center text-pale-water hover:text-bone-white transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <circle cx="11" cy="11" r="8" />
               <path strokeLinecap="round" d="M21 21l-4.35-4.35" />
@@ -89,7 +89,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop auth */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             {user ? (
               <>
                 <Link
@@ -124,7 +124,7 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-pale-water hover:text-bone-white p-2"
+            className="lg:hidden text-pale-water hover:text-bone-white p-2"
             aria-label="Toggle menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-surface-teal py-4 space-y-3">
+          <div className="lg:hidden border-t border-surface-teal py-4 space-y-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
