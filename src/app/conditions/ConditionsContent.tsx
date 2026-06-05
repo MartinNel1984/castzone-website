@@ -4,8 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   ALL_DAMS,
-  WC_DAMS,
-  FS_DAMS,
+  WC_DAMS, FS_DAMS, GP_DAMS, KZN_DAMS, LP_DAMS, MP_DAMS, NW_DAMS, EC_DAMS, NC_DAMS,
   GATE_NOTICES,
   DATA_UPDATED,
   NATIONAL_AVG,
@@ -55,8 +54,15 @@ function provinceSummary(dams: DamLevel[]) {
 }
 
 const PROVINCES = [
-  { key: "wc", label: "Western Cape", dams: WC_DAMS },
-  { key: "fs", label: "Free State",   dams: FS_DAMS },
+  { key: "wc",  label: "Western Cape",  short: "W Cape",  dams: WC_DAMS },
+  { key: "fs",  label: "Free State",    short: "Free St", dams: FS_DAMS },
+  { key: "nw",  label: "North West",    short: "NW",      dams: NW_DAMS },
+  { key: "gp",  label: "Gauteng",       short: "GP",      dams: GP_DAMS },
+  { key: "mp",  label: "Mpumalanga",    short: "MP",      dams: MP_DAMS },
+  { key: "lp",  label: "Limpopo",       short: "LP",      dams: LP_DAMS },
+  { key: "kzn", label: "KwaZulu-Natal", short: "KZN",     dams: KZN_DAMS },
+  { key: "ec",  label: "Eastern Cape",  short: "E Cape",  dams: EC_DAMS },
+  { key: "nc",  label: "N Cape",        short: "N Cape",  dams: NC_DAMS },
 ];
 
 type SortKey = "name" | "pct" | "fsc";
@@ -64,13 +70,13 @@ type SortKey = "name" | "pct" | "fsc";
 // ─── component ────────────────────────────────────────────────────────────
 
 export default function ConditionsContent() {
-  const [province, setProvince] = useState<"wc" | "fs">("wc");
+  const [province, setProvince] = useState("wc");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("fsc");
   const [sortAsc, setSortAsc] = useState(false);
   const [showAllNotices, setShowAllNotices] = useState(false);
 
-  const activeDams = province === "wc" ? WC_DAMS : FS_DAMS;
+  const activeDams = PROVINCES.find((p) => p.key === province)?.dams ?? WC_DAMS;
 
   const displayedDams = useMemo(() => {
     let list = activeDams.filter(
@@ -135,10 +141,10 @@ export default function ConditionsContent() {
       {/* ── National stats strip ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "National Average",  value: `${NATIONAL_AVG}%`,         sub: `${ALL_DAMS.length} dams tracked`,          cls: "text-cast-orange" },
-          { label: "Western Cape",      value: `${provinceSummary(WC_DAMS).weightedPct.toFixed(1)}%`, sub: `${WC_DAMS.length} dams · 1 918 Mm³`,  cls: levelTextClass(provinceSummary(WC_DAMS).weightedPct) },
-          { label: "Free State",        value: `${provinceSummary(FS_DAMS).weightedPct.toFixed(1)}%`, sub: `${FS_DAMS.length} dams · 15 665 Mm³`, cls: levelTextClass(provinceSummary(FS_DAMS).weightedPct) },
-          { label: "Vaal Dam Gates",    value: "CLOSED",                    sub: "Season reporting closed",                  cls: "text-green-400" },
+          { label: "National Average",  value: `${NATIONAL_AVG}%`,         sub: `${ALL_DAMS.length} dams · 9 provinces`,     cls: "text-cast-orange" },
+          { label: "Total Capacity",    value: `${Math.round(ALL_DAMS.reduce((a,d)=>a+d.fsc,0)).toLocaleString()} Mm³`, sub: "combined full storage",  cls: "text-pale-water" },
+          { label: "Dams Above 80%",    value: `${ALL_DAMS.filter(d=>d.pct>=80).length}`,                                sub: `of ${ALL_DAMS.length} monitored`, cls: "text-green-400" },
+          { label: "Vaal Dam Gates",    value: "CLOSED",                    sub: "Season reporting closed",                   cls: "text-green-400" },
         ].map((s) => (
           <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-4">
             <div className="text-xs font-heading font-bold uppercase tracking-wider text-storm mb-1">{s.label}</div>
@@ -265,19 +271,21 @@ export default function ConditionsContent() {
       {/* ── Province Tabs + Dam Table ── */}
       <div className="mb-8">
         <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
-          <h2 className="text-xl font-heading font-bold text-bone-white uppercase">Dam Levels</h2>
-          <div className="flex bg-deep-water-light border border-surface-teal rounded-lg p-1 gap-1">
+          <h2 className="text-xl font-heading font-bold text-bone-white uppercase">
+            Dam Levels — {PROVINCES.find((p) => p.key === province)?.label ?? ""}
+          </h2>
+          <div className="flex bg-deep-water-light border border-surface-teal rounded-lg p-1 gap-1 overflow-x-auto max-w-full">
             {PROVINCES.map((p) => (
               <button
                 key={p.key}
-                onClick={() => { setProvince(p.key as "wc" | "fs"); setSearch(""); }}
-                className={`px-4 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors ${
+                onClick={() => { setProvince(p.key); setSearch(""); }}
+                className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors whitespace-nowrap flex-shrink-0 ${
                   province === p.key
                     ? "bg-cast-orange text-white"
                     : "text-pale-water hover:text-bone-white"
                 }`}
               >
-                {p.label}
+                {p.short}
               </button>
             ))}
           </div>

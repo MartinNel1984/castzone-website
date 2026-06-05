@@ -1,1 +1,0 @@
-self.__SSG_MANIFEST=new Set(["\u002Fforum\u002F[category]","\u002Fvenues\u002F[slug]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

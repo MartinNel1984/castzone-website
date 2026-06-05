@@ -13,8 +13,7 @@ export const VENUE_SLUGS = [
   "vanderkloof-dam", "boegoeberg-dam",
   "vaal-river-parys", "vaal-barrage", "vaal-river-vereeniging",
   "clanwilliam-dam", "roodekopjes-dam", "ebenezer-dam", "inanda-dam", "brandvlei-dam",
-  // Water-conditions dams added 2026-06-05
-  "theewaterskloof-dam", "wemmershoek-dam", "wolwedans-dam",
+  "wemmershoek-dam", "wolwedans-dam",
   "bloemhof-dam", "allemanskraal-dam", "erfenis-dam", "kalkfontein-dam", "koppies-dam",
 ];
 
