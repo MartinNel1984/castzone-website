@@ -11,7 +11,6 @@ const navLinks = [
   { label: "Tackle Box",   href: "/classifieds" },
   { label: "The Map",      href: "/venues" },
   { label: "Trophy Room",  href: "/catches" },
-  { label: "Tournaments",  href: "/tournaments" },
   { label: "Conditions",   href: "/conditions" },
 ];
 
