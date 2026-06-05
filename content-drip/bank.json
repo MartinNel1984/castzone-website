@@ -1,0 +1,258 @@
+{
+  "_comment": "CastZone weekly content drip bank. Each item = 1 new forum thread + 2-3 replies, posted one item per week by .github/workflows/content-drip.yml. Authors are existing seed members (@seed.castzone.co.za). Grounded in real SA angling. SAFE TO EDIT/PRUNE: delete any item you don't like before it runs. The workflow posts items in order, tracked by state.json. category must be one of: bass, saltwater, specimen, general.",
+  "items": [
+    {
+      "category": "bass",
+      "author": "SmallmouthSindi",
+      "title": "Clanwilliam smallmouth switching off in the heat - any tips?",
+      "body": "Spent the weekend at Clanwilliam Dam and the smallmouth were glued to the structure but wouldn't commit. Early morning on a green pumpkin senko got me three nice fish, then dead quiet by 9am once the sun was up. Anyone cracked the midday bite there in summer? Thinking of going deeper with a drop shot next time.",
+      "replies": [
+        { "author": "DropShotDeon", "body": "Drop shot is exactly the move. Go down to 6-8m on the points and use a small finesse worm, natural colour. The fish pull off the banks and sit on the thermocline midday. Slow it right down, almost dead-stick it." },
+        { "author": "SpinnerbaitSipho", "body": "Also try fishing the shade lines under the trees on the western side later in the day. Clanwilliam fish love that overhanging cover when it cooks." },
+        { "author": "EishAngler", "body": "Story of my life on that dam haha. Sunrise and last light, otherwise you're just swimming lures. Beautiful water though." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "PapGooiPro",
+      "title": "Best pap recipe for winter carp - mielie meal mix that actually works",
+      "body": "Water temps are dropping fast now and the carp are getting fussy. My go-to winter pap is plain mielie meal cooked stiff, then I work in custard powder and a bit of vanilla while it's still warm. Keeps them grubbing even when it's cold. What's everyone else running this time of year? Curious if the cinnamon crowd has better luck in the cold.",
+      "replies": [
+        { "author": "KurperKing", "body": "Custard and vanilla is a classic for a reason. In winter I add a touch of molasses for the smell, carp home in on it in cold water when scent travels slower. Stiff mix is key, you don't want it falling off." },
+        { "author": "BarbelBaasMpho", "body": "I switch to a sweeter mix in winter and fish smaller baits. Cold water = slower metabolism, so less is more. Cinnamon works for me on the Vaal but every water is different." },
+        { "author": "MielieMan_JP", "body": "Don't sleep on adding a bit of brown bread to the mix for binding. Saved me on a windy day when normal pap kept washing off." }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "GaljoenGert",
+      "title": "Galjoen season opening - which Cape spots are you targeting?",
+      "body": "Galjoen season is open again and I'm itching to get the longer rod out. Last year the Kommetjie side of the peninsula fished well for me on red bait and white mussel. Planning a few dawn missions before the wind comes up. Where's everyone heading this season, and is anyone still finding decent fish on the False Bay side?",
+      "replies": [
+        { "author": "SteenbrasStompie", "body": "Red bait is the king bait, no question. I'd add that the lower stages of a spring low into the push has been my best window. Cape Point side reefs over the False Bay side lately, the cold push has the fish on." },
+        { "author": "WildCoastWill", "body": "Wish we had galjoen like that up here. Enjoy it Gert, that fight in the wash is something special. Tight lines." },
+        { "author": "ChokkaCharlie", "body": "Don't forget to handle them carefully and check your bag limits and size, the species has had a hard time. A healthy release goes a long way." }
+      ]
+    },
+    {
+      "category": "general",
+      "author": "TightLinesSA",
+      "title": "Braid vs mono in 2026 - has anyone gone back to mono?",
+      "body": "Been thinking about line lately. Braid has been my default for years for the sensitivity and casting distance, but I'm wondering if I've lost something in shock absorption, especially in the rocks. Anyone gone back to mono or fluoro mainline for certain styles? Where does braid genuinely earn its keep for you versus where it's overkill?",
+      "replies": [
+        { "author": "EishAngler", "body": "Braid for distance and feel, mono leader for the stretch and abrasion. Best of both. Straight mono mainline I only use for light spinning where casting distance isn't critical." },
+        { "author": "DeepDropDarren", "body": "Offshore and deep I'm braid all day, you simply can't feel the bite at depth on mono. But for galjoen in the wash I actually like the forgiveness of mono, the stretch saves hook pulls." },
+        { "author": "Cast_n_Blast", "body": "Honestly depends on the discipline more than the year. Match the line to the job and you can't go wrong." }
+      ]
+    },
+    {
+      "category": "bass",
+      "author": "SpinnerbaitSipho",
+      "title": "Spinnerbait colours for muddy water after the rains",
+      "body": "After all the rain a lot of our dams are properly stained. I've been hammering them with a chartreuse and white spinnerbait with a colorado blade for the vibration. Got a solid 2.1kg fish at Roodekopjes on it last week. Anyone running darker profiles in the chocolate water? Trying to work out if black/blue actually beats the bright stuff when visibility is near zero.",
+      "replies": [
+        { "author": "SmallmouthSindi", "body": "In really dirty water I go the opposite way and throw black/blue with a big thumping blade. The fish hunt the silhouette and vibration, not the colour. Both work, it's the thump that matters in chocolate water." },
+        { "author": "RoodekopjesRob", "body": "Roodekopjes has been on fire after the rain. The inflow areas where the dirty water meets cleaner is where I've found them stacked up. Colorado blade is the right call." },
+        { "author": "DropShotDeon", "body": "Slow roll it right along the bottom. They can't see far so make it easy for them to find. Nice fish!" }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "ShadSeasonSbu",
+      "title": "Shad (elf) running on the KZN coast - report from this weekend",
+      "body": "The shad are running properly along the KZN coast right now. Got into a nice shoal off the rocks at first light, fish from 40cm up to a solid 55. They were taking a spoon worked fast just behind the backline. Anyone else on them? Reminder to check your bag limit and the size, the rangers have been out and rightly so.",
+      "replies": [
+        { "author": "SardineRunRyan", "body": "Yes! Got my limit before work two mornings this week. A red and silver spoon and a fast retrieve, exactly as you say. When they're on like this it's the most fun you can have off the rocks." },
+        { "author": "KobKlapper", "body": "Good shout on the bag limits Sbu. Take what you'll eat and let the rest swim. The shad fishery is a precious thing." },
+        { "author": "WildCoastWill", "body": "Wire trace or you'll lose half your spoons to those teeth. Learnt that the expensive way." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "BarbelBaasMpho",
+      "title": "Night session for big barbel on the Vaal - bait and rig breakdown",
+      "body": "Did an overnight on the Vaal Barrage chasing the big barbel and it paid off with a fish just over 9kg. Running chicken liver and a homemade fishy paste on a simple running ledger, size 2/0 circle hook. The bigger fish moved in around 11pm once it was properly dark and quiet. Happy to break down the rig if anyone wants it. What's your best barbel bait?",
+      "replies": [
+        { "author": "NightShiftNico", "body": "9kg is a proper fish, well done. Chicken liver is unbeatable for the smell. I'd love the rig breakdown, especially how you're stopping the liver from flinging off on the cast." },
+        { "author": "PapGooiPro", "body": "Circle hook is the way for barbel, way better hookups in the corner of the mouth and easier to release. Big fish at night is the pattern every time on the Barrage." },
+        { "author": "VaalVanger", "body": "Barrage has been kind lately. Tip for the liver: a small bait elastic wrapped around it keeps it on the hook for the cast and slowly releases scent. Game changer." }
+      ]
+    },
+    {
+      "category": "general",
+      "author": "ReelMzansiThabo",
+      "title": "Getting my daughter into fishing - gear advice for a 9 year old?",
+      "body": "My 9 year old has decided she wants to come fishing with me and I could not be happier. Want to get her a little setup that's light enough to use but won't fall apart. Thinking a short spinning combo and we'll start on small stuff at the local dam, panfish and small carp to keep her interested. Any advice from the parents here on keeping it fun and not too serious early on?",
+      "replies": [
+        { "author": "HengelHettie", "body": "Best decision ever. Keep sessions short, bring snacks, and let her reel in everything even your fish. A light 6ft spinning combo is perfect. The goal is bent rods and laughing, not big fish. She'll be hooked, pun intended." },
+        { "author": "Cast_n_Blast", "body": "Take a camera. Those first-fish photos are priceless. And let her get muddy, that's half the fun at that age." },
+        { "author": "TightLinesSA", "body": "Small hooks, light floats and a tub of worms at the local kurper dam. Instant action keeps them keen. Lovely to see, enjoy it." }
+      ]
+    },
+    {
+      "category": "bass",
+      "author": "DropShotDeon",
+      "title": "Drop shot finesse - my go-to setup for pressured dam bass",
+      "body": "Our nearby dams get hammered on weekends and the bass get really shy. Drop shot has been saving my sessions. I'm running 8lb fluoro leader off braid, a size 1 hook nose-hooked with a 3 inch natural worm, weight about 30cm below. Long pauses and tiny shakes. Pulled a few quality fish when nothing else moved. Anyone tweaking the leader length or weight for clearer water?",
+      "replies": [
+        { "author": "SmallmouthSindi", "body": "In gin-clear water I'll drop down to 6lb fluoro and lengthen the tag to like 45cm to keep the worm away from the weight. Less is more, sometimes I literally just let it sit. Pressured fish hate a moving bait." },
+        { "author": "SpinnerbaitSipho", "body": "Nose-hooked natural worm is the deadliest thing in clear water full stop. I'd add: a lighter weight (you want the slowest fall the conditions allow). Great write-up." },
+        { "author": "EishAngler", "body": "Saving this. Our local dam is so pressured the bass have university degrees. Going to try the long pause thing." }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "KobKlapper",
+      "title": "Targeting kob (kabeljou) off the beach at night - live vs dead bait",
+      "body": "Been putting in the night shifts on the beach for kob and it's been a slow grind but worth it. My best fish came on a live mullet fished just behind the backline on the push. A mate next to me was on fresh dead sardine and also connected, so I'm not convinced live is always better. What's your experience, is live bait worth the extra effort for kob, or is fresh dead just as good?",
+      "replies": [
+        { "author": "NightShiftNico", "body": "Live bait edges it for the bigger fish in my experience, the movement triggers them. But a really fresh sardine or fresh-caught mullet head is deadly too. Fresh beats live-but-stale every time. The push at night is the magic window." },
+        { "author": "SardineRunRyan", "body": "Fresh is the operative word. A frozen-then-thawed bait that's gone soft will get ignored when the live ones are right there. Bleed and ice your baits and you'll out-fish guys with old stuff." },
+        { "author": "DeepDropDarren", "body": "Night kob on the beach is addictive. Heavy enough sinker to hold in the wash and patience. Respect for putting in the hours." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "KurperKing",
+      "title": "Kurper (tilapia) on light tackle - underrated fun?",
+      "body": "Everyone chases carp and barbel but I reckon kurper on ultralight gear is some of the most fun you can have. Tiny hook, a bit of worm or even bread under a small float, and the local vlei is full of them. Great for the kids and a proper scrap on light line. Anyone else target them on purpose, or am I the only one? Best baits you've found?",
+      "replies": [
+        { "author": "VleiKurperVusi", "body": "Preach. Kurper on a 3 weight is pound for pound a brilliant fight. I use tiny bits of earthworm and a small hook, sometimes a fleg of pap. The local vlei is criminally underrated." },
+        { "author": "HengelHettie", "body": "This is exactly what I put my kids on. Constant action, easy to catch, and they're beautiful little fish. More people should appreciate them." },
+        { "author": "MielieMan_JP", "body": "A pinch of bread flake on a size 12 under a tiny waggler. They can't resist it. Cheap, simple, and a great way to spend a morning." }
+      ]
+    },
+    {
+      "category": "bass",
+      "author": "RoodekopjesRob",
+      "title": "Topwater at first light - the most exciting 30 minutes in bass fishing",
+      "body": "There is nothing like a topwater blow-up at sunrise. Been getting to Roodekopjes before dawn and throwing a walking bait over the shallow flats and the explosions have been worth the early alarm. The window is short though, maybe 30-40 minutes before they pull off. What's your confidence topwater, and do you stick it out longer into the morning or switch quickly?",
+      "replies": [
+        { "author": "SpinnerbaitSipho", "body": "A walking bait (zara-style) is my number one, but on calm mornings a popper worked slow over weed edges is deadly. I usually give it till the sun hits the water then switch to a subsurface bait. That first blow-up never gets old." },
+        { "author": "SmallmouthSindi", "body": "Cloud cover is your friend, on overcast mornings I've kept the topwater bite going for hours. Sunny days it's a tight window like you say. Worth every early alarm." },
+        { "author": "DropShotDeon", "body": "Frog over the lily pads if your dam has them. Heart-stopping stuff. Nothing beats a surface eat." }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "SardineRunRyan",
+      "title": "Sardine run watch 2026 - any early signs along the coast?",
+      "body": "It's that time of year again and I'm watching the water temps and the bird activity like a hawk. The sardine run brings everything in close, the game fish, the sharks, the whole circus. Anyone seeing early signs of cold water pushing up, or bird work along the Wild Coast and KZN south coast yet? Trying to time my leave for when it actually hits.",
+      "replies": [
+        { "author": "WildCoastWill", "body": "Water's been cooling nicely down here and I've seen a few gannets working further out. Still early but the signs are building. When the nets go in down the coast you'll know it's properly on. It's chaos in the best way." },
+        { "author": "ShadSeasonSbu", "body": "Following this thread closely. The shad have been thick which usually means the bait is moving. Fingers crossed for a good run this year, last year was patchy." },
+        { "author": "KobKlapper", "body": "When it hits, the kob fishing off the beach goes mad with all that bait in the wash. Genuinely the best few weeks of the year on this coast." }
+      ]
+    },
+    {
+      "category": "general",
+      "author": "Cast_n_Blast",
+      "title": "How do you store and organise your tackle? Show me your system",
+      "body": "My tackle situation has become a disaster, lures in random bags, leaders tangled, sinkers everywhere. Time to sort it out properly. Thinking of going the tackle tray and backpack route so I can grab and go. How do you guys organise yours? Anyone got a system that actually survives a season of abuse, or am I dreaming?",
+      "replies": [
+        { "author": "TightLinesSA", "body": "Tackle trays sorted by technique, not by lure type, was the game changer for me. A 'topwater' tray, a 'soft plastics' tray etc. So when I want to fish a style I grab one box. Backpack with a few trays and you're sorted." },
+        { "author": "EishAngler", "body": "Silica gel packets in every tray to stop the hooks rusting in our humidity. Learnt that after ruining a box of jigheads. Otherwise it's chaos management, good luck haha." },
+        { "author": "DeepDropDarren", "body": "Rinse everything in fresh water after a salt session before it goes back in the box. Saves your gear and your wallet. Boring but it's the real answer." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "NightShiftNico",
+      "title": "First proper carp session - what would you tell a beginner?",
+      "body": "After years of lure fishing I'm getting into proper carp angling and the gear rabbit hole is deep. Bivvy, bite alarms, boilies, the works. Before I spend a fortune, what does a beginner actually need versus what's just nice to have? Trying to get set up sensibly without buying everything at once. Where did you waste money starting out?",
+      "replies": [
+        { "author": "BarbelBaasMpho", "body": "Don't overspend early. Two decent rods, two alarms, a net big enough, an unhooking mat (non-negotiable for the fish's sake) and good rigs. The bivvy can wait, a brolly does the job. Watercraft beats expensive gear every time, learn to read the water." },
+        { "author": "KurperKing", "body": "The unhooking mat and a proper net comment is the most important thing here. Look after the fish. Beyond that, a simple hair rig and decent boilies will catch you plenty. Don't get sucked into gimmicks." },
+        { "author": "PapGooiPro", "body": "Pre-baiting your spot for a few days before a session if you can. Carp fishing rewards patience and groundwork more than fancy tackle. Welcome to the dark side, it's addictive." }
+      ]
+    },
+    {
+      "category": "bass",
+      "author": "EishAngler",
+      "title": "Jerkbait in winter - slowing it right down for cold-water bass",
+      "body": "Winter bass have been testing my patience but a suspending jerkbait has been the answer. The trick I finally learnt is the pause, like a 5-10 second dead stop between twitches. They hit it on the pause every single time when the water's cold. Almost feels too slow but it works. Anyone else living on the jerkbait through winter, what's your cadence?",
+      "replies": [
+        { "author": "SmallmouthSindi", "body": "The long pause is THE winter jerkbait secret. The colder it is the longer I pause, sometimes 15 seconds. It drives you mad watching a still lure but the eats come on the dead stop. Natural shad colours for me." },
+        { "author": "DropShotDeon", "body": "If they're really lethargic and won't even hit the jerkbait, that's when I go to the drop shot. But a suspending jerkbait fished slow is my first choice in cold water too. Patience game." },
+        { "author": "RoodekopjesRob", "body": "Tune your jerkbait to suspend dead level (a little stick-on weight helps) and it makes a huge difference in cold water. They stare at it on the pause then eat. Good tip Eish." }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "GrunterGavin",
+      "title": "Spotted grunter in the estuaries - cracking the prawn bite",
+      "body": "Grunter have to be one of the most frustrating and rewarding estuary fish. Been targeting them with live prawn fished on a light running sinker, fishing the channels on the push tide. When they're feeding you'll see them tailing in the shallows. The takes are so delicate. Anyone got tips for the timid bite, I'm missing too many. Live prawn vs mud prawn?",
+      "replies": [
+        { "author": "ChokkaCharlie", "body": "Live mud prawn that you've pumped yourself on the day is gold. For the timid bite, fish a longer drop and let them take line before you strike, grunter mouth the bait. Patience on the strike is everything with these fish." },
+        { "author": "KobKlapper", "body": "The tailing fish in the shallows on a pushing tide is the holy grail. Cast well ahead of them and let them come to it. When you get it right it's the best sight fishing in the estuary." },
+        { "author": "WildCoastWill", "body": "Light as you dare on the sinker so they don't feel resistance. They drop a bait the second they feel weight. Frustrating but so worth it when it comes together." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "VaalVanger",
+      "title": "Yellowfish on the Vaal - fly vs bait, let's settle it",
+      "body": "The Vaal yellows are world class and I fish for them both on fly and on bait depending on my mood. The purists will tell you fly is the only way but a well-presented worm or bit of pap in the current accounts for plenty of big fish too. I love both. Where do you stand, and has anyone got into the larger yellows consistently on either method this season?",
+      "replies": [
+        { "author": "FlyGuyFrans", "body": "Fly guy here so I'm biased, but I'll admit a drifted nymph and a drifted worm aren't that different in principle, both about natural presentation in the current. The smallmouth yellows on a dry in summer is pure magic though. Each to their own, it's all good fishing." },
+        { "author": "YellowfishYusuf", "body": "Largemouth yellows have been eating well on bigger baits in the deeper runs early morning. They're a different animal to the smallies. Bait or fly, a Vaal yellow is one of SA's finest fish. No wrong answer here." },
+        { "author": "SmallmouthSindi", "body": "Smallmouth on a tiny dry fly when there's a hatch is the most fun. But I've had my biggest fish on a drifted nymph deep. Whatever gets the bend in the rod, the Vaal is a treasure." }
+      ]
+    },
+    {
+      "category": "general",
+      "author": "BoetfromBenoni",
+      "title": "Weather apps and fishing - which one do you actually trust?",
+      "body": "I plan way too many sessions around the weather and I'm forever flicking between apps that disagree with each other. Wind is the big one for me, especially for the dams. What apps or sites do you actually trust for wind and pressure, and does anyone properly fish the barometric pressure, like only going when it's falling? Curious how much science vs superstition there is in it.",
+      "replies": [
+        { "author": "TightLinesSA", "body": "Windy for the wind forecast, it's the most reliable for the dams in my experience. On pressure, I do believe a falling barometer ahead of a front switches the fish on, and the dead high-pressure bluebird days are tough. Not superstition, the fish definitely respond." },
+        { "author": "HartiesHennie", "body": "Glad it's not just me planning my whole weekend around the wind forecast. Windy is the one I trust most for Harties, that dam turns into the sea when the wind's up. A falling barometer ahead of a front is when I drop everything and go." },
+        { "author": "Cast_n_Blast", "body": "I just check the CastZone bite times now to be honest, lines up with what I see on the water more often than not. Front coming through = go fishing, that's my rule." }
+      ]
+    },
+    {
+      "category": "bass",
+      "author": "TheewatersTim",
+      "title": "Theewaterskloof bass - finding fish on a big, intimidating dam",
+      "body": "Theewaterskloof is massive and the first few times out there I felt totally lost, just way too much water. Starting to figure it out by focusing on the structure, points, old fence lines and the standing timber rather than just casting at random banks. Got onto a decent pattern last trip cranking the points. Any TWK regulars willing to share how you break down a dam that big?",
+      "replies": [
+        { "author": "SmallmouthSindi", "body": "Big water is all about eliminating it fast. Use your electronics if you have them, find the bait and the structure and don't waste time on dead water. Points and the timber are exactly right, that's where they stage. You're on the right track." },
+        { "author": "SpinnerbaitSipho", "body": "TWK can be feast or famine. When the water's up and into the flooded timber and grass, fish those edges, it's incredible. A crankbait on the points is a solid search bait to find them first. Lovely dam." },
+        { "author": "RoodekopjesRob", "body": "Wind position matters a lot on the big dams, the windblown banks push the bait and the bass follow. Fish the windy points and you'll often find them stacked. Don't be scared of a bit of chop." }
+      ]
+    },
+    {
+      "category": "saltwater",
+      "author": "SteenbrasStompie",
+      "title": "Rock and surf for white steenbras - the bait presentation that works",
+      "body": "White steenbras off the beach are one of my favourite targets and they can be very particular. I've had my best results on a well-presented redbait or fresh white mussel fished on a longer trace so the bait moves naturally in the wash. Fishing the gullies and the deeper holes between sandbanks on the right tide. Anyone else chasing them, and please remember they're slow growing so handle and release the big breeders carefully.",
+      "replies": [
+        { "author": "GaljoenGert", "body": "Couldn't agree more on releasing the big ones, white steenbras have been hammered over the years. On bait, a moving redbait in a gully on the push has been my winner too. Find the holes at low tide and remember them for the high. Watercraft beats everything." },
+        { "author": "KobKlapper", "body": "Fresh bait and a natural presentation is the whole game with steenbras, they'll snub a sloppy bait. Good on you for the conservation message, they need it. A precious species." },
+        { "author": "GrunterGavin", "body": "Long flowing trace so the bait tumbles naturally in the wash, that's the detail most people miss. They feel anything unnatural. Beautiful fish, treat them well." }
+      ]
+    },
+    {
+      "category": "specimen",
+      "author": "VleiKurperVusi",
+      "title": "Float fishing for carp in the margins - back to basics and loving it",
+      "body": "Got a bit tired of sitting behind motionless bite alarms so I went back to float fishing the margins for carp and I'd forgotten how much fun it is. Watching that float dip and bury, it's proper fishing. A bit of corn or pap under a waggler, loose feed a little and a bit, and the carp move in close. When did everyone get so obsessed with the long-range bivvy game? The margins are full of fish.",
+      "replies": [
+        { "author": "KurperKing", "body": "100%. Everyone casts to the horizon and forgets the fish are often right under their feet in the margins, especially early and late. A float and some loose feed is the most engaging way to fish. You've reminded me to dust mine off." },
+        { "author": "MielieMan_JP", "body": "Loose feeding little and often is the secret, builds them up into a feeding frenzy in the margin. Watching the float go is a thousand times better than staring at an alarm. Old school is best school." },
+        { "author": "HengelHettie", "body": "This is the kind of fishing that hooks beginners and reminds the rest of us why we started. A diving float never gets old. Lovely post." }
+      ]
+    },
+    {
+      "category": "general",
+      "author": "HengelHettie",
+      "title": "Catch and release - are we doing it right? Handling tips for healthy releases",
+      "body": "With more of us posting our catches I think it's worth a friendly chat about good release practice, because a fish that swims off strong is a fish someone else gets to catch one day. Wet hands, minimal time out of the water, support the belly, no fingers in the gills, and revive them properly before letting go. What are your non-negotiables for looking after the fish, especially the big breeders?",
+      "replies": [
+        { "author": "TightLinesSA", "body": "Wet hands and a wet mat, every time, and keep them out of the water no longer than you can hold your own breath. That's my rule of thumb. Get the photo ready before you lift the fish so it's quick. Great topic to raise Hettie." },
+        { "author": "KobKlapper", "body": "Reviving them properly is the bit people skip. Hold them upright in the water, let the water move over the gills, and only let go when they kick off strongly. Those big old breeders carry the whole fishery, look after them." },
+        { "author": "BarbelBaasMpho", "body": "Barbless or crushed barbs make releases so much quicker and kinder, and you lose almost no fish. Pinch the barb and look after our sport's future. Good on you for posting this." }
+      ]
+    }
+  ]
+}

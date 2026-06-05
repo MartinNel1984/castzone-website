@@ -1,0 +1,48 @@
+name: Weekly content drip
+
+# Posts one grounded forum thread + replies from content-drip/bank.json each
+# week, so CastZone always shows recent activity. Runs in GitHub Actions
+# because a Claude routine cannot reach Supabase, but Actions has full
+# internet. See content-drip/README.md.
+
+on:
+  schedule:
+    # 04:00 UTC every Saturday = 06:00 SAST. Lands fresh threads for the
+    # weekend. Change the cron to retune (cron is always UTC).
+    - cron: "0 4 * * 6"
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab to test
+
+permissions:
+  contents: write   # to commit the advanced state.json back
+
+concurrency:
+  group: content-drip
+  cancel-in-progress: false
+
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Post next drip item
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python content-drip/post_drip.py
+
+      - name: Commit advanced state
+        run: |
+          if git diff --quiet content-drip/state.json; then
+            echo "No state change (bank may be exhausted) - nothing to commit."
+            exit 0
+          fi
+          git config user.name "CastZone Drip Bot"
+          git config user.email "drip@castzone.co.za"
+          git add content-drip/state.json
+          git commit -m "Content drip: advance state [skip ci]"
+          git push
