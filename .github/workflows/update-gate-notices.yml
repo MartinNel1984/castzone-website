@@ -23,6 +23,7 @@ jobs:
 
       - name: Scrape DWS gate notices
         run: python scripts/update_gate_notices.py
+        continue-on-error: true
 
       - name: Commit if changed
         run: |

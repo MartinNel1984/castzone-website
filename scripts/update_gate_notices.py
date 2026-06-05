@@ -107,11 +107,13 @@ def main() -> int:
     ctx = ssl._create_unverified_context()
     try:
         req = urllib.request.Request(URL, headers={"User-Agent": "CastZone/1.0 (+https://castzone.co.za)"})
-        with urllib.request.urlopen(req, context=ctx, timeout=20) as resp:
+        with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
             html = resp.read().decode("utf-8", errors="replace")
     except Exception as exc:
-        print(f"[gate-notices] Fetch failed: {exc}", file=sys.stderr)
-        return 1
+        # Network failures are non-fatal — leave existing JSON untouched
+        print(f"[gate-notices] Fetch failed (site unreachable?): {exc}", file=sys.stderr)
+        print("[gate-notices] Leaving existing gateNotices.json unchanged.", file=sys.stderr)
+        return 0
 
     notices = parse_notices(html)
     if not notices:
