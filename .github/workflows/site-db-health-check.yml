@@ -1,0 +1,61 @@
+name: Site + Database Health Check
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # Daily 6am UTC = 8am SA time
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check site is up and database is intact
+        env:
+          SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
+          NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+        run: |
+          FAILURES=""
+
+          echo "Checking site is reachable..."
+          SITE_CODE=$(curl -sS -o /dev/null -w "%{http_code}" https://castzone.co.za)
+          echo "Site responded: $SITE_CODE"
+          if [ "$SITE_CODE" != "200" ]; then
+            FAILURES="${FAILURES}Site returned HTTP $SITE_CODE (expected 200). "
+          fi
+
+          check_table () {
+            TABLE="$1"
+            MIN="$2"
+            RESP=$(curl -sS -D - -o /dev/null "$SUPABASE_URL/rest/v1/$TABLE?select=id&limit=1" \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+              -H "Prefer: count=exact")
+            CODE=$(echo "$RESP" | grep -i '^HTTP' | tail -1 | awk '{print $2}')
+            COUNT=$(echo "$RESP" | grep -i '^content-range' | sed -E 's#.*/##' | tr -d '\r\n ')
+            echo "$TABLE -> HTTP $CODE, count=$COUNT"
+            if [ "$CODE" != "200" ] && [ "$CODE" != "206" ]; then
+              FAILURES="${FAILURES}Table '$TABLE' query failed (HTTP $CODE). "
+            elif ! echo "$COUNT" | grep -qE '^[0-9]+$'; then
+              FAILURES="${FAILURES}Table '$TABLE' returned no row count. "
+            elif [ "$COUNT" -lt "$MIN" ]; then
+              FAILURES="${FAILURES}Table '$TABLE' has only $COUNT rows (expected >= $MIN — DB may be empty or corrupted). "
+            fi
+          }
+
+          echo "Checking database tables..."
+          check_table categories 1
+          check_table venues 1
+
+          if [ -z "$FAILURES" ]; then
+            echo "All checks passed — site and database are healthy."
+            exit 0
+          fi
+
+          echo "FAILURES: $FAILURES"
+          ALERT="CastZone health check FAILED ($(date -u +'%Y-%m-%d %H:%M') UTC): $FAILURES Check https://castzone.co.za and the Supabase project."
+          ENCODED_ALERT="$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$ALERT")"
+          curl -sS -o /dev/null "https://api.callmebot.com/whatsapp.php?phone=$NOTIFY_WHATSAPP_NUMBER&text=$ENCODED_ALERT&apikey=$CALLMEBOT_API_KEY" || true
+
+          exit 1
