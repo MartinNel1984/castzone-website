@@ -1,0 +1,125 @@
+{
+  "_comment": "CastZone social media post bank. Each item = 1 Facebook Page post + 1 Instagram post, released weekly on Wednesdays. The script in post_social.py cycles through these in order (wrapping when done). Edit or reorder freely — the next run picks up at social-state.json's next_index. caption = post body text (no hashtags). hashtags = appended at the bottom of every post.",
+  "items": [
+    {
+      "type": "community",
+      "caption": "Welcome to CastZone — Where South Africa Fishes. 🎣\n\nThe modern home for SA anglers. Bass, saltwater, and specimen in one place. No global noise, no irrelevant content. Just South African fishing, on South African waters, by anglers who actually go.\n\nJoin free at castzone.co.za",
+      "hashtags": "#CastZone #WhereSouthAfricaFishes #SouthAfricanAngling #SAanglers #FishingLife #AnglingSA #BassLife #CarpFishing #SaltwaterFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "The golden hour doesn't just apply to photography. 🌅\n\nSA's best bite window opens at first light — you get roughly 45 minutes of prime activity before the sun hits the water and the fish go deep. Get to the bank before sunrise. Fish quietly. The fish that woke up before you are still feeding.\n\nTag a mate who's always late to the bank 👇",
+      "hashtags": "#CastZone #FishingTips #SouthAfricanAngling #SAanglers #EarlyBird #FishingLife #BassLife #CarpFishing #MorningFishing #DawnFishing"
+    },
+    {
+      "type": "cta",
+      "caption": "Think you've caught something special? 🏆\n\nThe CastZone Trophy Room is live — submit your best catch with a photo and claim your spot on the all-time leaderboard. Carp & freshwater, bass, and saltwater all have their own category. One photo, your name on the board.\n\nCastzone.co.za → Trophy Room",
+      "hashtags": "#CastZone #TrophyFish #PBFish #PersonalBest #SouthAfricaFishing #SAanglers #CarpFishing #BassLife #SaltwaterFishing #FishingCommunity"
+    },
+    {
+      "type": "tip",
+      "caption": "The moon controls more than the tides. 🌕\n\nFish are most active during solunar major periods — when the moon is directly overhead or underfoot. A session timed to hit one of these windows can triple your catch count compared to fishing the same spot in a dead period.\n\nCastZone has a free Best Bite Times tool on every venue page. Use it. 🎣",
+      "hashtags": "#CastZone #SolunariTimes #FishingTips #MoonPhase #SAanglers #BestBiteTimes #SouthAfricanAngling #FishingScience #AnglingSA"
+    },
+    {
+      "type": "venue",
+      "caption": "Vaal River – Parys 🏞️\n\nIf you haven't fished this stretch yet, it's on your bucket list. The yellowfish run from August to October is world-class — these fish hit a fly or spinner like freight trains. The water runs clear, the setting is beautiful, and it's one of SA's true fly-fishing gems. Accessible from Parys town.\n\nFind it on The Map at castzone.co.za 🗺️",
+      "hashtags": "#CastZone #VaalRiver #Parys #Yellowfish #FlyFishing #SAFlyFishing #FreeState #SouthAfricanAngling #RiverFishing #SAanglers"
+    },
+    {
+      "type": "gear",
+      "caption": "Polarised sunglasses will catch you more fish than any new lure. 🕶️\n\nThey cut surface glare so you can see structure, weed beds, shallow holding points, and fish that are completely invisible through bare eyes. Bass anglers use them for sight-fishing. Saltwater anglers spot feeding fish from the rocks. Non-negotiable once you've fished with a quality pair.",
+      "hashtags": "#CastZone #FishingGear #FishingTips #Polarised #SAanglers #BassLife #SouthAfricanAngling #TackleAdvice #FishingEssentials"
+    },
+    {
+      "type": "tip",
+      "caption": "Summer topwater is SA's most exciting bass fishing. 💥\n\nFrogs, buzz baits, poppers — work them parallel to reeds and weed mats in the first 45 minutes after sunrise from October to March. The visual explosions are addictive. Commit to the strike, don't rip the bait away early.\n\nEarly start + topwater = best morning you'll have this summer.",
+      "hashtags": "#CastZone #TopwaterFishing #BassLife #SABass #LargemouthBass #SouthAfricanAngling #FrogFishing #BuzzBait #SAanglers #FishingTips"
+    },
+    {
+      "type": "venue",
+      "caption": "Clanwilliam Dam, Western Cape 🐟\n\nHome to the Cape smallmouth yellowfish (Labeobarbus seeberi) — found NOWHERE else on Earth. Targeting these endemic beauties on light tackle or fly is one of SA's most unique fishing experiences. The dam also holds excellent bass on the rocky points and brush.\n\nDetails on The Map at castzone.co.za 🗺️",
+      "hashtags": "#CastZone #ClanwilliumDam #WesternCape #Yellowfish #CapeSmallmouth #FlyFishing #SAanglers #EndemicFish #SouthAfricanAngling #BassLife"
+    },
+    {
+      "type": "cta",
+      "caption": "67 SA fishing venues on one interactive map. 🗺️\n\nDams, rivers, estuaries, and saltwater spots across all 9 provinces. Each venue has GPS coordinates, species list, permit info, bite times, and real member reviews. Province filters, water level overlays, nearby venues.\n\nOpen The Map at castzone.co.za and plan your next session.",
+      "hashtags": "#CastZone #FishingMap #SouthAfricaFishing #SAanglers #FishingVenues #WhereTOFish #BassLife #CarpFishing #SaltwaterFishing #AnglingSA"
+    },
+    {
+      "type": "tip",
+      "caption": "Cold water carp bait 101 🎣\n\nIn winter, carp's metabolism slows. They don't need to eat much, so your bait needs to punch above its weight. Go smaller — a 14mm hookbait outfishes a 24mm in cold water. Go sweeter — custard, vanilla, and a drop of molasses travel further in cold water where scent disperses slowly. Fish slow, fish tight to features.",
+      "hashtags": "#CastZone #CarpFishing #CarpBait #WinterCarp #SAcarp #SpecimenFishing #CarpAngling #BaitTips #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "seasonal",
+      "caption": "Galjoen season is open. 🎣\n\nSA's national fish is also one of the toughest catches from the rocks — it demands patience, the right tide, and local knowledge. Red bait or white mussel on a Cape rock ledge at dawn is pure magic. Every one you land feels earned.\n\nWho's heading to the Cape coast this season? 👇",
+      "hashtags": "#CastZone #Galjoen #RockAndSurf #ShoreAngling #SouthAfricanAngling #WesternCape #SaltwaterFishing #SAanglers #NationalFish #CoastalFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "Drop shot — finally landing in SA. 🐟\n\nSA bass anglers are catching up to this technique fast, and for good reason. Overfished Gauteng dams need finesse. Keep the weight on the bottom, twitch just enough to move the tail, and dead-stick it when fish are present but not committing. Go lighter than you think on the hook — 6–10 lb fluorocarbon leader.",
+      "hashtags": "#CastZone #DropShot #BassLife #SABass #FinessFishing #BassAngling #SouthAfricanAngling #LargemouthBass #TechniqueTuesday #SAanglers"
+    },
+    {
+      "type": "venue",
+      "caption": "Vaal Barrage, Gauteng 🎣\n\nGauteng's all-season carp water. Big fish, heavy snags, proper specimen carp scene — this is where Gauteng anglers go when everywhere else isn't fishing. The 60-day Rand Water permit is worth every rand. Bank fishing with hair-rigged boilies, long nights, coffee, and a proper take at 2am.\n\nDetails on The Map at castzone.co.za",
+      "hashtags": "#CastZone #VaalBarrage #CarpFishing #SAcarp #GautengFishing #SpecimenFishing #NightFishing #CarpAngling #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "gear",
+      "caption": "Mono or braid? Here's the simple guide. 🎣\n\nBraid (8–15 lb) for bass: better sensitivity, longer casts, direct hooksets. Fluorocarbon leader on the end.\n\nMono (10–20 lb) for carp: the stretch absorbs the run, fewer thrown hooks in long fights. Braid + shock leader for distance casting on big dams.\n\nKnow when to switch — it changes your results more than a new rod will.",
+      "hashtags": "#CastZone #FishingGear #TackleAdvice #BraidVsMono #SAanglers #BassLife #CarpFishing #FishingTips #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "seasonal",
+      "caption": "August to October is SA yellowfish season. 🪰\n\nThe Vaal, Wilge, and Mooi River systems are running clear, the fish are aggressive, and midday dry fly fishing is actually a thing. SA's equivalent of a trout season opener — except yellowfish fight harder and don't mind the heat. Book a guide, grab a 5-weight, and go.",
+      "hashtags": "#CastZone #Yellowfish #FlyFishing #SAFlyFishing #VaalRiver #SouthAfricanAngling #SAanglers #RiverFishing #DryFly #AnglingSA"
+    },
+    {
+      "type": "cta",
+      "caption": "Got old tackle collecting dust? 🎣\n\nList it free on the CastZone Tackle Box — South Africa's fishing classifieds. No fees, no middlemen. Photos, price, location — buyers contact you directly on WhatsApp. Clear out the shed, fund the next trip.\n\nPost your listing at castzone.co.za → Tackle Box",
+      "hashtags": "#CastZone #TackleBox #FishingClassifieds #SellYourTackle #SAanglers #FishingGear #SecondHandTackle #SouthAfricanAngling #FishingCommunity"
+    },
+    {
+      "type": "tip",
+      "caption": "Switch to circle hooks for carp. ♻️\n\nFewer deep hooksets. Healthier fish. Cleaner releases. Rig them the same as a standard hook — the critical difference: DON'T STRIKE. When the fish moves away, just tighten and let the hook do its job. The corner-of-the-mouth hookset is almost guaranteed. C&R anglers in SA are switching fast.",
+      "hashtags": "#CastZone #CarpFishing #CatchAndRelease #CircleHooks #SAcarp #SpecimenFishing #CarpAngling #ResponsibleAngling #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "venue",
+      "caption": "Rietvlei Dam, Pretoria 🎣\n\nInside a nature reserve, carefully managed, with some of the best carp fishing in Gauteng. The setting is unlike any urban dam — wildlife, birding, pristine banks. A Tshwane/SANParks day permit is required. Worth every cent for the experience alone.\n\nDetails and GPS on The Map at castzone.co.za 🗺️",
+      "hashtags": "#CastZone #RietvleiDam #Pretoria #GautengFishing #CarpFishing #SAcarp #SouthAfricanAngling #SAanglers #NatureReserve #DamFishing"
+    },
+    {
+      "type": "gear",
+      "caption": "A sharp hook catches fish. A blunt one loses them. 🎣\n\nSpend 10 minutes before every session: touch-test every hook you plan to use (should snag your thumbnail lightly). Swap anything blunt — they're cheap. Check your mainline for nicks from rocks or snags. Check your knots by pulling firmly. 90% of lost fish are a preparation failure, not bad luck.",
+      "hashtags": "#CastZone #FishingTips #TackleAdvice #SharpHooks #SAanglers #PrepFishing #BassLife #CarpFishing #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "seasonal",
+      "caption": "Winter bass fishing 101 🐟\n\nBass don't stop feeding in winter — they just slow down. The fish move to deeper structure (5–8 m on main-lake points, channel edges, submerged trees). Go slow: shaky head, Carolina rig, drop shot. A 10-second pause after a bottom contact often triggers the bite. Forget the fast crankbaits until spring.",
+      "hashtags": "#CastZone #BassLife #WinterBass #SABass #LargemouthBass #FishingTips #SlowFishing #BassAngling #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "venue",
+      "caption": "Hout Bay, Cape Town 🌊\n\nSnoek season on the Cape Atlantic is a bucket-list experience. A ski-boat run out of Hout Bay in July into a baitball — Cape gannets diving overhead, snoek smashing jigs below. Add a sunset Cape Malay curry with your catch and you have the perfect Cape winter day.\n\nNow that's fishing. 🎣",
+      "hashtags": "#CastZone #HoutBay #Snoek #SnoekSeason #CapeTown #SaltwaterFishing #SkiBoat #WesternCape #SAanglers #SouthAfricanAngling"
+    },
+    {
+      "type": "tip",
+      "caption": "Night fishing unlocks a different game. 🌙\n\nGrunter work the shallows after dark. Geelbek are bolder at night in the surf. Bass blow up topwater in dead-calm evening conditions from October to March. The fish that ignore your bait all day can eat it confidently at night.\n\nInvest in a quality headlamp with a red-light mode (doesn't spook fish or your mates).",
+      "hashtags": "#CastZone #NightFishing #FishingTips #SAanglers #SaltwaterFishing #BassLife #Grunter #Geelbek #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "community",
+      "caption": "Why CastZone? 🎣\n\nFishSA closed. Bass Fishing SA is quiet. The Facebook groups are fragmented and full of noise. 1.3 million South African anglers deserved something better — a modern, mobile-first platform built specifically for SA waters.\n\nThis is it. Register free and make it yours at castzone.co.za",
+      "hashtags": "#CastZone #WhereSouthAfricaFishes #SouthAfricanAngling #SAanglers #FishingCommunity #OnlineAngling #SAFishingForum #BassLife #CarpFishing #SaltwaterFishing"
+    },
+    {
+      "type": "gear",
+      "caption": "Hook size matters more than most anglers realise. 📐\n\nCarp on boilies: size 6 to 10 (wide gape or curved-shank). Bass on soft plastics: 1/0 to 3/0 EWG depending on bait size. Yellowfish on nymph: #10 to #14. Light tackle saltwater: circle 2/0 to 4/0.\n\nSA anglers over-size constantly. Go smaller — hook-up rate improves every time. The fish doesn't care about the number on the packet.",
+      "hashtags": "#CastZone #FishingTips #TackleAdvice #HookSize #SAanglers #BassLife #CarpFishing #Yellowfish #SaltwaterFishing #SouthAfricanAngling"
+    }
+  ]
+}

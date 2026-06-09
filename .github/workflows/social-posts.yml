@@ -1,0 +1,54 @@
+name: Weekly social posts
+
+# Every Wednesday 08:00 SAST (06:00 UTC). Posts one caption from
+# social-media/social-bank.json to Facebook + Instagram, with a branded tip
+# card image or a live Trophy Room catch photo if one was submitted this week.
+# See social-media/README.md for first-time setup.
+
+on:
+  schedule:
+    - cron: "0 6 * * 3"   # Wednesday 08:00 SAST (UTC+2)
+  workflow_dispatch: {}    # run manually from Actions tab to test
+
+permissions:
+  contents: write   # to commit the advanced social-state.json back
+
+concurrency:
+  group: social-posts
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y --no-install-recommends fonts-dejavu-core
+          pip install pillow
+
+      - name: Post to Facebook + Instagram
+        env:
+          SUPABASE_URL:          ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
+          FB_PAGE_ACCESS_TOKEN:  ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          FB_PAGE_ID:            ${{ secrets.FB_PAGE_ID }}
+          IG_USER_ID:            ${{ secrets.IG_USER_ID }}
+        run: python social-media/post_social.py
+
+      - name: Commit advanced state
+        run: |
+          if git diff --quiet social-media/social-state.json; then
+            echo "No state change — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "CastZone Social Bot"
+          git config user.email "social@castzone.co.za"
+          git add social-media/social-state.json
+          git commit -m "Social post: advance state [skip ci]"
+          git push
