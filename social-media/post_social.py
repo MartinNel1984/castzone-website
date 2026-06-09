@@ -14,7 +14,8 @@ Each Wednesday this script:
 Requires these GitHub repo secrets:
   SUPABASE_URL
   SUPABASE_SERVICE_KEY
-  CALLMEBOT_API_KEY       (already set — same as health check)
+  MAKE_WEBHOOK_URL        (Make.com webhook URL — posts to Facebook + Instagram)
+  CALLMEBOT_API_KEY       (already set — sends a brief WhatsApp confirmation)
   NOTIFY_WHATSAPP_NUMBER  (already set — same as health check)
 """
 
@@ -31,10 +32,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BANK_PATH  = os.path.join(HERE, "social-bank.json")
 STATE_PATH = os.path.join(HERE, "social-state.json")
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
-SERVICE_KEY  = os.environ.get("SUPABASE_SERVICE_KEY", "")
-WA_PHONE     = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
-WA_APIKEY    = os.environ.get("CALLMEBOT_API_KEY", "")
+SUPABASE_URL     = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SERVICE_KEY      = os.environ.get("SUPABASE_SERVICE_KEY", "")
+MAKE_WEBHOOK_URL = os.environ.get("MAKE_WEBHOOK_URL", "")
+WA_PHONE         = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
+WA_APIKEY        = os.environ.get("CALLMEBOT_API_KEY", "")
 
 BRAND_BG     = "#1a3a3a"
 BRAND_ORANGE = "#f26522"
@@ -99,14 +101,31 @@ def upload_to_storage(filepath, bucket, object_path, content_type):
     return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{object_path}"
 
 
+def call_make_webhook(caption, image_url):
+    """POST caption + image_url to Make.com — it handles FB + IG posting."""
+    payload = json.dumps({"caption": caption, "image_url": image_url}).encode()
+    req = urllib.request.Request(
+        MAKE_WEBHOOK_URL,
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            resp.read()
+        print("Make.com webhook called — posting to Facebook + Instagram.")
+    except Exception as e:
+        die(f"Make.com webhook failed: {e}")
+
+
 def send_whatsapp(message):
-    """Send a WhatsApp message via CallMeBot. Non-fatal if it fails."""
+    """Send a brief WhatsApp confirmation via CallMeBot. Non-fatal if it fails."""
     encoded = urllib.parse.quote(message)
     url     = f"https://api.callmebot.com/whatsapp.php?phone={WA_PHONE}&text={encoded}&apikey={WA_APIKEY}"
     try:
         with urllib.request.urlopen(url, timeout=30) as resp:
             resp.read()
-        print("WhatsApp sent.")
+        print("WhatsApp confirmation sent.")
     except Exception as e:
         warn(f"WhatsApp send failed (non-fatal): {e}")
 
@@ -176,8 +195,7 @@ def main():
     for name, val in [
         ("SUPABASE_URL",         SUPABASE_URL),
         ("SUPABASE_SERVICE_KEY", SERVICE_KEY),
-        ("CALLMEBOT_API_KEY",    WA_APIKEY),
-        ("NOTIFY_WHATSAPP_NUMBER", WA_PHONE),
+        ("MAKE_WEBHOOK_URL",     MAKE_WEBHOOK_URL),
     ]:
         if not val:
             die(f"{name} env var is not set.")
@@ -234,17 +252,15 @@ def main():
         image_note = "Branded tip card"
     print(f"Image URL: {image_url}")
 
-    # Send WhatsApp
-    wa_msg = (
-        f"CastZone - Post #{idx + 1}/{len(items)} ready!\n\n"
-        f"--- CAPTION (copy this) ---\n"
-        f"{full_caption}\n"
-        f"--- END ---\n\n"
-        f"IMAGE ({image_note}):\n"
-        f"{image_url}\n\n"
-        f"Tap image URL to open, save to Photos, then post on Instagram + Facebook."
-    )
-    send_whatsapp(wa_msg)
+    # Post via Make.com (handles Facebook + Instagram automatically)
+    call_make_webhook(full_caption, image_url)
+
+    # Brief WhatsApp confirmation so you know it went through
+    if WA_PHONE and WA_APIKEY:
+        send_whatsapp(
+            f"CastZone post #{idx + 1}/{len(items)} sent to Facebook + Instagram. "
+            f"({item['type']})"
+        )
 
     # Advance state
     state["next_index"] = (idx + 1) % len(items)

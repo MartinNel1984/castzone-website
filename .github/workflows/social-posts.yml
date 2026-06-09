@@ -38,6 +38,7 @@ jobs:
         env:
           SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY:    ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MAKE_WEBHOOK_URL:        ${{ secrets.MAKE_WEBHOOK_URL }}
           CALLMEBOT_API_KEY:       ${{ secrets.CALLMEBOT_API_KEY }}
           NOTIFY_WHATSAPP_NUMBER:  ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
         run: python social-media/post_social.py
