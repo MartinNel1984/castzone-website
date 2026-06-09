@@ -23,6 +23,7 @@ const STATIC_ROUTES = [
   "/conditions",
   "/members",
   "/saved",
+  "/list-your-venue",
 ];
 
 const FORUM_CATEGORIES = ["bass", "saltwater", "specimen", "general"];
