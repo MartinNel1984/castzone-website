@@ -1,19 +1,18 @@
 name: Monthly highlight reel
 
-# Runs on the first Friday of each month at 09:00 SAST (07:00 UTC).
-# Fetches top Trophy Room catches, generates a 9:16 MP4 slideshow with ffmpeg,
-# and publishes it as an Instagram Reel + Facebook video post.
-# See social-media/README.md for first-time setup.
+# First Friday of each month 09:00 SAST (07:00 UTC).
+# Builds a 9:16 MP4 slideshow from the top Trophy Room catches using ffmpeg,
+# uploads it to Supabase Storage, and sends Martin a WhatsApp with the
+# download link + ready-to-paste caption. Martin saves the MP4 to his phone
+# and posts it as an Instagram Reel + Facebook video.
 
 on:
   schedule:
-    # First Friday of the month 07:00 UTC (09:00 SAST).
-    # "day-of-month 1-7 AND day-of-week 5 (Friday)" gives the first Friday.
-    - cron: "0 7 1-7 * 5"
-  workflow_dispatch: {}   # run manually from Actions tab to test
+    - cron: "0 7 1-7 * 5"   # first Friday of month, 09:00 SAST
+  workflow_dispatch: {}      # run manually from Actions tab to test
 
 permissions:
-  contents: read   # no state file to commit for the reel
+  contents: read
 
 concurrency:
   group: social-reels
@@ -22,7 +21,7 @@ concurrency:
 jobs:
   reel:
     runs-on: ubuntu-latest
-    timeout-minutes: 20   # ffmpeg + IG processing should finish well inside this
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -36,11 +35,10 @@ jobs:
           sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
           pip install pillow
 
-      - name: Generate and publish reel
+      - name: Build reel + send WhatsApp
         env:
-          SUPABASE_URL:          ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
-          FB_PAGE_ACCESS_TOKEN:  ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
-          FB_PAGE_ID:            ${{ secrets.FB_PAGE_ID }}
-          IG_USER_ID:            ${{ secrets.IG_USER_ID }}
+          SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY:    ${{ secrets.SUPABASE_SERVICE_KEY }}
+          CALLMEBOT_API_KEY:       ${{ secrets.CALLMEBOT_API_KEY }}
+          NOTIFY_WHATSAPP_NUMBER:  ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
         run: python social-media/make_reel.py
