@@ -222,7 +222,7 @@ export default function NewListingPage() {
           <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handleFileChange} className="hidden" />
           <div className="flex flex-wrap gap-3">
             {images.map((img, i) => (
-              <div key={i} className="relative group">
+              <div key={img.preview} className="relative group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.preview} alt={`Photo ${i + 1}`} className="w-24 h-24 object-cover rounded border border-surface-teal" />
                 {i === 0 && (

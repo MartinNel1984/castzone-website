@@ -7,6 +7,7 @@ Runs daily via .github/workflows/update-gate-notices.yml.
 If the page is unreachable the existing JSON is left untouched.
 """
 
+import html
 import json
 import re
 import sys
@@ -81,8 +82,8 @@ def parse_notices(html: str) -> list[dict]:
         # Extract all <p> contents in this block
         paragraphs = re.findall(r"<p[^>]*>(.*?)</p>", body, re.DOTALL | re.IGNORECASE)
         for para in paragraphs:
-            # Strip inner tags
-            text_raw = re.sub(r"<[^>]+>", "", para).strip()
+            # Strip inner tags, then decode HTML entities (e.g. &#8211; → –)
+            text_raw = html.unescape(re.sub(r"<[^>]+>", "", para).strip())
             if not text_raw:
                 continue
 

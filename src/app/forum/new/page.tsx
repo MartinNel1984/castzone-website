@@ -262,7 +262,7 @@ function NewThreadForm() {
             {images.length > 0 && (
               <div className="flex flex-wrap gap-3 mt-3">
                 {images.map((img, i) => (
-                  <div key={i} className="relative group">
+                  <div key={img.preview} className="relative group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img.preview}

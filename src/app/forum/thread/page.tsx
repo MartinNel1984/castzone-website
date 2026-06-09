@@ -58,7 +58,7 @@ function PostImages({ urls, locked }: { urls: string[]; locked: boolean }) {
   return (
     <div className={`mt-4 grid gap-2 ${urls.length === 1 ? "grid-cols-1" : urls.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
       {urls.map((url, i) => (
-        <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded overflow-hidden border border-surface-teal/50 hover:border-cast-orange transition-colors">
+        <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="block rounded overflow-hidden border border-surface-teal/50 hover:border-cast-orange transition-colors">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={url}
@@ -454,7 +454,7 @@ function ThreadContent() {
               {replyImages.length > 0 && (
                 <div className="flex flex-wrap gap-3 mt-3">
                   {replyImages.map((img, i) => (
-                    <div key={i} className="relative group">
+                    <div key={img.preview} className="relative group">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={img.preview}
