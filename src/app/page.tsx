@@ -211,6 +211,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Bite forecast widget */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" locationLabel="Johannesburg area" />
+      </section>
+
       {/* Angler Safety — Vaal River */}
       {(() => {
         const latestVaal      = GATE_NOTICES.find((n) => n.dam === "vaal"     && n.latest);
@@ -308,11 +313,6 @@ export default function HomePage() {
           </section>
         );
       })()}
-
-      {/* Bite forecast widget */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" locationLabel="Johannesburg area" />
-      </section>
 
       {/* Forum categories with photos */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
