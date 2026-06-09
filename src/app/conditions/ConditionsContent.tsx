@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import GateNoticeStaleness from "@/components/GateNoticeStaleness";
 import {
   ALL_DAMS,
   WC_DAMS, FS_DAMS, GP_DAMS, KZN_DAMS, LP_DAMS, MP_DAMS, NW_DAMS, EC_DAMS, NC_DAMS,
@@ -125,7 +126,7 @@ export default function ConditionsContent() {
         <div className="text-xs font-body text-storm bg-deep-water-light border border-surface-teal rounded px-3 py-2 self-start mt-1">
           DWS data updated <span className="text-pale-water font-medium">{DATA_UPDATED}</span>
           <span className="mx-2">·</span>
-          Next update <span className="text-pale-water font-medium">Mon 8 Jun 2026</span>
+          Updated <span className="text-pale-water font-medium">every Monday</span>
         </div>
       </div>
 
@@ -258,6 +259,8 @@ export default function ConditionsContent() {
           </div>
         </div>
       </div>
+
+      <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} />
 
       {/* ── Province Tabs + Dam Table ── */}
       <div className="mb-8">

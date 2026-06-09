@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import ShareButtons from "@/components/ShareButtons";
 import BiteTimes from "@/components/BiteTimes";
+import GateNoticeStaleness from "@/components/GateNoticeStaleness";
 import { GATE_NOTICES } from "@/data/waterConditions";
 
 const forumCategories = [
@@ -268,6 +269,8 @@ export default function HomePage() {
                 </p>
               )}
             </div>
+
+            <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} />
 
             {/* Vaal sections guide */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
