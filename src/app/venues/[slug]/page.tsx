@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import VenueContent from "./VenueContent";
 
 // All seeded venue slugs — add new ones here when you add venues to the database
@@ -29,6 +30,27 @@ export const VENUE_SLUGS = [
   // Northern Cape
   "vaalharts-weir", "spitskop-dam",
 ];
+
+function slugToName(slug: string): string {
+  return slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const name = slugToName(slug);
+  return {
+    title: `${name} Fishing | Water Conditions & Venue Guide`,
+    description: `Fishing at ${name} — live water conditions, best bite times, GPS coordinates, species guide, permit info, and tips from SA anglers on CastZone.`,
+    alternates: { canonical: `/venues/${slug}` },
+    openGraph: {
+      title: `${name} Fishing Venue | CastZone`,
+      description: `Everything you need to fish ${name}: conditions, species, GPS, and tips from South African anglers.`,
+    },
+  };
+}
 
 export function generateStaticParams() {
   return VENUE_SLUGS.map((slug) => ({ slug }));
