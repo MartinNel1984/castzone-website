@@ -1,5 +1,5 @@
 {
-  "_comment": "CastZone social media post bank. Each item = 1 Facebook Page post + 1 Instagram post, released weekly on Wednesdays. The script in post_social.py cycles through these in order (wrapping when done). Edit or reorder freely — the next run picks up at social-state.json's next_index. caption = post body text (no hashtags). hashtags = appended at the bottom of every post.",
+  "_comment": "CastZone social media post bank. Each item = 1 post sent via WhatsApp on Mon/Wed/Fri. The script cycles through in order (wrapping when done). Edit or reorder freely — the next run picks up at social-state.json's next_index. caption = post body text (no hashtags). hashtags = appended at the bottom of every post.",
   "items": [
     {
       "type": "community",
@@ -120,6 +120,126 @@
       "type": "gear",
       "caption": "Hook size matters more than most anglers realise. 📐\n\nCarp on boilies: size 6 to 10 (wide gape or curved-shank). Bass on soft plastics: 1/0 to 3/0 EWG depending on bait size. Yellowfish on nymph: #10 to #14. Light tackle saltwater: circle 2/0 to 4/0.\n\nSA anglers over-size constantly. Go smaller — hook-up rate improves every time. The fish doesn't care about the number on the packet.",
       "hashtags": "#CastZone #FishingTips #TackleAdvice #HookSize #SAanglers #BassLife #CarpFishing #Yellowfish #SaltwaterFishing #SouthAfricanAngling"
+    },
+    {
+      "type": "tip",
+      "caption": "Two knots every SA angler must know. 🪢\n\nPalomar knot: the strongest all-round knot for braid and fluorocarbon. Never slips, never fails on the strike. Tie it before everything else.\n\nImproved clinch knot: your backup for lighter mono when you're in a hurry. Five wraps minimum — less and it will fail on a big fish.\n\nLearn both. Tie them in the dark. A lost fish from a bad knot is the most avoidable mistake in fishing.",
+      "hashtags": "#CastZone #FishingKnots #FishingTips #SAanglers #PalomarKnot #BassLife #CarpFishing #SaltwaterFishing #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "tip",
+      "caption": "Reading water is the most underrated skill in fishing. 🔍\n\nBass stack on the shady side of structure — points, fallen trees, dock edges. Carp follow the wind, feeding on the upwind bank where food collects. Yellowfish hold in the seam between fast and slow water. Saltwater fish cruise the same gutters on every tide.\n\nLearn to read a body of water and you won't need a fish finder.",
+      "hashtags": "#CastZone #FishingTips #ReadingWater #SAanglers #BassLife #CarpFishing #Yellowfish #SaltwaterFishing #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "venue",
+      "caption": "Loskop Dam, Mpumalanga 🏞️\n\nOne of SA's most underrated bass dams. Big water, rocky structure, and largemouth that don't get nearly as much pressure as the Gauteng dams. The bushveld setting is stunning — you're fishing between mountains with no city in sight. MTPA permit required. Worth the drive from Joburg.\n\nDetails on The Map at castzone.co.za",
+      "hashtags": "#CastZone #LoskopDam #Mpumalanga #BassLife #SABass #LargemouthBass #SouthAfricanAngling #SAanglers #BushveldFishing #DamFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "Your drag is set wrong. Here's how to fix it. ⚙️\n\nA correct drag should slip at roughly 25-30% of your line's breaking strength. On 10 lb line: drag slips at about 2.5 kg of pressure. Test it by hand — pull your line and check. Too tight = the fish breaks you off on the run. Too loose = you can't drive the hook home.\n\nSet it before every session. It takes 10 seconds and saves fish.",
+      "hashtags": "#CastZone #FishingTips #DragSetting #SAanglers #BassLife #CarpFishing #SaltwaterFishing #TackleAdvice #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "seasonal",
+      "caption": "Barbel season is open the moment it rains. 🌧️\n\nAfrican sharptooth catfish (barbel) feed most aggressively during and just after summer rain — rising water, murky conditions, and the flood of insects and debris into the system trigger a feeding frenzy. Heavy mono, strong hook, smelly bait (offal, bloodworm, pilchard), and you're in business. Night sessions in summer are electric.",
+      "hashtags": "#CastZone #Barbel #CatfishFishing #SummerFishing #SouthAfricanAngling #SAanglers #NightFishing #RiverFishing #AfricanFishing #AnglingSA"
+    },
+    {
+      "type": "tip",
+      "caption": "Why fluorocarbon leader changes everything. 🎣\n\nFluorocarbon is nearly invisible underwater — its refractive index is almost identical to water. On clear Gauteng dams where bass have seen every lure, dropping to a 6-8 lb fluoro leader can double your strike rate. It's also more abrasion resistant than mono on rocky bottoms. The cost per spool is higher but the difference on pressured fish is real.",
+      "hashtags": "#CastZone #Fluorocarbon #FishingTips #SAanglers #BassLife #SABass #ClearWater #TackleAdvice #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "venue",
+      "caption": "Berg River, Western Cape 🎣\n\nOne of the Cape's best-kept fishing secrets. The lower Berg holds yellowfish and bass in the cooler months, while the estuary mouth near Velddrif produces steenbras, harder, and the occasional kob. The upper reaches near Paarl are clean, accessible, and beautiful in autumn when the surrounding vineyards turn.\n\nFind it on The Map at castzone.co.za",
+      "hashtags": "#CastZone #BergRiver #WesternCape #YellowfishFishing #SaltwaterFishing #Steenbras #SouthAfricanAngling #SAanglers #RiverFishing #CapeFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "How to hold a fish for a photo and release it healthy. 📸\n\nSupport the belly — never hold a fish vertically by the jaw for more than a few seconds (it damages the spine). Keep it low over the water in case it slips. Wet your hands first so you don't remove the slime coat. Have your camera ready before you lift it. Quick photo, back in the water, hold it upright until it kicks away.\n\nA well-handled fish fights again another day.",
+      "hashtags": "#CastZone #CatchAndRelease #FishingTips #SAanglers #ResponsibleAngling #BassLife #CarpFishing #FishCare #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "gear",
+      "caption": "Check your fishing line before every session. 🎣\n\nRun your fingers along the first 2-3 metres. Feel for nicks, fraying, or rough spots from rocks and snags — even one nick can halve the line's breaking strength. If you find damage, cut it off and retie. Mono and fluoro should be replaced every 6-12 months even if unused — UV and heat degrade it. Braid lasts longer but check the first metre weekly if you fish structure.",
+      "hashtags": "#CastZone #FishingGear #TackleAdvice #SAanglers #FishingLine #BassLife #CarpFishing #FishingTips #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "venue",
+      "caption": "Hartbeespoort Dam, North West 🎣\n\nGauteng's most accessible big water — and still producing good carp, bass, and tigerfish despite the pressure and hyacinth. The hyacinth mats are actually holding structure for bass in summer. Fish the edges of the mats early morning with a weedless frog and you'll get explosive topwater strikes. Permit from Harties municipality required.\n\nDetails on The Map at castzone.co.za",
+      "hashtags": "#CastZone #Hartbeespoort #HartiesDAM #NorthWest #GautengFishing #BassLife #CarpFishing #Tigerfish #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "tip",
+      "caption": "Fishing in wind — don't pack up, adapt. 💨\n\nWind pushes surface food and bait fish to the downwind bank. That's where the feeding fish are. Cast into the wind if you have to — the effort is worth it. On dams, the windward bank in summer heat holds the most oxygenated water and the most active fish. Bass and carp both respond to it. Most anglers move away from wind. Move toward it.",
+      "hashtags": "#CastZone #FishingTips #WindFishing #SAanglers #BassLife #CarpFishing #SouthAfricanAngling #DamFishing #AnglingSA #WeatherFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "How to present carp bait properly on a hair rig. 🎣\n\nThe hair rig changed carp fishing because fish learned to blow out a hook hidden in bait. With a hair, the bait sits just below the hook on a short loop of line — the fish picks it up confidently, the hook is free to turn and catch.\n\nCritical: the bait should sit 3-5mm below the hook bend. Too long = bad hooksets. Balanced hookbaits (critically weighted to near-neutral buoyancy) make it even harder for the carp to eject.",
+      "hashtags": "#CastZone #CarpFishing #HairRig #CarpAngling #SAcarp #SpecimenFishing #BaitPresentation #FishingTips #SouthAfricanAngling #SAanglers"
+    },
+    {
+      "type": "venue",
+      "caption": "Wilderness Lagoon, Garden Route 🌊\n\nOne of SA's most beautiful fishing settings. The lagoon produces leervis (garrick), kob, and springer — all on light tackle in crystal-clear water. Early morning surface lures along the reed edges is fly-fishing level visual excitement. The town is worth the trip alone. SA's Garden Route has some of the most underexplored light-tackle saltwater fishing in the country.\n\nFind it on The Map at castzone.co.za",
+      "hashtags": "#CastZone #Wilderness #GardenRoute #Leervis #Garrick #Kob #SaltwaterFishing #SAanglers #LagoonFishing #SouthAfricanAngling"
+    },
+    {
+      "type": "tip",
+      "caption": "Want to cast further? Fix your technique before buying a longer rod. 🎣\n\nMost lost distance comes from releasing too late (casting at the water instead of the horizon) or overpowering the cast (which collapses the rod). Load the rod with a smooth acceleration, release at 1-2 o'clock, and follow through. Pendulum casting for surf anglers adds 30-40% distance once learned. A smooth 90g cast beats a hard 140g cast every time.",
+      "hashtags": "#CastZone #FishingTips #CastingTips #SurfFishing #SAanglers #SaltwaterFishing #ShoreAngling #SouthAfricanAngling #AnglingSA #RockAndSurf"
+    },
+    {
+      "type": "seasonal",
+      "caption": "Bass spawn happens right now in Gauteng dams. 🐟\n\nFrom late September through November, largemouth bass move shallow to build nests on hard sandy or gravelly bottoms — 0.5 to 2 metres deep, usually near structure. Males guard the nest aggressively and will strike anything that comes close. Sight-fishing to nesting bass is some of the most exciting freshwater fishing in SA.\n\nCatch, photo, quick release — let them finish spawning.",
+      "hashtags": "#CastZone #BassLife #BassSpawn #SABass #LargemouthBass #SightFishing #SouthAfricanAngling #SAanglers #SpringFishing #GautengFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "The importance of a landing net. 🎣\n\nLifting a fish out of the water by the line stresses the mouth and hook hold — a big fish can tear free or the line can snap at the worst moment. A rubber mesh landing net (not the old knotted nylon) protects the slime coat, keeps the fish calm, and gives you time to unhook properly. Buy one. Use it every time. Lose fewer fish and release them healthier.",
+      "hashtags": "#CastZone #FishingGear #LandingNet #FishingTips #SAanglers #CarpFishing #BassLife #CatchAndRelease #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "community",
+      "caption": "The CastZone Trophy Room leaderboard is live. 🏆\n\nWho's on top right now? Carp & Freshwater, Largemouth Bass, and Saltwater — three categories, three all-time leaders. The current champions hold their title until someone submits a heavier verified catch.\n\nCould your best fish be on that board? Submit a photo catch at castzone.co.za → Trophy Room. Every approved catch counts toward the all-time ranking.",
+      "hashtags": "#CastZone #TrophyFish #PBFish #PersonalBest #SAanglers #CarpFishing #BassLife #SaltwaterFishing #FishingCommunity #WhereSouthAfricaFishes"
+    },
+    {
+      "type": "tip",
+      "caption": "Fishing pressure makes fish smarter. Here's how to beat it. 🎣\n\nOverfished SA dams produce educated fish — bass that flinch from anything that looks wrong, carp that confidently eject rigs they've felt before. Beat it with: longer leaders, lighter line, smaller hooks, slower retrieves, natural colours, and fishing times when most people aren't there (early, late, midweek). The fish haven't moved. They've just seen everything.",
+      "hashtags": "#CastZone #FishingTips #PressuredFish #SAanglers #BassLife #CarpFishing #FinessFishing #SouthAfricanAngling #GautengFishing #AnglingSA"
+    },
+    {
+      "type": "seasonal",
+      "caption": "Post-spawn bass recovery — fish with care. 🐟\n\nAfter spawning, female bass are exhausted and thin. They're in the shallows, feeding hard to recover, and they're catchable — but they're also vulnerable. Keep the fight short. Use barbless hooks if you can. Hold them in the water to recover fully before releasing. The female bass you release today is protecting next season's fish. SA bass populations depend on every angler treating them right.",
+      "hashtags": "#CastZone #BassLife #CatchAndRelease #ResponsibleAngling #SABass #LargemouthBass #PostSpawn #SouthAfricanAngling #SAanglers #ConservationFishing"
+    },
+    {
+      "type": "venue",
+      "caption": "Ebenezer Dam, Limpopo 🎣\n\nLimpopo's best bass dam and one of SA's most underrated. Big largemouth in impeccable water, surrounded by the Tzaneen tea and avocado farming country. The dam has classic bass structure — creek channels, submerged timber, rocky points. Less than a 2-hour drive from Pretoria and completely different fishing to the Gauteng metro dams.\n\nDetails on The Map at castzone.co.za",
+      "hashtags": "#CastZone #EbenezerDam #Limpopo #BassLife #SABass #LargemouthBass #SouthAfricanAngling #SAanglers #DamFishing #BushveldFishing"
+    },
+    {
+      "type": "tip",
+      "caption": "Why you should fish the last 30 minutes before dark. 🌆\n\nThe transition from daylight to dark is one of the most reliable feeding windows in freshwater and saltwater. Visibility drops, predators get confident, baitfish move to the surface. Bass smash topwater. Carp cruise the margins. Kob and leervis work the gutter edges. The fish that ignored you all afternoon come alive.\n\nDon't pack up when the light fades. That's when it starts.",
+      "hashtags": "#CastZone #FishingTips #SunsetFishing #GoldenHour #SAanglers #BassLife #CarpFishing #SaltwaterFishing #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "gear",
+      "caption": "Choosing your first serious bass rod. 🎣\n\nFor SA conditions: a 6'6\" to 7' medium-heavy fast-action spinning rod handles 90% of bass fishing — soft plastics, jigs, lighter crankbaits, topwater. Pair it with a 2500-3000 size reel and 15 lb braid + 10 lb fluoro leader. Budget R800-R1500 for a rod that'll last years. Abu Garcia, Shimano Catana, and Penn Pursuit are all solid entry-level options available locally.",
+      "hashtags": "#CastZone #FishingGear #BassRod #TackleAdvice #SAanglers #BassLife #SABass #SpinningRod #SouthAfricanAngling #AnglingSA"
+    },
+    {
+      "type": "cta",
+      "caption": "The CastZone forum is free, forever. 🎣\n\nNo subscription. No paywall. Post a thread, share a spot, ask a question, help a beginner. SA angling knowledge has always been passed down mouth to ear on the bank — now there's a permanent place to write it down.\n\nJoin at castzone.co.za and add your voice to SA's fishing community.",
+      "hashtags": "#CastZone #WhereSouthAfricaFishes #SouthAfricanAngling #SAanglers #FishingForum #FishingCommunity #BassLife #CarpFishing #SaltwaterFishing #AnglingSA"
+    },
+    {
+      "type": "tip",
+      "caption": "Teach someone to fish this weekend. 🎣\n\nThe best thing you can do for SA angling is put a rod in someone's hands for the first time. A nephew, a friend, a colleague who's always been curious. You don't need perfect conditions or an expensive setup — a basic rod, a float, some worms, and the closest accessible water.\n\nEvery angler was a first-timer once. Pay it forward.",
+      "hashtags": "#CastZone #TeachFishing #FishingFamily #SAanglers #FishingCommunity #SouthAfricanAngling #KidsFishing #PayItForward #AnglingSA #WhereSouthAfricaFishes"
     }
   ]
 }
