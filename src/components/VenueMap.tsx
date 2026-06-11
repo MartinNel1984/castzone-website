@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import Link from "next/link";
 import { VENUE_WATER_LEVELS } from "@/data/waterConditions";
+import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
 
 export type Venue = {
   id: string;
@@ -85,6 +86,11 @@ export default function VenueMap({ venues }: { venues: Venue[] }) {
                 <span style={{ fontSize: 12, color: "#555", textTransform: "capitalize" }}>
                   {venue.type} · {venue.province}
                 </span>
+                {DEPTH_MAP_SLUGS.has(venue.slug) && (
+                  <span style={{ display: "block", fontSize: 11, color: "#2a6e6e", fontWeight: 600, marginTop: 2 }}>
+                    🗺 Depth map available
+                  </span>
+                )}
 
                 {/* Water level badge */}
                 {waterData && (

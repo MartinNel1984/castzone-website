@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { Venue } from "@/components/VenueMap";
+import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
 
 const VenueMap = dynamic(() => import("@/components/VenueMap"), { ssr: false });
 
@@ -148,9 +149,14 @@ export default function VenuesPage() {
                 <h3 className="text-bone-white font-heading font-bold uppercase group-hover:text-cast-orange transition-colors leading-tight">
                   {venue.name}
                 </h3>
-                <span className={`flex-shrink-0 ml-2 text-xs font-body border rounded px-2 py-0.5 ${TYPE_COLOUR[venue.type] ?? ""}`}>
-                  {TYPE_LABEL[venue.type] ?? venue.type}
-                </span>
+                <div className="flex-shrink-0 ml-2 flex flex-col items-end gap-1">
+                  <span className={`text-xs font-body border rounded px-2 py-0.5 ${TYPE_COLOUR[venue.type] ?? ""}`}>
+                    {TYPE_LABEL[venue.type] ?? venue.type}
+                  </span>
+                  {DEPTH_MAP_SLUGS.has(venue.slug) && (
+                    <span className="text-[11px] font-body text-pale-water">🗺 Depth map</span>
+                  )}
+                </div>
               </div>
               <p className="text-storm text-xs font-body mb-3">{venue.province}</p>
               <div className="flex flex-wrap gap-1">
