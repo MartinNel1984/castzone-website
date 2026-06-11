@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import BiteTimes from "@/components/BiteTimes";
 import { VENUE_WATER_LEVELS, GATE_NOTICES } from "@/data/waterConditions";
+import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
 import type { Venue } from "@/components/VenueMap";
 
 const VenueMapPin = dynamic(() => import("@/components/VenueMapPin"), { ssr: false });
@@ -411,6 +412,26 @@ export default function VenueContent() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Depth map */}
+      {DEPTH_MAP_SLUGS.has(slug) && (
+        <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6">
+          <h2 className="text-pale-water text-xs font-body uppercase tracking-wider mb-3">Depth Map</h2>
+          <a href={`/depth-maps/${slug}.png`} target="_blank" rel="noopener noreferrer">
+            <img
+              src={`/depth-maps/${slug}.png`}
+              alt={`Estimated depth contour map of ${venue.name}`}
+              className="w-full rounded-lg border border-surface-teal"
+              loading="lazy"
+            />
+          </a>
+          <p className="text-xs font-body text-storm mt-2">
+            Estimated depths at full supply level, modelled from the open GLOBathy bathymetry
+            dataset. A guide for anglers — not a navigation chart. Actual depths vary with the
+            dam level. Tap the map to open it full size.
+          </p>
         </div>
       )}
 
