@@ -45,7 +45,6 @@ export default function VenuesPage() {
     supabase
       .from("venues")
       .select("*")
-      .order("province")
       .order("name")
       .then(({ data }) => {
         setVenues((data ?? []) as Venue[]);
