@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 """
-CastZone weekly social post — WhatsApp delivery edition.
+CastZone social post — direct Facebook edition.
 
-Each Wednesday this script:
+Each Mon/Wed/Fri this script:
   1. Picks the next caption from social-bank.json
   2. Checks Supabase for a new Trophy Room catch this week (with photo)
   3. If found: uses the catch photo; if not: generates a branded tip card
   4. Uploads the image to Supabase Storage (public URL)
-  5. Sends you a WhatsApp message with the ready-to-paste caption + image URL
-  6. You open the image on your phone, save it, paste the caption, post to
-     Instagram and Facebook manually — takes about 2 minutes.
+  5. Posts the image + caption straight to the CastZone Facebook Page via the
+     Meta Graph API (no Make.com / third parties)
+  6. Sends a brief WhatsApp confirmation with a link to the live post
+
+If the Facebook secrets are not configured yet, it falls back to WhatsApping
+the ready-to-paste caption + image URL so the post can be made manually —
+and marks the run with a warning so the gap is visible.
 
 Requires these GitHub repo secrets:
   SUPABASE_URL
   SUPABASE_SERVICE_KEY
-  MAKE_WEBHOOK_URL        (Make.com webhook URL — posts to Facebook + Instagram)
+  FB_PAGE_ID              (numeric ID of the CastZone Facebook Page)
+  FB_PAGE_ACCESS_TOKEN    (long-lived Page access token, pages_manage_posts)
   CALLMEBOT_API_KEY       (already set — sends a brief WhatsApp confirmation)
   NOTIFY_WHATSAPP_NUMBER  (already set — same as health check)
 """
@@ -34,9 +39,12 @@ STATE_PATH = os.path.join(HERE, "social-state.json")
 
 SUPABASE_URL     = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY      = os.environ.get("SUPABASE_SERVICE_KEY", "")
-MAKE_WEBHOOK_URL = os.environ.get("MAKE_WEBHOOK_URL", "")
+FB_PAGE_ID       = os.environ.get("FB_PAGE_ID", "")
+FB_PAGE_TOKEN    = os.environ.get("FB_PAGE_ACCESS_TOKEN", "")
 WA_PHONE         = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
 WA_APIKEY        = os.environ.get("CALLMEBOT_API_KEY", "")
+
+GRAPH_API = "https://graph.facebook.com/v23.0"
 
 BRAND_BG     = "#1a3a3a"
 BRAND_ORANGE = "#f26522"
@@ -101,21 +109,34 @@ def upload_to_storage(filepath, bucket, object_path, content_type):
     return f"{SUPABASE_URL}/storage/v1/object/public/{bucket}/{object_path}"
 
 
-def call_make_webhook(caption, image_url):
-    """POST caption + image_url to Make.com — it handles FB + IG posting."""
-    payload = json.dumps({"caption": caption, "image_url": image_url}).encode()
+def post_to_facebook(caption, image_url):
+    """Publish a photo post on the Facebook Page. Returns the post URL."""
+    params = urllib.parse.urlencode({
+        "url":          image_url,
+        "caption":      caption,
+        "access_token": FB_PAGE_TOKEN,
+    }).encode()
     req = urllib.request.Request(
-        MAKE_WEBHOOK_URL,
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+        f"{GRAPH_API}/{FB_PAGE_ID}/photos", data=params, method="POST"
     )
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            resp.read()
-        print("Make.com webhook called — posting to Facebook + Instagram.")
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        if WA_PHONE and WA_APIKEY:
+            send_whatsapp(
+                "CastZone Facebook post FAILED - check the GitHub Actions log "
+                "(token may have expired)."
+            )
+        die(f"Facebook post failed: {e.code} {body}")
     except Exception as e:
-        die(f"Make.com webhook failed: {e}")
+        die(f"Facebook post error: {e}")
+
+    post_id  = result.get("post_id") or result.get("id", "")
+    post_url = f"https://www.facebook.com/{post_id}" if post_id else ""
+    print(f"Posted to Facebook: {post_url or result}")
+    return post_url
 
 
 def send_whatsapp(message):
@@ -195,7 +216,6 @@ def main():
     for name, val in [
         ("SUPABASE_URL",         SUPABASE_URL),
         ("SUPABASE_SERVICE_KEY", SERVICE_KEY),
-        ("MAKE_WEBHOOK_URL",     MAKE_WEBHOOK_URL),
     ]:
         if not val:
             die(f"{name} env var is not set.")
@@ -252,15 +272,25 @@ def main():
         image_note = "Branded tip card"
     print(f"Image URL: {image_url}")
 
-    # Post via Make.com (handles Facebook + Instagram automatically)
-    call_make_webhook(full_caption, image_url)
-
-    # Brief WhatsApp confirmation so you know it went through
-    if WA_PHONE and WA_APIKEY:
-        send_whatsapp(
-            f"CastZone post #{idx + 1}/{len(items)} sent to Facebook + Instagram. "
-            f"({item['type']})"
+    # Post to Facebook directly, or fall back to manual-post WhatsApp
+    if FB_PAGE_ID and FB_PAGE_TOKEN:
+        post_url = post_to_facebook(full_caption, image_url)
+        if WA_PHONE and WA_APIKEY:
+            send_whatsapp(
+                f"CastZone post #{idx + 1}/{len(items)} is live on Facebook "
+                f"({item['type']}): {post_url}"
+            )
+    else:
+        warn(
+            "FB_PAGE_ID / FB_PAGE_ACCESS_TOKEN not set — Facebook posting "
+            "skipped. Sending manual-post WhatsApp instead."
         )
+        if WA_PHONE and WA_APIKEY:
+            send_whatsapp(
+                f"CastZone post #{idx + 1}/{len(items)} ready (Facebook "
+                f"auto-post not set up yet). Image: {image_url} -- Caption: "
+                f"{full_caption[:600]}"
+            )
 
     # Advance state
     state["next_index"] = (idx + 1) % len(items)

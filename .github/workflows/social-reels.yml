@@ -8,7 +8,10 @@ name: Monthly highlight reel
 
 on:
   schedule:
-    - cron: "0 7 1-7 * 5"   # first Friday of month, 09:00 SAST
+    # Cron ORs day-of-month with day-of-week, so "1-7 * 5" would fire on ALL
+    # of the 1st-7th PLUS every Friday. Instead: fire every Friday and have
+    # the guard step below skip every Friday after the first of the month.
+    - cron: "0 7 * * 5"
   workflow_dispatch: {}      # run manually from Actions tab to test
 
 permissions:
@@ -26,18 +29,30 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      - name: Skip unless first Friday of the month
+        if: github.event_name == 'schedule'
+        run: |
+          if [ "$(date -u +%-d)" -gt 7 ]; then
+            echo "Not the first Friday of the month — skipping."
+            echo "SKIP_REEL=true" >> "$GITHUB_ENV"
+          fi
+
       - uses: actions/checkout@v4
+        if: env.SKIP_REEL != 'true'
 
       - uses: actions/setup-python@v5
+        if: env.SKIP_REEL != 'true'
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: env.SKIP_REEL != 'true'
         run: |
           sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
           pip install pillow
 
       - name: Build reel + send WhatsApp
+        if: env.SKIP_REEL != 'true'
         env:
           SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY:    ${{ secrets.SUPABASE_SERVICE_KEY }}

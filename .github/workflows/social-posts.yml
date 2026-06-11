@@ -1,9 +1,11 @@
 name: Weekly social posts
 
-# Every Wednesday 08:00 SAST (06:00 UTC).
+# Mon/Wed/Fri 08:00 SAST (06:00 UTC).
 # Generates a branded post (tip card or catch spotlight), uploads the image to
-# Supabase Storage, and sends Martin a WhatsApp with the ready-to-paste caption
-# + image URL. Martin posts manually to Instagram and Facebook — takes ~2 min.
+# Supabase Storage, and posts it straight to the CastZone Facebook Page via
+# the Meta Graph API. Sends Martin a WhatsApp confirmation with the post link.
+# If the FB secrets are missing it WhatsApps the caption + image for manual
+# posting instead (with a run warning), so nothing is ever silently dropped.
 
 on:
   schedule:
@@ -38,7 +40,8 @@ jobs:
         env:
           SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY:    ${{ secrets.SUPABASE_SERVICE_KEY }}
-          MAKE_WEBHOOK_URL:        ${{ secrets.MAKE_WEBHOOK_URL }}
+          FB_PAGE_ID:              ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN:    ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
           CALLMEBOT_API_KEY:       ${{ secrets.CALLMEBOT_API_KEY }}
           NOTIFY_WHATSAPP_NUMBER:  ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
         run: python social-media/post_social.py
