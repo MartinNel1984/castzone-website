@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { computeBiteDays, ratingFor, fmtTime, type BiteDay } from "@/lib/solunar";
 import { fetchConditions, fetchForecast, type Conditions, type DayForecast } from "@/lib/weather";
+import { createClient } from "@/lib/supabase";
+
+// Days of the outlook visible without an account (today + tomorrow).
+const FREE_DAYS = 2;
 
 type Props = {
   lat: number;
@@ -28,6 +32,18 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
   const [state, setState] = useState<{ days: BiteDay[]; nowMin: number; nowMs: number } | null>(null);
   const [cond, setCond] = useState<Conditions | null>(null);
   const [forecast, setForecast] = useState<DayForecast[] | null>(null);
+  // false until we *know* the visitor is logged out, so members never see a flash of the lock
+  const [lockedOut, setLockedOut] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+    supabase.auth.getUser().then(({ data }) => { if (active) setLockedOut(!data.user); });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLockedOut(!session?.user);
+    });
+    return () => { active = false; listener.subscription.unsubscribe(); };
+  }, []);
 
   useEffect(() => {
     const now = new Date();
@@ -202,16 +218,18 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-2">
           7-Day Outlook{forecast ? " · Bite + Weather" : ""}
         </p>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="relative grid grid-cols-7 gap-1">
           {days.map((d, i) => {
             const sc = i === 0 ? score : d.score;
             const r = ratingFor(sc);
             const fc = forecast?.[i];
+            const locked = lockedOut && i >= FREE_DAYS;
             return (
               <div
                 key={i}
-                className={`text-center rounded-md py-2 ${i === 0 ? "bg-deep-water border border-cast-orange/40" : "bg-deep-water"}`}
-                title={`${r.rating} · ${sc}%${fc ? ` · ${fc.label}, ${fc.tMin}–${fc.tMax}°C, rain ${fc.rainPct}%, wind up to ${fc.windMax} km/h` : ""}`}
+                className={`text-center rounded-md py-2 ${i === 0 ? "bg-deep-water border border-cast-orange/40" : "bg-deep-water"} ${locked ? "blur-[5px] select-none pointer-events-none" : ""}`}
+                aria-hidden={locked}
+                title={locked ? undefined : `${r.rating} · ${sc}%${fc ? ` · ${fc.label}, ${fc.tMin}–${fc.tMax}°C, rain ${fc.rainPct}%, wind up to ${fc.windMax} km/h` : ""}`}
               >
                 <p className="text-storm text-[10px] font-body uppercase">
                   {i === 0 ? "Today" : d.date.toLocaleDateString("en-ZA", { weekday: "short" })}
@@ -232,8 +250,28 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
               </div>
             );
           })}
+          {lockedOut && (
+            <Link
+              href="/register"
+              className="group absolute inset-y-0 right-0 z-10 flex flex-col items-center justify-center text-center rounded-md px-2"
+              style={{ left: `${(FREE_DAYS / 7) * 100}%` }}
+            >
+              <span className="text-xl leading-none mb-1.5">🔒</span>
+              <span className="bg-cast-orange group-hover:bg-bone-white text-deep-water text-[11px] sm:text-xs font-heading font-bold uppercase tracking-wider rounded px-2.5 py-1.5 transition-colors">
+                Sign up free
+              </span>
+              <span className="text-pale-water text-[10px] sm:text-[11px] font-body mt-1.5 leading-tight drop-shadow">
+                to unlock the full 7-day forecast
+              </span>
+            </Link>
+          )}
         </div>
-        {forecast && (
+        {lockedOut ? (
+          <p className="text-storm text-[10px] font-body mt-1.5">
+            Free members see the full 7-day bite + weather outlook ·{" "}
+            <Link href="/login" className="text-cast-orange hover:underline">already a member? Log in</Link>
+          </p>
+        ) : forecast && (
           <p className="text-storm text-[10px] font-body mt-1.5">
             Weather updates live every time the page loads · tap a day for detail
           </p>
