@@ -6,7 +6,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write   # needed to read/update the LAST_MEMBER_SEEN repo variable
+  contents: write   # to commit the advanced marker file back
+
+concurrency:
+  group: new-member-alert
+  cancel-in-progress: false
 
 jobs:
   check:
@@ -16,23 +20,19 @@ jobs:
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPO: ${{ github.repository }}
+      STATE_FILE: .github/new-member-state.txt
     steps:
+      - uses: actions/checkout@v4
+
       - name: Check for new member signups
         run: |
-          VAR_URL="/repos/$REPO/actions/variables/LAST_MEMBER_SEEN"
-
-          SINCE=$(gh api "$VAR_URL" --jq .value 2>/dev/null || echo "")
-
-          if [ -z "$SINCE" ]; then
+          if [ ! -f "$STATE_FILE" ]; then
             # First run: initialise the marker to now, don't alert on history.
-            NOW=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-            gh api -X POST "/repos/$REPO/actions/variables" \
-              -f name=LAST_MEMBER_SEEN -f value="$NOW"
-            echo "Initialised LAST_MEMBER_SEEN to $NOW — no alert on first run."
+            date -u +'%Y-%m-%dT%H:%M:%SZ' > "$STATE_FILE"
+            echo "Initialised marker to $(cat "$STATE_FILE") — no alert on first run."
             exit 0
           fi
+          SINCE=$(cat "$STATE_FILE")
           echo "Checking for members created after $SINCE"
 
           RESP=$(curl -sS -G "$SUPABASE_URL/rest/v1/profiles" \
@@ -43,7 +43,7 @@ jobs:
             -H "Authorization: Bearer $SUPABASE_ANON_KEY")
           echo "New profiles: $RESP"
 
-          NEW_COUNT=$(echo "$RESP" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          NEW_COUNT=$(echo "$RESP" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d) if isinstance(d, list) else exit('Unexpected response: '+str(d)))")
           if [ "$NEW_COUNT" -eq 0 ]; then
             echo "No new members."
             exit 0
@@ -67,5 +67,17 @@ jobs:
           curl -sS -o /dev/null "https://api.callmebot.com/whatsapp.php?phone=$NOTIFY_WHATSAPP_NUMBER&text=$ENCODED&apikey=$CALLMEBOT_API_KEY"
 
           # Only advance the marker after the alert goes out.
-          gh api -X PATCH "$VAR_URL" -f name=LAST_MEMBER_SEEN -f value="$LATEST"
-          echo "Marker advanced to $LATEST"
+          echo "$LATEST" > "$STATE_FILE"
+
+      - name: Commit advanced marker
+        run: |
+          if git diff --quiet -- "$STATE_FILE" && git ls-files --error-unmatch "$STATE_FILE" >/dev/null 2>&1; then
+            echo "No marker change — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "CastZone Member Bot"
+          git config user.email "members@castzone.co.za"
+          git add "$STATE_FILE"
+          git commit -m "New member alert: advance marker [skip ci]"
+          git pull --rebase
+          git push
