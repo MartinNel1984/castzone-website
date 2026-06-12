@@ -8,6 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import BiteTimes from "@/components/BiteTimes";
 import GateNoticeStaleness from "@/components/GateNoticeStaleness";
 import { GATE_NOTICES } from "@/data/waterConditions";
+import { useSpot, JOHANNESBURG } from "@/lib/geo";
 
 const forumCategories = [
   {
@@ -98,6 +99,7 @@ export default function HomePage() {
   const [recentThreads, setRecentThreads] = useState<RecentThread[]>([]);
   const [recentCatches, setRecentCatches] = useState<RecentCatch[]>([]);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
+  const { spot, locateMe, locating, geoError } = useSpot(JOHANNESBURG);
 
   useEffect(() => {
     const supabase = createClient();
@@ -213,7 +215,17 @@ export default function HomePage() {
 
       {/* Bite forecast widget */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        <BiteTimes lat={-26.2041} lng={28.0473} variant="compact" locationLabel="Johannesburg area" />
+        <div className="flex flex-wrap items-center justify-end gap-3 mb-2">
+          {geoError && <span className="text-amber-400 text-xs font-body">{geoError}</span>}
+          <button
+            onClick={locateMe}
+            disabled={locating}
+            className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded transition-colors disabled:opacity-50"
+          >
+            📍 {locating ? "Finding you…" : "Use my location"}
+          </button>
+        </div>
+        <BiteTimes lat={spot.lat} lng={spot.lng} variant="compact" locationLabel={spot.label} />
       </section>
 
       {/* Angler Safety — Vaal River */}

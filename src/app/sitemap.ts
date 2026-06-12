@@ -21,6 +21,7 @@ const STATIC_ROUTES = [
   "/venues",
   "/venues/suggest",
   "/conditions",
+  "/bite-times",
   "/members",
   "/saved",
   "/list-your-venue",

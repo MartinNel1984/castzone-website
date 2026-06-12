@@ -14,6 +14,62 @@ export type Conditions = {
   summary: string;
 };
 
+export type DayForecast = {
+  date: string; // YYYY-MM-DD (location's timezone)
+  emoji: string;
+  label: string;
+  tMax: number; // °C
+  tMin: number; // °C
+  rainPct: number; // max precipitation probability for the day, 0-100
+  windMax: number; // km/h
+};
+
+// WMO weather interpretation codes → display
+function wmoIcon(code: number): { emoji: string; label: string } {
+  if (code === 0) return { emoji: "☀️", label: "Clear" };
+  if (code === 1) return { emoji: "🌤️", label: "Mostly clear" };
+  if (code === 2) return { emoji: "⛅", label: "Partly cloudy" };
+  if (code === 3) return { emoji: "☁️", label: "Overcast" };
+  if (code === 45 || code === 48) return { emoji: "🌫️", label: "Fog" };
+  if (code >= 51 && code <= 57) return { emoji: "🌦️", label: "Drizzle" };
+  if (code >= 61 && code <= 67) return { emoji: "🌧️", label: "Rain" };
+  if (code >= 71 && code <= 77) return { emoji: "🌨️", label: "Snow" };
+  if (code >= 80 && code <= 82) return { emoji: "🌧️", label: "Showers" };
+  if (code >= 95) return { emoji: "⛈️", label: "Thunderstorm" };
+  return { emoji: "🌥️", label: "Cloudy" };
+}
+
+// 7-day daily forecast. Fetched live in the visitor's browser, so it is always
+// current — no scheduled refresh needed.
+export async function fetchForecast(lat: number, lng: number): Promise<DayForecast[] | null> {
+  try {
+    const url =
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max` +
+      `&forecast_days=7&timezone=auto`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const d = data?.daily;
+    const dates: string[] = d?.time ?? [];
+    if (dates.length === 0) return null;
+    return dates.map((date, i) => {
+      const { emoji, label } = wmoIcon(d.weather_code?.[i] ?? -1);
+      return {
+        date,
+        emoji,
+        label,
+        tMax: Math.round(d.temperature_2m_max?.[i] ?? 0),
+        tMin: Math.round(d.temperature_2m_min?.[i] ?? 0),
+        rainPct: Math.round(d.precipitation_probability_max?.[i] ?? 0),
+        windMax: Math.round(d.wind_speed_10m_max?.[i] ?? 0),
+      };
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchConditions(lat: number, lng: number): Promise<Conditions | null> {
   try {
     const url =

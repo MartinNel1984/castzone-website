@@ -42,6 +42,7 @@ export default function Footer() {
               {[
                 { label: "Tackle Box", href: "/classifieds" },
                 { label: "The Map", href: "/venues" },
+                { label: "Bite Times", href: "/bite-times" },
                 { label: "Tournaments", href: "/tournaments" },
                 { label: "Trophy Room", href: "/catches" },
               ].map((item) => (

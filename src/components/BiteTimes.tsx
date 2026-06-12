@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { computeBiteDays, ratingFor, fmtTime, type BiteDay } from "@/lib/solunar";
-import { fetchConditions, type Conditions } from "@/lib/weather";
+import { fetchConditions, fetchForecast, type Conditions, type DayForecast } from "@/lib/weather";
 
 type Props = {
   lat: number;
@@ -27,6 +27,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
   // into the prerendered HTML and cause a hydration mismatch.
   const [state, setState] = useState<{ days: BiteDay[]; nowMin: number; nowMs: number } | null>(null);
   const [cond, setCond] = useState<Conditions | null>(null);
+  const [forecast, setForecast] = useState<DayForecast[] | null>(null);
 
   useEffect(() => {
     const now = new Date();
@@ -38,6 +39,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
     });
     let active = true;
     fetchConditions(lat, lng).then((c) => { if (active) setCond(c); });
+    fetchForecast(lat, lng).then((f) => { if (active) setForecast(f); });
     return () => { active = false; };
   }, [lat, lng]);
 
@@ -68,7 +70,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
       .sort((a, b) => a.start.getTime() - b.start.getTime())[0];
     return (
       <Link
-        href="/venues"
+        href="/bite-times"
         className="group block bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors"
       >
         <div className="flex items-center justify-between gap-3 mb-3">
@@ -84,6 +86,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         </div>
         <p className="text-pale-water text-xs font-body mt-1 mb-3">
           {today.moon.emoji} {today.moon.name}
+          {forecast?.[0] && <> · {forecast[0].emoji} {forecast[0].tMax}°<span className="text-storm">/{forecast[0].tMin}°</span></>}
           {nextMajor && <> · next prime <span className="text-bone-white">{fmtTime(nextMajor.start)}–{fmtTime(nextMajor.end)}</span></>}
         </p>
 
@@ -194,28 +197,47 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         </div>
       </div>
 
-      {/* 7-day outlook */}
+      {/* 7-day bite + weather outlook */}
       <div className="mb-4">
-        <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-2">7-Day Outlook</p>
+        <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-2">
+          7-Day Outlook{forecast ? " · Bite + Weather" : ""}
+        </p>
         <div className="grid grid-cols-7 gap-1">
           {days.map((d, i) => {
             const sc = i === 0 ? score : d.score;
             const r = ratingFor(sc);
+            const fc = forecast?.[i];
             return (
               <div
                 key={i}
                 className={`text-center rounded-md py-2 ${i === 0 ? "bg-deep-water border border-cast-orange/40" : "bg-deep-water"}`}
-                title={`${r.rating} · ${sc}%`}
+                title={`${r.rating} · ${sc}%${fc ? ` · ${fc.label}, ${fc.tMin}–${fc.tMax}°C, rain ${fc.rainPct}%, wind up to ${fc.windMax} km/h` : ""}`}
               >
                 <p className="text-storm text-[10px] font-body uppercase">
                   {i === 0 ? "Today" : d.date.toLocaleDateString("en-ZA", { weekday: "short" })}
                 </p>
                 <p className="text-base leading-tight my-0.5">{d.moon.emoji}</p>
                 <p className="font-heading font-bold text-sm" style={{ color: r.color }}>{sc}</p>
+                {fc && (
+                  <div className="border-t border-surface-teal/30 mt-1.5 pt-1">
+                    <p className="text-sm leading-tight">{fc.emoji}</p>
+                    <p className="text-pale-water text-[10px] font-body leading-tight mt-0.5">
+                      {fc.tMax}°<span className="text-storm">/{fc.tMin}°</span>
+                    </p>
+                    <p className={`text-[10px] font-body leading-tight ${fc.rainPct >= 40 ? "text-blue-300" : "text-storm"}`}>
+                      💧{fc.rainPct}%
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
+        {forecast && (
+          <p className="text-storm text-[10px] font-body mt-1.5">
+            Weather updates live every time the page loads · tap a day for detail
+          </p>
+        )}
       </div>
 
       {/* Sun + disclaimer */}
