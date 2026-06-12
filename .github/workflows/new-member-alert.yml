@@ -1,0 +1,71 @@
+name: New Member Alert
+
+on:
+  schedule:
+    - cron: '7 * * * *'   # hourly, 7 min past to avoid the top-of-hour rush
+  workflow_dispatch:
+
+permissions:
+  actions: write   # needed to read/update the LAST_MEMBER_SEEN repo variable
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
+      NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Check for new member signups
+        run: |
+          VAR_URL="/repos/$REPO/actions/variables/LAST_MEMBER_SEEN"
+
+          SINCE=$(gh api "$VAR_URL" --jq .value 2>/dev/null || echo "")
+
+          if [ -z "$SINCE" ]; then
+            # First run: initialise the marker to now, don't alert on history.
+            NOW=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            gh api -X POST "/repos/$REPO/actions/variables" \
+              -f name=LAST_MEMBER_SEEN -f value="$NOW"
+            echo "Initialised LAST_MEMBER_SEEN to $NOW — no alert on first run."
+            exit 0
+          fi
+          echo "Checking for members created after $SINCE"
+
+          RESP=$(curl -sS -G "$SUPABASE_URL/rest/v1/profiles" \
+            --data-urlencode "select=username,created_at" \
+            --data-urlencode "created_at=gt.$SINCE" \
+            --data-urlencode "order=created_at.asc" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          echo "New profiles: $RESP"
+
+          NEW_COUNT=$(echo "$RESP" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          if [ "$NEW_COUNT" -eq 0 ]; then
+            echo "No new members."
+            exit 0
+          fi
+
+          NAMES=$(echo "$RESP" | python3 -c "import json,sys; print(', '.join(p['username'] for p in json.load(sys.stdin)))")
+          LATEST=$(echo "$RESP" | python3 -c "import json,sys; print(json.load(sys.stdin)[-1]['created_at'])")
+
+          TOTAL=$(curl -sS -D - -o /dev/null "$SUPABASE_URL/rest/v1/profiles?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Prefer: count=exact" | grep -i '^content-range' | sed -E 's#.*/##' | tr -d '\r\n ')
+
+          if [ "$NEW_COUNT" -eq 1 ]; then
+            MSG="🎣 CastZone: new member signed up — $NAMES. Total members: $TOTAL."
+          else
+            MSG="🎣 CastZone: $NEW_COUNT new members signed up — $NAMES. Total members: $TOTAL."
+          fi
+          echo "Sending: $MSG"
+          ENCODED="$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$MSG")"
+          curl -sS -o /dev/null "https://api.callmebot.com/whatsapp.php?phone=$NOTIFY_WHATSAPP_NUMBER&text=$ENCODED&apikey=$CALLMEBOT_API_KEY"
+
+          # Only advance the marker after the alert goes out.
+          gh api -X PATCH "$VAR_URL" -f name=LAST_MEMBER_SEEN -f value="$LATEST"
+          echo "Marker advanced to $LATEST"
