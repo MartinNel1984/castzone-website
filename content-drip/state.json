@@ -1,4 +1,4 @@
 {
-  "next_index": 2,
+  "next_index": 3,
   "_comment": "Points at the next item in bank.json the drip will post. The GitHub Action increments this each run and commits it back. To replay from the start, set this to 0."
 }
