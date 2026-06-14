@@ -1,14 +1,1 @@
-[
-  {
-    "name": "Dimalachite River Lodge",
-    "slug": "dimalachite-river-lodge",
-    "province": "Free State",
-    "type": "river",
-    "species": ["Carp", "Barbel", "Yellowfish"],
-    "lat": -26.9400,
-    "lng": 27.4100,
-    "permit_required": false,
-    "permit_info": "Private lodge on the Vaal River near Parys — access by booking. Camping, chalets & lodges. Contact 056 818 1862 / hannes@dimalachite.co.za",
-    "facilities": ["Camping", "Chalets", "Lodges", "Swimming pool"]
-  }
-]
+[]

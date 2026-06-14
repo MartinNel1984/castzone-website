@@ -29,6 +29,7 @@ export const VENUE_SLUGS = [
   "darlington-dam", "kouga-dam", "impofu-dam", "umtata-dam", "ncora-dam", "wriggleswade-dam",
   // Northern Cape
   "vaalharts-weir", "spitskop-dam",
+  "dimalachite-river-lodge", // onboarded
 ];
 
 function slugToName(slug: string): string {
