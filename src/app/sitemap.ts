@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { VENUE_SLUGS } from "./venues/[slug]/page";
+import { DAM_SLUGS } from "@/data/waterConditions";
 
 export const dynamic = "force-static";
 
@@ -49,6 +50,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE}/venues/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...DAM_SLUGS.map((slug) => ({
+      url: `${BASE}/conditions/${slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
       priority: 0.6,
     })),
   ];

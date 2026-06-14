@@ -9,6 +9,7 @@ import {
   GATE_NOTICES,
   DATA_UPDATED,
   NATIONAL_AVG,
+  damSlug,
   type DamLevel,
 } from "@/data/waterConditions";
 
@@ -363,16 +364,12 @@ export default function ConditionsContent() {
                     className="border-b border-surface-teal/50 hover:bg-surface-teal/10 transition-colors"
                   >
                     <td className="px-4 py-3">
-                      {dam.venueSlug ? (
-                        <Link
-                          href={`/venues/${dam.venueSlug}`}
-                          className="font-heading font-bold text-bone-white hover:text-cast-orange transition-colors text-sm"
-                        >
-                          {dam.name}
-                        </Link>
-                      ) : (
-                        <span className="font-heading font-bold text-bone-white text-sm">{dam.name}</span>
-                      )}
+                      <Link
+                        href={`/conditions/${damSlug(dam.name)}`}
+                        className="font-heading font-bold text-bone-white hover:text-cast-orange transition-colors text-sm"
+                      >
+                        {dam.name}
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-xs font-body text-storm">{dam.river}</td>
                     <td className="px-4 py-3 text-sm font-body text-pale-water">{dam.fsc.toLocaleString()}</td>

@@ -52,7 +52,7 @@ const featureCards = [
   { title: "Tournaments", description: "SA tournament calendar — bass, carp, saltwater and more.", href: "/tournaments", icon: "🥇" },
 ];
 
-type Stats = { members: number; threads: number; posts: number; categories: number };
+type Stats = { members: number; threads: number; posts: number; categories: number; venues: number };
 
 type RecentCatch = {
   id: string;
@@ -112,6 +112,7 @@ export default function HomePage() {
         { count: members },
         { count: threads },
         { count: posts },
+        { count: venues },
         { data: cats },
         { data: latest },
         { data: latestCatches },
@@ -119,11 +120,12 @@ export default function HomePage() {
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("threads").select("*", { count: "exact", head: true }),
         supabase.from("posts").select("*", { count: "exact", head: true }),
+        supabase.from("venues").select("*", { count: "exact", head: true }),
         supabase.from("categories").select("slug,thread_count,post_count"),
         supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
         supabase.from("catches").select("id,species,weight_kg,category,venue,image_url,profiles(username)").eq("approved", true).order("approved_at", { ascending: false }).limit(3),
       ]);
-      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0 });
+      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0 });
       if (cats) {
         const map: Record<string, { thread_count: number; post_count: number }> = {};
         cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
@@ -177,14 +179,19 @@ export default function HomePage() {
                 </Link>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-4">
-                <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                  Join Free
-                </Link>
-                <Link href="/forum" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                  Browse Forum
-                </Link>
-              </div>
+              <>
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
+                    Join Free
+                  </Link>
+                  <Link href="/forum" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
+                    Browse Forum
+                  </Link>
+                </div>
+                <p className="text-pale-water/70 text-sm font-body mt-4">
+                  Free forever · Dam &amp; gate-level alerts · Find venues near you
+                </p>
+              </>
             )}
           </div>
         </div>
@@ -199,6 +206,7 @@ export default function HomePage() {
                 <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></Link>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p></div>
+                {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.venues.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Venues</p></Link>}
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.categories.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
               </>
             ) : (

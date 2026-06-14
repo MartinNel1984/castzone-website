@@ -286,6 +286,18 @@ export const ALL_DAMS: DamLevel[] = [
 const _totalFSC = ALL_DAMS.reduce((a, d) => a + d.fsc, 0);
 export const NATIONAL_AVG = +(ALL_DAMS.reduce((a, d) => a + d.fsc * d.pct, 0) / _totalFSC).toFixed(1);
 
+// ─── Per-dam SEO pages (/conditions/[dam]) ────────────────────────────────
+// URL-safe slug for a dam name. Stable across the 217 dams (no collisions).
+export function damSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+export const DAM_SLUGS: string[] = ALL_DAMS.map((d) => damSlug(d.name));
+
+export const DAM_BY_SLUG: Record<string, DamLevel> = Object.fromEntries(
+  ALL_DAMS.map((d) => [damSlug(d.name), d])
+);
+
 // Slug → water level lookup used by the Leaflet map
 export const VENUE_WATER_LEVELS: Record<string, { pct: number; lastYear: number; river: string }> =
   Object.fromEntries(
