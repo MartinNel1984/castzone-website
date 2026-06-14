@@ -8,7 +8,6 @@ import NotificationBell from "@/components/NotificationBell";
 
 const navLinks = [
   { label: "Forum",        href: "/forum" },
-  { label: "Tackle Box",   href: "/classifieds" },
   { label: "The Map",      href: "/venues" },
   { label: "Trophy Room",  href: "/catches" },
   { label: "Conditions",   href: "/conditions" },

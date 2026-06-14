@@ -40,7 +40,6 @@ export default function Footer() {
             <h4 className="text-bone-white font-heading font-semibold uppercase tracking-wider text-sm mb-3">Community</h4>
             <ul className="space-y-2">
               {[
-                { label: "Tackle Box", href: "/classifieds" },
                 { label: "The Map", href: "/venues" },
                 { label: "Bite Times", href: "/bite-times" },
                 { label: "Tournaments", href: "/tournaments" },

@@ -46,7 +46,7 @@ const forumCategories = [
 ];
 
 const featureCards = [
-  { title: "Tackle Box", description: "Buy and sell fishing gear. Rods, reels, boats, tackle — all in one place.", href: "/classifieds", icon: "🛒" },
+  { title: "Best Bite Times", description: "Solunar + weather forecast for the best times to fish, anywhere in SA.", href: "/bite-times", icon: "🎣" },
   { title: "The Map", description: "Find dams and venues across all 9 provinces. Species, permits, GPS.", href: "/venues", icon: "🗺️" },
   { title: "Trophy Room", description: "Log your catches, track personal bests, and show off your fish.", href: "/catches", icon: "🏆" },
   { title: "Tournaments", description: "SA tournament calendar — bass, carp, saltwater and more.", href: "/tournaments", icon: "🥇" },
