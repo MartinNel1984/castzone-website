@@ -20,7 +20,7 @@ import sys, os, re, json, ssl, urllib.parse, urllib.request, argparse
 import openpyxl
 
 REPO  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LEADS = os.path.expanduser("~/Desktop/CastZone_Venue_Leads.xlsx")
+LEADS = os.path.expanduser("~/Documents/CastZone/Outreach/CastZone_Venue_Leads.xlsx")
 SLUGF = os.path.join(REPO, "src/app/venues/[slug]/page.tsx")
 KEYS  = ['num','venue','prov','vtype','contact','email','phone','web','offered','status','notes','date']
 
