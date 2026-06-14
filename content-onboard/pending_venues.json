@@ -1,1 +1,607 @@
-[]
+[
+ {
+  "name": "Kwaggaskloof Dam",
+  "slug": "kwaggaskloof-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.75674,
+  "lng": 19.47485,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Kammanassie Dam",
+  "slug": "kammanassie-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.62067,
+  "lng": 22.76355,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Duiwenhoks Dam",
+  "slug": "duiwenhoks-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -34.11082,
+  "lng": 20.96788,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Haarlem Dam",
+  "slug": "haarlem-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.73389,
+  "lng": 23.33861,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Klipheuwel Dam",
+  "slug": "klipheuwel-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.71795,
+  "lng": 18.70796,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Ernest Robertson Dam",
+  "slug": "ernest-robertson-dam",
+  "province": "Western Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.90021,
+  "lng": 22.1717,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Groothoek Dam",
+  "slug": "groothoek-dam",
+  "province": "Free State",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel",
+   "Yellowfish"
+  ],
+  "lat": -33.46214,
+  "lng": 19.69695,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Klipdrift Dam",
+  "slug": "klipdrift-dam",
+  "province": "Gauteng",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.84112,
+  "lng": 19.3856,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Mearns Dam",
+  "slug": "mearns-dam",
+  "province": "KwaZulu-Natal",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -29.25553,
+  "lng": 29.96335,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Hans Merensky Dam",
+  "slug": "hans-merensky-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -23.96595,
+  "lng": 31.17014,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Modjadji Dam",
+  "slug": "modjadji-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -23.62785,
+  "lng": 30.36881,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Mutshedzi Dam",
+  "slug": "mutshedzi-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -23.92951,
+  "lng": 29.42157,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Nsami Dam",
+  "slug": "nsami-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -23.19097,
+  "lng": 30.65016,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Nwanedzi Dam",
+  "slug": "nwanedzi-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -23.81369,
+  "lng": 31.42414,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Thabina Dam",
+  "slug": "thabina-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -24.03154,
+  "lng": 30.16315,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Tonteldoos Dam",
+  "slug": "tonteldoos-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -25.32895,
+  "lng": 29.99304,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Tours Dam",
+  "slug": "tours-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -22.21761,
+  "lng": 29.3883,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Warmbad Dam",
+  "slug": "warmbad-dam",
+  "province": "Limpopo",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -24.8806,
+  "lng": 28.29048,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Buffelskloof Dam",
+  "slug": "buffelskloof-dam",
+  "province": "Mpumalanga",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -24.958,
+  "lng": 30.25629,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Klerkskraal Dam",
+  "slug": "klerkskraal-dam",
+  "province": "North West",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -26.25144,
+  "lng": 27.16433,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Madikwe Dam",
+  "slug": "madikwe-dam",
+  "province": "North West",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -25.35528,
+  "lng": 26.53139,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Setumo Dam",
+  "slug": "setumo-dam",
+  "province": "North West",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -25.85298,
+  "lng": 25.58086,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Kromrivier Dam",
+  "slug": "kromrivier-dam",
+  "province": "Eastern Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -33.37023,
+  "lng": 25.81765,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Mabeleni Dam",
+  "slug": "mabeleni-dam",
+  "province": "Eastern Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -32.74722,
+  "lng": 26.77861,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Sandile Dam",
+  "slug": "sandile-dam",
+  "province": "Eastern Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -32.94225,
+  "lng": 27.75537,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Douglas Weir Dam",
+  "slug": "douglas-weir-dam",
+  "province": "Northern Cape",
+  "type": "dam",
+  "species": [
+   "Carp",
+   "Bass",
+   "Barbel",
+   "Yellowfish"
+  ],
+  "lat": -29.04345,
+  "lng": 23.83578,
+  "permit_required": false,
+  "permit_info": "Public dam \u2014 a provincial fishing licence/permit may be required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Vanderbijlpark",
+  "slug": "vaal-river-vanderbijlpark",
+  "province": "Gauteng",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -26.70689,
+  "lng": 27.83627,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Deneysville",
+  "slug": "vaal-river-deneysville",
+  "province": "Free State",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -26.89,
+  "lng": 28.09639,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Standerton",
+  "slug": "vaal-river-standerton",
+  "province": "Mpumalanga",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -26.94333,
+  "lng": 29.24361,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Villiers",
+  "slug": "vaal-river-villiers",
+  "province": "Free State",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -27.02972,
+  "lng": 28.60083,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Klerksdorp",
+  "slug": "vaal-river-klerksdorp",
+  "province": "North West",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -26.86254,
+  "lng": 26.66568,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Orkney",
+  "slug": "vaal-river-orkney",
+  "province": "North West",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -26.97528,
+  "lng": 26.67193,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Bothaville",
+  "slug": "vaal-river-bothaville",
+  "province": "Free State",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -27.38889,
+  "lng": 26.61667,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Christiana",
+  "slug": "vaal-river-christiana",
+  "province": "North West",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -27.91364,
+  "lng": 25.16462,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Warrenton",
+  "slug": "vaal-river-warrenton",
+  "province": "Northern Cape",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -28.11139,
+  "lng": 24.84972,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Douglas",
+  "slug": "vaal-river-douglas",
+  "province": "Northern Cape",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -29.055,
+  "lng": 23.77659,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Vaal River \u2013 Vredefort",
+  "slug": "vaal-river-vredefort",
+  "province": "Free State",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel",
+   "Bass"
+  ],
+  "lat": -27.005,
+  "lng": 27.36556,
+  "permit_required": false,
+  "permit_info": "Vaal River public access \u2014 a provincial licence is required to fish the Vaal; check local regulations.",
+  "facilities": []
+ }
+]
