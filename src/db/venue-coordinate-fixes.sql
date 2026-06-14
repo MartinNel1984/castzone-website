@@ -40,3 +40,4 @@ update venues set lat = -25.9387, lng = 29.2770 where slug = 'witbank-dam';  -- 
 update venues set lat = -34.0009, lng = 22.2096 where slug = 'wolwedans-dam';  -- was -33.9933, 22.4333 (21 km off)
 update venues set lat = -28.7432, lng = 29.2039 where slug = 'woodstock-dam';  -- was -28.73, 29.55 (34 km off)
 update venues set lat = -32.5846, lng = 27.5649 where slug = 'wriggleswade-dam';  -- was -32.12, 27.5 (52 km off)
+update venues set lat = -26.888699, lng = 27.369475 where slug = 'dimalachite-river-lodge';
