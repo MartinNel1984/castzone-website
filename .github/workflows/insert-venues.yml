@@ -1,0 +1,19 @@
+name: Insert pending venues (DB only)
+
+# Inserts venues from content-onboard/pending_venues.json into Supabase using the
+# service-role key. DB-only — does NOT build/deploy (the static venue page is built
+# locally + pushed, the proven deploy path). Trigger from the Actions tab or via API.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  insert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Insert venues via Supabase REST
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python3 scripts/insert_pending_venues.py
