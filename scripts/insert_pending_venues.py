@@ -39,7 +39,7 @@ def main():
         print("Queue empty — nothing to insert."); return 0
     allowed = {"name","slug","province","type","species","lat","lng",
                "permit_required","permit_info","facilities",
-               "contact_name","contact_phone","contact_email","website"}
+               "contact_name","contact_phone","contact_email","website","address"}
     failed = 0
     for v in venues:
         slug = v["slug"]

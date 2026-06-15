@@ -22,6 +22,7 @@ export type Venue = {
   contact_phone?: string | null;
   contact_email?: string | null;
   website?: string | null;
+  address?: string | null;
 };
 
 const TYPE_COLOUR: Record<string, string> = {

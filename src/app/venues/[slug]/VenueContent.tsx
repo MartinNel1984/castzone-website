@@ -325,11 +325,17 @@ export default function VenueContent() {
         <VenueMapPin name={venue.name} type={venue.type} lat={venue.lat} lng={venue.lng} />
       </div>
 
-      {/* GPS */}
+      {/* Location / GPS */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6 flex items-center justify-between gap-4">
         <div>
-          <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">GPS Coordinates</p>
-          <p className="text-bone-white font-body font-mono text-sm">{venue.lat.toFixed(4)}, {venue.lng.toFixed(4)}</p>
+          <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">
+            {venue.address ? "Location" : "GPS Coordinates"}
+          </p>
+          {venue.address ? (
+            <p className="text-bone-white font-body text-sm">{venue.address}</p>
+          ) : (
+            <p className="text-bone-white font-body font-mono text-sm">{venue.lat.toFixed(4)}, {venue.lng.toFixed(4)}</p>
+          )}
         </div>
         <a
           href={gpsUrl}
