@@ -18,6 +18,10 @@ export type Venue = {
   permit_required: boolean;
   permit_info: string | null;
   facilities: string[];
+  contact_name?: string | null;
+  contact_phone?: string | null;
+  contact_email?: string | null;
+  website?: string | null;
 };
 
 const TYPE_COLOUR: Record<string, string> = {

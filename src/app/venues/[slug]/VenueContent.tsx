@@ -469,6 +469,57 @@ export default function VenueContent() {
         </div>
       </div>
 
+      {/* Contact & bookings — for private/partner venues */}
+      {(venue.contact_name || venue.contact_phone || venue.contact_email || venue.website) && (
+        <div className="bg-surface-teal/10 border border-surface-teal/40 rounded-lg p-5 mb-6">
+          <h2 className="text-surface-teal font-heading font-bold uppercase text-sm mb-3">
+            Contact &amp; Bookings
+          </h2>
+          <ul className="space-y-2">
+            {venue.contact_name && (
+              <li className="text-bone-white text-sm font-body flex items-center gap-2">
+                <span className="text-surface-teal flex-shrink-0">👤</span> {venue.contact_name}
+              </li>
+            )}
+            {venue.contact_phone && (
+              <li className="text-sm font-body flex items-center gap-2">
+                <span className="text-surface-teal flex-shrink-0">📞</span>
+                <a
+                  href={`tel:${venue.contact_phone.split("/")[0].replace(/[^+\d]/g, "")}`}
+                  className="text-bone-white hover:text-cast-orange transition-colors"
+                >
+                  {venue.contact_phone}
+                </a>
+              </li>
+            )}
+            {venue.contact_email && (
+              <li className="text-sm font-body flex items-center gap-2">
+                <span className="text-surface-teal flex-shrink-0">✉</span>
+                <a
+                  href={`mailto:${venue.contact_email}`}
+                  className="text-bone-white hover:text-cast-orange transition-colors break-all"
+                >
+                  {venue.contact_email}
+                </a>
+              </li>
+            )}
+            {venue.website && (
+              <li className="text-sm font-body flex items-center gap-2">
+                <span className="text-surface-teal flex-shrink-0">🌐</span>
+                <a
+                  href={venue.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-bone-white hover:text-cast-orange transition-colors break-all"
+                >
+                  {venue.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
       {/* Permit warning */}
       {venue.permit_required && venue.permit_info && (
         <div className="bg-cast-orange/10 border border-cast-orange/40 rounded-lg p-5 mb-6 flex gap-3">
