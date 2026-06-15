@@ -10,5 +10,29 @@
     "permit_required": false,
     "permit_info": "Resort on the southern bank of the Vaal Dam at Oranjeville — access by booking. Bass & carp fishing, camping & accommodation. Contact 064 631 1513 / flamingobay01@gmail.com",
     "facilities": ["Camping", "Accommodation", "Boat launch"]
+  },
+  {
+    "name": "Two Dam Sustainable",
+    "slug": "two-dam-sustainable",
+    "province": "Western Cape",
+    "type": "dam",
+    "species": ["Bass", "Carp"],
+    "lat": -33.6386,
+    "lng": 19.977,
+    "permit_required": false,
+    "permit_info": "Off-grid working farm (Langhoogte Farm) in the Keisie Valley near Montagu, with two dams for freshwater fishing. Day visits, tours & tastings, plus Kingfisher Cottages for overnight stays — all by booking. Contact 082 748 6448 / hello@twodam.co.za — www.twodam.co.za",
+    "facilities": ["Accommodation", "Day visits", "Hiking", "Swimming"]
+  },
+  {
+    "name": "Angler & Antelope Guesthouse",
+    "slug": "angler-antelope-guesthouse",
+    "province": "Eastern Cape",
+    "type": "river",
+    "species": ["Yellowfish", "Bass", "Trout"],
+    "lat": -32.7212,
+    "lng": 25.5871,
+    "permit_required": false,
+    "permit_info": "TGCSA 4-star fly-fishing guesthouse in Somerset East — a base for guided fly fishing on the Great Fish River and surrounding Karoo stillwaters (smallmouth yellowfish, bass & trout). Booking required. Contact 042 243 3440 / 079 488 1361 / info@anglerandantelope.co.za — www.anglerandantelope.co.za",
+    "facilities": ["Accommodation", "Guided fly fishing", "Restaurant"]
   }
 ]

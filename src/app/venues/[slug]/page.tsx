@@ -44,6 +44,8 @@ export const VENUE_SLUGS = [
   "wild-trout-rivers-rhodes",
   // Partner venue — Flamingo Bay Resort 2026-06-15
   "flamingo-bay-resort",
+  // Partner venues — venue outreach replies 2026-06-15
+  "two-dam-sustainable", "angler-antelope-guesthouse",
 ];
 
 function slugToName(slug: string): string {
