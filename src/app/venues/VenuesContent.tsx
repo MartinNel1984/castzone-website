@@ -39,6 +39,8 @@ export default function VenuesPage() {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [province, setProvince] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   useEffect(() => {
     const supabase = createClient();
@@ -52,7 +54,20 @@ export default function VenuesPage() {
       });
   }, []);
 
-  const filtered = province ? venues.filter((v) => v.province === province) : venues;
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query.trim().toLowerCase()), 300);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const q = query.trim().toLowerCase();
+  const matchQ = (v: Venue, qq: string) =>
+    !qq ||
+    v.name.toLowerCase().includes(qq) ||
+    v.province.toLowerCase().includes(qq) ||
+    (v.type?.toLowerCase().includes(qq) ?? false) ||
+    (v.species ?? []).some((s) => s.toLowerCase().includes(qq));
+  const filtered = venues.filter((v) => (!province || v.province === province) && matchQ(v, q));
+  const mapVenues = venues.filter((v) => (!province || v.province === province) && matchQ(v, debouncedQuery));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -70,6 +85,35 @@ export default function VenuesPage() {
         >
           + Suggest a Venue
         </Link>
+      </div>
+
+      {/* Search */}
+      <div className="mb-4">
+        <div className="relative max-w-lg">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-storm pointer-events-none">🔍</span>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search dams, rivers, towns or species…"
+            aria-label="Search venues"
+            className="w-full bg-deep-water-light border border-surface-teal focus:border-cast-orange focus:outline-none text-bone-white placeholder:text-storm rounded-lg pl-10 pr-10 py-2.5 font-body text-sm transition-colors"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-storm hover:text-cast-orange text-sm"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        {q && (
+          <p className="text-storm text-xs font-body mt-2">
+            {filtered.length} {filtered.length === 1 ? "result" : "results"} for &ldquo;{query}&rdquo;
+          </p>
+        )}
       </div>
 
       {/* Legend */}
@@ -90,7 +134,7 @@ export default function VenuesPage() {
             <p className="text-storm font-body">Loading map...</p>
           </div>
         ) : (
-          <VenueMap venues={filtered} key={province ?? "all"} />
+          <VenueMap venues={mapVenues} key={`${province ?? "all"}-${debouncedQuery}`} />
         )}
       </div>
 
