@@ -38,6 +38,8 @@ export const VENUE_SLUGS = [
   "orange-river-upington", "orange-river-keimoes", "orange-river-kakamas", "orange-river-augrabies", "orange-river-groblershoop", "orange-river-prieska", "orange-river-hopetown", "orange-river-aliwal-north", "orange-river-bethulie", "orange-river-onseepkans", "crocodile-river-brits", "crocodile-river-thabazimbi", "olifants-river-phalaborwa", "olifants-river-hoedspruit", "olifants-river-clanwilliam", "olifants-river-citrusdal", "olifants-river-lutzville", "breede-river-robertson", "breede-river-swellendam", "breede-river-bonnievale", "breede-river-malgas", "breede-river-estuary-witsand", "tugela-river-colenso", "tugela-river-weenen", "tugela-river-tugela-ferry", "tugela-river-mouth-mandini", "limpopo-river-musina", "limpopo-river-pont-drift", "crocodile-river-malelane", "komati-river-komatipoort", "berg-river-paarl", "berg-river-wellington", "caledon-river-smithfield", "sundays-river-kirkwood", "great-fish-river-cradock",
   // Coastal & estuary 2026-06-14
   "struisbaai", "cape-point", "gordon-s-bay", "hermanus-shore", "mossel-bay-shore", "stilbaai", "cape-agulhas", "arniston", "yzerfontein", "langebaan-lagoon", "lambert-s-bay", "strandfontein", "knysna-lagoon", "plettenberg-bay", "sedgefield", "storms-river-mouth", "jeffreys-bay", "cape-st-francis", "kenton-on-sea", "port-alfred-shore", "kei-mouth", "mazeppa-bay", "coffee-bay", "port-st-johns", "hamburg", "port-edward",
+  // Final coastal + rivers 2026-06-15
+  "mooi-river-mooi-river", "wilge-river-frankfort", "sabie-river-sabie", "margate", "ballito", "umhlanga-rocks", "scottburgh", "richards-bay-shore", "sodwana-bay", "pongola-river-pongola", "buffalo-river-king-william-s-town", "mkomazi-river-hella-hella",
 ];
 
 function slugToName(slug: string): string {
