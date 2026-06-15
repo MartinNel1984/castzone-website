@@ -1,1 +1,205 @@
-[]
+[
+ {
+  "name": "Mooi River \u2013 Mooi River",
+  "slug": "mooi-river-mooi-river",
+  "province": "KwaZulu-Natal",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Trout",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -29.13115,
+  "lng": 30.11191,
+  "permit_required": false,
+  "permit_info": "Mooi River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ },
+ {
+  "name": "Wilge River \u2013 Frankfort",
+  "slug": "wilge-river-frankfort",
+  "province": "Free State",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Carp",
+   "Barbel"
+  ],
+  "lat": -27.27879,
+  "lng": 28.49783,
+  "permit_required": false,
+  "permit_info": "Wilge River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ },
+ {
+  "name": "Sabie River \u2013 Sabie",
+  "slug": "sabie-river-sabie",
+  "province": "Mpumalanga",
+  "type": "river",
+  "species": [
+   "Trout",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -25.09556,
+  "lng": 30.77944,
+  "permit_required": false,
+  "permit_info": "Sabie River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ },
+ {
+  "name": "Margate",
+  "slug": "margate",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Shad",
+   "Kingfish",
+   "Garrick",
+   "Stumpnose",
+   "Bronze Bream"
+  ],
+  "lat": -30.857,
+  "lng": 30.37,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Ballito",
+  "slug": "ballito",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Shad",
+   "Kingfish",
+   "Garrick",
+   "Stumpnose",
+   "Bronze Bream"
+  ],
+  "lat": -29.539,
+  "lng": 31.214,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Umhlanga Rocks",
+  "slug": "umhlanga-rocks",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Shad",
+   "Kingfish",
+   "Garrick",
+   "Stumpnose",
+   "Bronze Bream"
+  ],
+  "lat": -29.727,
+  "lng": 31.085,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Scottburgh",
+  "slug": "scottburgh",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Shad",
+   "Kingfish",
+   "Garrick",
+   "Stumpnose",
+   "Bronze Bream"
+  ],
+  "lat": -30.287,
+  "lng": 30.758,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Richards Bay Shore",
+  "slug": "richards-bay-shore",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Kingfish",
+   "GTs",
+   "Pompano",
+   "Stumpnose"
+  ],
+  "lat": -28.783,
+  "lng": 32.038,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Sodwana Bay",
+  "slug": "sodwana-bay",
+  "province": "KwaZulu-Natal",
+  "type": "saltwater",
+  "species": [
+   "Kingfish",
+   "GTs",
+   "Pompano",
+   "Stumpnose"
+  ],
+  "lat": -27.545,
+  "lng": 32.683,
+  "permit_required": false,
+  "permit_info": "Coastal/estuary public access \u2014 saltwater licence required; check local regulations.",
+  "facilities": []
+ },
+ {
+  "name": "Pongola River \u2013 Pongola",
+  "slug": "pongola-river-pongola",
+  "province": "KwaZulu-Natal",
+  "type": "river",
+  "species": [
+   "Tigerfish",
+   "Barbel",
+   "Tilapia"
+  ],
+  "lat": -27.374,
+  "lng": 31.616,
+  "permit_required": false,
+  "permit_info": "Pongola River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ },
+ {
+  "name": "Buffalo River \u2013 King William's Town",
+  "slug": "buffalo-river-king-william-s-town",
+  "province": "Eastern Cape",
+  "type": "river",
+  "species": [
+   "Bass",
+   "Carp",
+   "Barbel"
+  ],
+  "lat": -32.879,
+  "lng": 27.396,
+  "permit_required": false,
+  "permit_info": "Buffalo River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ },
+ {
+  "name": "Mkomazi River \u2013 Hella Hella",
+  "slug": "mkomazi-river-hella-hella",
+  "province": "KwaZulu-Natal",
+  "type": "river",
+  "species": [
+   "Yellowfish",
+   "Bass",
+   "Barbel"
+  ],
+  "lat": -29.95,
+  "lng": 30.18,
+  "permit_required": false,
+  "permit_info": "Mkomazi River public access \u2014 provincial licence may be required.",
+  "facilities": []
+ }
+]
