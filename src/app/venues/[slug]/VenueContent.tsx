@@ -517,6 +517,16 @@ export default function VenueContent() {
               </li>
             )}
           </ul>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              `${venue.name}, ${venue.province}, South Africa`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-md border border-surface-teal/60 px-4 py-2 text-sm font-heading font-bold uppercase text-surface-teal hover:bg-surface-teal hover:text-white transition-colors"
+          >
+            <span>★</span> See reviews on Google
+          </a>
         </div>
       )}
 
