@@ -40,6 +40,8 @@ export const VENUE_SLUGS = [
   "struisbaai", "cape-point", "gordon-s-bay", "hermanus-shore", "mossel-bay-shore", "stilbaai", "cape-agulhas", "arniston", "yzerfontein", "langebaan-lagoon", "lambert-s-bay", "strandfontein", "knysna-lagoon", "plettenberg-bay", "sedgefield", "storms-river-mouth", "jeffreys-bay", "cape-st-francis", "kenton-on-sea", "port-alfred-shore", "kei-mouth", "mazeppa-bay", "coffee-bay", "port-st-johns", "hamburg", "port-edward",
   // Final coastal + rivers 2026-06-15
   "mooi-river-mooi-river", "wilge-river-frankfort", "sabie-river-sabie", "margate", "ballito", "umhlanga-rocks", "scottburgh", "richards-bay-shore", "sodwana-bay", "pongola-river-pongola", "buffalo-river-king-william-s-town", "mkomazi-river-hella-hella",
+  // Partner venue — Wild Trout Association 2026-06-15
+  "wild-trout-rivers-rhodes",
 ];
 
 function slugToName(slug: string): string {
