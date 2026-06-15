@@ -42,6 +42,8 @@ export const VENUE_SLUGS = [
   "mooi-river-mooi-river", "wilge-river-frankfort", "sabie-river-sabie", "margate", "ballito", "umhlanga-rocks", "scottburgh", "richards-bay-shore", "sodwana-bay", "pongola-river-pongola", "buffalo-river-king-william-s-town", "mkomazi-river-hella-hella",
   // Partner venue — Wild Trout Association 2026-06-15
   "wild-trout-rivers-rhodes",
+  // Partner venue — Flamingo Bay Resort 2026-06-15
+  "flamingo-bay-resort",
 ];
 
 function slugToName(slug: string): string {

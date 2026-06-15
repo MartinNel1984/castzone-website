@@ -1,14 +1,14 @@
 [
   {
-    "name": "Wild Trout Rivers (Rhodes, Wartrail & New England)",
-    "slug": "wild-trout-rivers-rhodes",
-    "province": "Eastern Cape",
-    "type": "river",
-    "species": ["Trout", "Smallmouth Yellowfish"],
-    "lat": -30.7952,
-    "lng": 27.9645,
-    "permit_required": true,
-    "permit_info": "Over 200 km of running water — wild trout rivers around Rhodes, Wartrail & New England. Fly-fishing only, subject to compliance with Foot & Mouth Disease protocols. Target species: Trout and Smallmouth Yellowfish. No closed season. Day permits arranged with the Rhodes Information Centre (045 971 9003, info@rhodesinfo.co.za). More info: www.wildtrout.co.za",
-    "facilities": ["Day permits", "Fly fishing", "Catch & release"]
+    "name": "Flamingo Bay Resort",
+    "slug": "flamingo-bay-resort",
+    "province": "Free State",
+    "type": "dam",
+    "species": ["Bass", "Carp"],
+    "lat": -26.985,
+    "lng": 28.205,
+    "permit_required": false,
+    "permit_info": "Resort on the southern bank of the Vaal Dam at Oranjeville — access by booking. Bass & carp fishing, camping & accommodation. Contact 064 631 1513 / flamingobay01@gmail.com",
+    "facilities": ["Camping", "Accommodation", "Boat launch"]
   }
 ]

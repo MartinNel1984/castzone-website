@@ -3,4 +3,4 @@
 :HL["/_next/static/media/4f530f52d514af96-s.p.0xf8lnqelv8sb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/_next/static/media/d9b5d46d9a89ffe6-s.p.0xxdg0o7uh536.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"venues","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"vaalharts-weir","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"7EMdsT6bJExSL4-6QozVY"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"venues","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"vaalharts-weir","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"aHF963D5wAwS3mQvR2EHA"}
