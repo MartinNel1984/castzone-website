@@ -44,6 +44,39 @@ export const metadata: Metadata = {
   },
 };
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://castzone.co.za/#organization",
+      name: "CastZone",
+      url: "https://castzone.co.za",
+      logo: "https://castzone.co.za/icon",
+      image: "https://castzone.co.za/opengraph-image",
+      description:
+        "South Africa's home for bass, saltwater, and specimen anglers. Share catches, find venues, buy and sell tackle.",
+      sameAs: ["https://www.facebook.com/profile.php?id=61590869510596"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://castzone.co.za/#website",
+      name: "CastZone",
+      url: "https://castzone.co.za",
+      inLanguage: "en-ZA",
+      publisher: { "@id": "https://castzone.co.za/#organization" },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://castzone.co.za/search?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -52,6 +85,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${barlowCondensed.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-deep-water text-bone-white antialiased">
+        {/* Organization + WebSite structured data (schema.org JSON-LD) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
