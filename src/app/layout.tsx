@@ -57,7 +57,7 @@ const structuredData = {
       description:
         "South Africa's home for bass, saltwater, and specimen anglers. Share catches, find venues, buy and sell tackle.",
       sameAs: [
-        "https://www.facebook.com/profile.php?id=61590869510596",
+        "https://www.facebook.com/CastZoneFishing",
         "https://instagram.com/castzonefishing",
       ],
     },
