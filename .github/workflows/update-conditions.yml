@@ -1,0 +1,95 @@
+name: Update Conditions
+
+# ONE daily robot for all DWS water data:
+#   • dam levels  → scripts/update_dam_levels.py  (src/data/waterConditions.ts)
+#   • gate notices→ scripts/update_gate_notices.py (src/data/gateNotices.json + gateStatus.json)
+# If anything changed it rebuilds the static site and commits out/ so Cloudflare
+# Pages auto-deploys. Replaces the old update-gate-notices.yml / update-dam-levels.yml.
+#
+# Requires repo secrets (both are PUBLIC keys, already shipped in the client bundle):
+#   SUPABASE_URL                   – e.g. https://zohgnpogjtjnozyweutg.supabase.co
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY  – the Supabase anon/publishable key
+# Needed at BUILD time so /fishing-near pages keep their venue lists.
+
+on:
+  schedule:
+    - cron: '0 5 * * *'   # 07:00 SAST daily
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Scrape DWS dam levels
+        run: python3 scripts/update_dam_levels.py
+        continue-on-error: true
+
+      - name: Scrape DWS gate notices
+        run: python3 scripts/update_gate_notices.py
+        continue-on-error: true
+
+      - name: Detect data changes
+        id: changed
+        run: |
+          if git diff --quiet src/data/waterConditions.ts src/data/gateNotices.json src/data/gateStatus.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No data changes — nothing to build or deploy."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node
+        if: steps.changed.outputs.changed == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.changed.outputs.changed == 'true'
+        run: npm ci
+
+      - name: Build static site
+        if: steps.changed.outputs.changed == 'true'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Remove any iCloud/duplicate junk
+        if: steps.changed.outputs.changed == 'true'
+        run: find out -name '* 2*' -print -delete 2>/dev/null || true
+
+      - name: Safety check — build must not be degraded
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          # /fishing-near pages are built from Supabase at build time. If the
+          # Johannesburg page has no venue links the build-time fetch failed
+          # (missing anon key / Supabase down) → abort so we never deploy empty.
+          if ! grep -q 'href="/venues/' out/fishing-near/johannesburg.html; then
+            echo "::error::Degraded build — /fishing-near/johannesburg has no venues. Aborting."
+            exit 1
+          fi
+          echo "Build looks healthy (fishing-near venues present)."
+
+      - name: Commit & push (source + built out/)
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          git config user.name "CastZone Bot"
+          git config user.email "bot@castzone.co.za"
+          # 'git add out/' (NOT -u) so newly-hashed chunk files are captured.
+          git add out/ src/data/waterConditions.ts src/data/gateNotices.json src/data/gateStatus.json
+          git commit -m "Update water conditions $(date +'%Y-%m-%d') [skip ci]"
+          git pull --rebase origin main   # tolerate the hourly new-member-alert bot
+          git push

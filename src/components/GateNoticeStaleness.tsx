@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { GateStatus } from "@/data/waterConditions";
 
 const MONTHS: Record<string, number> = {
   January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
@@ -15,16 +16,44 @@ function parseDWSDate(s: string): Date | null {
   return new Date(parseInt(m[3]), month, parseInt(m[1]));
 }
 
-export default function GateNoticeStaleness({ latestDate }: { latestDate: string }) {
+export default function GateNoticeStaleness({
+  latestDate,
+  status,
+}: {
+  latestDate: string;
+  status?: GateStatus;
+}) {
   const [daysSince, setDaysSince] = useState<number | null>(null);
 
   useEffect(() => {
     const parsed = parseDWSDate(latestDate);
     if (!parsed) return;
-    const diff = Math.floor((Date.now() - parsed.getTime()) / 86_400_000);
-    setDaysSince(diff);
+    setDaysSince(Math.floor((Date.now() - parsed.getTime()) / 86_400_000));
   }, [latestDate]);
 
+  // Off-season: DWS has closed flood-season reporting (winter / low flow).
+  // Show an accurate, reassuring note rather than an alarmist staleness warning.
+  if (status?.season === "closed") {
+    return (
+      <div className="mt-3 rounded border border-teal-600/40 bg-teal-900/10 px-4 py-3 text-sm font-body">
+        <span className="font-bold text-teal-300">❄️ Flood-season gate reporting is closed.</span>{" "}
+        DWS pauses daily Vaal gate notices over the dry winter
+        {status.asOf ? ` (since ${status.asOf})` : ""}. The Vaal is on low / valve
+        discharge — generally safe for bank anglers below the wall. Daily alerts
+        resume with the summer rains.{" "}
+        <a
+          href="https://mobi.reservoir.org.za/dws-comms/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline text-teal-300 hover:opacity-80"
+        >
+          Check DWS directly →
+        </a>
+      </div>
+    );
+  }
+
+  // In-season: warn if the latest dated notice is getting old.
   if (daysSince === null || daysSince <= 7) return null;
 
   const isRed = daysSince > 21;

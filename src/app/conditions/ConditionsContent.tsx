@@ -7,6 +7,7 @@ import {
   ALL_DAMS,
   WC_DAMS, FS_DAMS, GP_DAMS, KZN_DAMS, LP_DAMS, MP_DAMS, NW_DAMS, EC_DAMS, NC_DAMS,
   GATE_NOTICES,
+  GATE_STATUS,
   DATA_UPDATED,
   NATIONAL_AVG,
   damSlug,
@@ -261,7 +262,7 @@ export default function ConditionsContent() {
         </div>
       </div>
 
-      <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} />
+      <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} status={GATE_STATUS} />
 
       {/* ── Province Tabs + Dam Table ── */}
       <div className="mb-8">

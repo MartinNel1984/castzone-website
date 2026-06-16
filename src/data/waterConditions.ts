@@ -4,6 +4,7 @@
 // Last updated: 2026-06-15 (dams) · see gateNotices.json for gate notice date
 
 import gateNoticesData from "./gateNotices.json";
+import gateStatusData from "./gateStatus.json";
 
 export type DamLevel = {
   name: string;
@@ -21,6 +22,17 @@ export type GateNotice = {
   dam: "vaal" | "bloemhof" | "barrage";
   text: string;
   latest?: boolean;
+};
+
+// Seasonal status of the DWS Vaal flood-reporting feed.
+// season "open"   = flood season, GATE_NOTICES is the live dated list.
+// season "closed" = DWS closed flood-season reporting for winter (low/valve flow).
+export type GateStatus = {
+  season: "open" | "closed";
+  checkedAt: string;          // ISO date this was last confirmed
+  asOf?: string;              // human date the status was set ("19 May 2026")
+  currentRelease?: string;    // ISO date of DWS "Current Release" line
+  latest?: string;            // latest notice date when season is open
 };
 
 export const DATA_UPDATED = "2026-06-15";
@@ -308,5 +320,6 @@ export const VENUE_WATER_LEVELS: Record<string, { pct: number; lastYear: number;
 
 // ─── Vaal System gate notices ─────────────────────────────────────────────
 // Auto-updated daily from mobi.reservoir.org.za/dws-comms/
-// via .github/workflows/update-gate-notices.yml
+// via .github/workflows/update-conditions.yml
 export const GATE_NOTICES: GateNotice[] = gateNoticesData as GateNotice[];
+export const GATE_STATUS: GateStatus = gateStatusData as GateStatus;

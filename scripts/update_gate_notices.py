@@ -1,36 +1,50 @@
 #!/usr/bin/env python3
 """
-Scrapes DWS gate notices from mobi.reservoir.org.za/dws-comms/
-and writes the result to src/data/gateNotices.json.
+Scrapes DWS gate notices from mobi.reservoir.org.za/dws-comms/.
 
-Runs daily via .github/workflows/update-gate-notices.yml.
-If the page is unreachable the existing JSON is left untouched.
+Two modes, because the DWS feed is seasonal:
+  • Flood season (≈Oct–May): a dated list of gate operations →
+    written to src/data/gateNotices.json (array of {date,dam,text,latest}).
+  • Off season (≈May–Oct): DWS closes flood-season reporting; the page only
+    shows an "Attention … Season Reporting closed" banner + a current-release
+    date. We DON'T wipe the historical notice list — we just record the
+    seasonal status in src/data/gateStatus.json so the site can show an
+    accurate (non-alarmist) message.
+
+Tag-agnostic: parses the page's plain text, so it survives the WordPress
+theme re-wrapping words in extra tags (which is what silently broke the old
+parser). Network/parse failures are non-fatal — existing files are left as-is.
+
+Runs daily via .github/workflows/update-conditions.yml.
 """
 
-import html
+import html as htmllib  # aliased: local vars named `html` shadow the module otherwise
 import json
 import re
+import ssl
 import sys
 import urllib.request
-import ssl
+from datetime import date, datetime
 from pathlib import Path
-from datetime import datetime
 
 URL = "https://mobi.reservoir.org.za/dws-comms/"
-OUT = Path(__file__).parent.parent / "src" / "data" / "gateNotices.json"
+DATA_DIR = Path(__file__).parent.parent / "src" / "data"
+NOTICES_OUT = DATA_DIR / "gateNotices.json"
+STATUS_OUT = DATA_DIR / "gateStatus.json"
 
-# Which words in a paragraph text identify each dam
 DAM_PATTERNS = {
     "vaal":     re.compile(r"vaal dam", re.IGNORECASE),
     "bloemhof": re.compile(r"bloemhof dam", re.IGNORECASE),
     "barrage":  re.compile(r"\bbarrage\b", re.IGNORECASE),
 }
-
-# Normalise "Tue 19 May 2026" → "19 May 2026"
 DATE_CLEAN = re.compile(r"^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+", re.IGNORECASE)
+# "19 May 2026" inside arbitrary text
+LONG_DATE = re.compile(r"(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})")
+# "Current Release 13-06-2026."
+REL_DATE = re.compile(r"Current Release\s+(\d{1,2})-(\d{1,2})-(\d{4})", re.IGNORECASE)
 
 
-def detect_dam(text: str) -> str | None:
+def detect_dam(text: str):
     for dam, pat in DAM_PATTERNS.items():
         if pat.search(text):
             return dam
@@ -38,70 +52,69 @@ def detect_dam(text: str) -> str | None:
 
 
 def clean_text(raw: str) -> str:
-    # Strip the "For Vaal Dam, the recommendation today is to " preamble
     text = re.sub(
         r"^For (?:Vaal Dam|Bloemhof Dam|the Barrage|the Vaal Barrage),\s*"
         r"(?:the recommendation today is to\s*|in-line with[^,]+,\s*)?",
-        "",
-        raw.strip(),
-        flags=re.IGNORECASE,
-    )
-    # Capitalise first letter
+        "", raw.strip(), flags=re.IGNORECASE)
     return text[:1].upper() + text[1:] if text else raw.strip()
 
 
-def parse_notices(html: str) -> list[dict]:
-    """
-    The page structure is:
-      <h3>Tue 19 May 2026</h3>
-      <p>For Vaal Dam …</p>
-      <p>For Bloemhof Dam …</p>
-      <h3>Wed 17 May 2026</h3>
-      …
-    """
-    # Strip tags we don't need
-    html = re.sub(r"<(?:br|hr)\s*/?>", "\n", html, flags=re.IGNORECASE)
+def plain_text(page: str) -> str:
+    page = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", page, flags=re.S | re.I)
+    text = htmllib.unescape(re.sub(r"<[^>]+>", " ", page))
+    return re.sub(r"[ \t]+", " ", text)
 
-    h3_blocks = re.split(r"<h3[^>]*>", html)
-    notices: list[dict] = []
-    latest_date: str | None = None
 
-    for block in h3_blocks[1:]:  # skip content before first <h3>
-        # Extract date from the h3 content (before </h3>)
-        h3_match = re.match(r"([^<]+)</h3>(.*)", block, re.DOTALL)
-        if not h3_match:
+def parse_inseason(page: str) -> list:
+    """Best-effort flood-season parse: the legacy <h3>date</h3><p>notice</p> layout."""
+    page = re.sub(r"<(?:br|hr)\s*/?>", "\n", page, flags=re.IGNORECASE)
+    notices, latest_date = [], None
+    for block in re.split(r"<h3[^>]*>", page)[1:]:
+        m = re.match(r"([^<]+)</h3>(.*)", block, re.DOTALL)
+        if not m:
             continue
-
-        raw_date = DATE_CLEAN.sub("", h3_match.group(1).strip())
-        body = h3_match.group(2)
-
-        # Track the most-recent date for the "latest" flag
+        raw_date = DATE_CLEAN.sub("", m.group(1).strip())
+        if not LONG_DATE.search(raw_date):
+            continue
         if latest_date is None:
             latest_date = raw_date
-
-        # Extract all <p> contents in this block
-        paragraphs = re.findall(r"<p[^>]*>(.*?)</p>", body, re.DOTALL | re.IGNORECASE)
-        for para in paragraphs:
-            # Strip inner tags, then decode HTML entities (e.g. &#8211; → –)
-            text_raw = html.unescape(re.sub(r"<[^>]+>", "", para).strip())
-            if not text_raw:
+        for para in re.findall(r"<p[^>]*>(.*?)</p>", m.group(2), re.DOTALL | re.IGNORECASE):
+            txt = htmllib.unescape(re.sub(r"<[^>]+>", "", para).strip())
+            dam = detect_dam(txt)
+            if not txt or dam is None:
                 continue
-
-            dam = detect_dam(text_raw)
-            if dam is None:
-                continue  # skip non-dam paragraphs (navigation, cookies, etc.)
-
-            notice: dict = {
-                "date": raw_date,
-                "dam": dam,
-                "text": clean_text(text_raw),
-            }
+            n = {"date": raw_date, "dam": dam, "text": clean_text(txt)}
             if raw_date == latest_date:
-                notice["latest"] = True
-
-            notices.append(notice)
-
+                n["latest"] = True
+            notices.append(n)
     return notices
+
+
+def parse_status(text: str) -> dict | None:
+    """Off-season banner: 'Attention … <date> … Season Reporting closed. Current Release dd-mm-yyyy.'"""
+    if "season reporting closed" not in text.lower():
+        return None
+    status = {"season": "closed", "checkedAt": date.today().isoformat()}
+    # Attention date — the long date nearest the "Attention" banner
+    seg = text
+    a = re.search(r"Attention", text, re.IGNORECASE)
+    if a:
+        seg = text[a.start():a.start() + 200]
+    dm = LONG_DATE.search(seg)
+    if dm:
+        status["asOf"] = f"{int(dm.group(1))} {dm.group(2)} {dm.group(3)}"
+    rm = REL_DATE.search(text)
+    if rm:
+        status["currentRelease"] = f"{rm.group(3)}-{int(rm.group(2)):02d}-{int(rm.group(1)):02d}"
+    return status
+
+
+def write_if_changed(path: Path, obj) -> bool:
+    new = json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
+    if path.exists() and path.read_text() == new:
+        return False
+    path.write_text(new)
+    return True
 
 
 def main() -> int:
@@ -109,36 +122,36 @@ def main() -> int:
     try:
         req = urllib.request.Request(URL, headers={"User-Agent": "CastZone/1.0 (+https://castzone.co.za)"})
         with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-            html = resp.read().decode("utf-8", errors="replace")
+            page = resp.read().decode("utf-8", errors="replace")
     except Exception as exc:
-        # Network failures are non-fatal — leave existing JSON untouched
         print(f"[gate-notices] Fetch failed (site unreachable?): {exc}", file=sys.stderr)
-        print("[gate-notices] Leaving existing gateNotices.json unchanged.", file=sys.stderr)
-        return 0
+        return 0  # non-fatal — leave existing files untouched
 
-    notices = parse_notices(html)
-    if not notices:
-        print("[gate-notices] No notices parsed — page structure may have changed.", file=sys.stderr)
-        return 1
+    text = plain_text(page)
+    notices = parse_inseason(page)
+    status = parse_status(text)
 
-    # Load existing file to compare
-    existing: list = []
-    if OUT.exists():
-        try:
-            existing = json.loads(OUT.read_text())
-        except Exception:
-            pass
-
-    if notices == existing:
-        print(f"[gate-notices] No changes ({len(notices)} notices).")
-        return 0
-
-    OUT.write_text(json.dumps(notices, indent=2, ensure_ascii=False) + "\n")
-    print(f"[gate-notices] Updated — {len(notices)} notices written to {OUT.name}.")
     if notices:
-        print(f"  Latest: [{notices[0]['dam']}] {notices[0]['date']} — {notices[0]['text'][:80]}")
+        # Flood season: refresh the dated notice list.
+        changed = write_if_changed(NOTICES_OUT, notices)
+        write_if_changed(STATUS_OUT, {"season": "open", "checkedAt": date.today().isoformat(),
+                                      "latest": notices[0]["date"]})
+        print(f"[gate-notices] In-season: {len(notices)} notices "
+              + ("(updated)." if changed else "(no change)."))
+        return 0
 
-    return 0
+    if status:
+        # Off season: keep the historical notice list; record the seasonal status.
+        changed = write_if_changed(STATUS_OUT, status)
+        print(f"[gate-notices] Off-season — reporting closed as of "
+              f"{status.get('asOf','?')}, current release {status.get('currentRelease','?')} "
+              + ("(status updated)." if changed else "(no change)."))
+        return 0
+
+    # Neither parsed: layout likely changed mid-season — fail loud (don't corrupt data).
+    print("[gate-notices] Could not parse notices OR seasonal status — "
+          "page layout may have changed. Left existing files untouched.", file=sys.stderr)
+    return 1
 
 
 if __name__ == "__main__":
