@@ -39,8 +39,9 @@ function timeAgo(dateStr: string) {
 
 function ListingCard({ listing }: { listing: Listing }) {
   const cover = listing.image_urls?.[0] ?? null;
+  const [now] = useState(() => Date.now());
   const daysLeft = Math.ceil(
-    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - Date.now()) / 86400000
+    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - now) / 86400000
   );
   return (
     <Link

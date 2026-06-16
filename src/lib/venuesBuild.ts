@@ -9,6 +9,7 @@ export type BuildVenue = {
   province: string;
   type: string;
   species: string[];
+  facilities: string[];
   lat: number;
   lng: number;
 };
@@ -23,7 +24,7 @@ export function getAllVenues(): Promise<BuildVenue[]> {
     if (!url || !key) return [];
     try {
       const res = await fetch(
-        `${url}/rest/v1/venues?select=name,slug,province,type,species,lat,lng`,
+        `${url}/rest/v1/venues?select=name,slug,province,type,species,facilities,lat,lng`,
         { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" },
       );
       if (!res.ok) return [];

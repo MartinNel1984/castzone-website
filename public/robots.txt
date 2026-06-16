@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /api/
 
 Sitemap: https://castzone.co.za/sitemap.xml
 

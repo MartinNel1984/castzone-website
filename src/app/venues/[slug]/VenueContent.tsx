@@ -274,34 +274,7 @@ export default function VenueContent() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "TouristAttraction",
-            "name": venue.name,
-            "description": `Fishing at ${venue.name} in ${venue.province}, South Africa. Species include ${(venue.species || []).slice(0, 4).join(", ")}.`,
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": venue.lat,
-              "longitude": venue.lng,
-            },
-            "address": {
-              "@type": "PostalAddress",
-              "addressCountry": "ZA",
-              "addressRegion": venue.province,
-            },
-            "url": `https://castzone.co.za/venues/${venue.slug}`,
-            "touristType": "Angler",
-            "amenityFeature": (venue.facilities || []).map((f: string) => ({
-              "@type": "LocationFeatureSpecification",
-              "name": f,
-              "value": true,
-            })),
-          }),
-        }}
-      />
+      {/* TouristAttraction JSON-LD is now server-rendered in page.tsx (better SEO). */}
       {/* Breadcrumb */}
       <nav className="text-sm font-body text-storm mb-6">
         <Link href="/venues" className="hover:text-pale-water">The Map</Link>

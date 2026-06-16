@@ -24,6 +24,7 @@ export default function SignupNudge() {
       sessionStorage.setItem(VIEWS_KEY, String(views));
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: hide on quiet paths
     if (QUIET_PATHS.includes(pathname)) { setShow(false); return; }
     if (Number(sessionStorage.getItem(VIEWS_KEY) ?? "0") < VIEW_THRESHOLD) return;
 

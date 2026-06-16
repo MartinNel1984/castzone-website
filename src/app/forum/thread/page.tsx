@@ -89,6 +89,7 @@ function ThreadContent() {
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [editSaving, setEditSaving] = useState(false);
+  const [now] = useState(() => Date.now()); // captured once for the 24h edit-window check
   const [bookmarked, setBookmarked] = useState(false);
   const [bookmarkWorking, setBookmarkWorking] = useState(false);
   const [bookmarkFlash, setBookmarkFlash] = useState(false);
@@ -350,7 +351,7 @@ function ThreadContent() {
                   <p className="text-storm text-xs">#{index + 1}</p>
                   <p className="text-storm text-xs">{timeAgo(post.created_at)}</p>
                   {user && post.author_id === user.id &&
-                    Date.now() - new Date(post.created_at).getTime() < 86400000 &&
+                    now - new Date(post.created_at).getTime() < 86400000 &&
                     editingPostId !== post.id && (
                     <button
                       onClick={() => { setEditingPostId(post.id); setEditContent(post.content); }}

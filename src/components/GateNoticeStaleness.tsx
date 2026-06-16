@@ -28,6 +28,8 @@ export default function GateNoticeStaleness({
   useEffect(() => {
     const parsed = parseDWSDate(latestDate);
     if (!parsed) return;
+    // Intentional: computed from Date.now() after mount to avoid an SSR/client mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDaysSince(Math.floor((Date.now() - parsed.getTime()) / 86_400_000));
   }, [latestDate]);
 

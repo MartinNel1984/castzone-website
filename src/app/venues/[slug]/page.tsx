@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import VenueContent from "./VenueContent";
+import { getAllVenues } from "@/lib/venuesBuild";
 
 // All seeded venue slugs — add new ones here when you add venues to the database
 export const VENUE_SLUGS = [
@@ -73,6 +74,39 @@ export function generateStaticParams() {
   return VENUE_SLUGS.map((slug) => ({ slug }));
 }
 
-export default function VenuePage() {
-  return <VenueContent />;
+export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  // Server-rendered TouristAttraction structured data so search engines see it
+  // on the first fetch (no JS needed). Venue data comes from the build-time
+  // Supabase fetch; if unavailable, we simply omit the schema (graceful).
+  const venue = (await getAllVenues()).find((v) => v.slug === slug);
+  const jsonLd = venue
+    ? {
+        "@context": "https://schema.org",
+        "@type": "TouristAttraction",
+        name: venue.name,
+        description: `Fishing at ${venue.name} in ${venue.province}, South Africa. Species include ${(venue.species || []).slice(0, 4).join(", ")}.`,
+        geo: { "@type": "GeoCoordinates", latitude: venue.lat, longitude: venue.lng },
+        address: { "@type": "PostalAddress", addressCountry: "ZA", addressRegion: venue.province },
+        url: `https://castzone.co.za/venues/${venue.slug}`,
+        touristType: "Angler",
+        amenityFeature: (venue.facilities || []).map((f) => ({
+          "@type": "LocationFeatureSpecification",
+          name: f,
+          value: true,
+        })),
+      }
+    : null;
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
+      )}
+      <VenueContent />
+    </>
+  );
 }

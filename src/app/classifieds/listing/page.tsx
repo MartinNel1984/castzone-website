@@ -52,6 +52,7 @@ function ListingDetail() {
   const [activeImage, setActiveImage] = useState(0);
   const [working, setWorking] = useState(false);
   const [otherListings, setOtherListings] = useState<OtherListing[]>([]);
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     if (!id) return;
@@ -123,7 +124,7 @@ function ListingDetail() {
   const isSold = listing.status === "sold";
   const images = listing.image_urls ?? [];
   const daysUntilExpiry = Math.ceil(
-    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - Date.now()) / 86400000
+    (new Date(listing.created_at).getTime() + LISTING_EXPIRY_DAYS * 86400000 - now) / 86400000
   );
 
   return (
