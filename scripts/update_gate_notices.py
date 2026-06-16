@@ -24,7 +24,6 @@ import re
 import ssl
 import sys
 import urllib.request
-from datetime import date, datetime
 from pathlib import Path
 
 URL = "https://mobi.reservoir.org.za/dws-comms/"
@@ -94,7 +93,10 @@ def parse_status(text: str) -> dict | None:
     """Off-season banner: 'Attention … <date> … Season Reporting closed. Current Release dd-mm-yyyy.'"""
     if "season reporting closed" not in text.lower():
         return None
-    status = {"season": "closed", "checkedAt": date.today().isoformat()}
+    # NB: deliberately no "checkedAt" timestamp — it would change daily and
+    # trigger a needless rebuild/deploy. Only real DWS changes (season/asOf/
+    # currentRelease) should produce a diff.
+    status = {"season": "closed"}
     # Attention date — the long date nearest the "Attention" banner
     seg = text
     a = re.search(r"Attention", text, re.IGNORECASE)
@@ -134,8 +136,7 @@ def main() -> int:
     if notices:
         # Flood season: refresh the dated notice list.
         changed = write_if_changed(NOTICES_OUT, notices)
-        write_if_changed(STATUS_OUT, {"season": "open", "checkedAt": date.today().isoformat(),
-                                      "latest": notices[0]["date"]})
+        write_if_changed(STATUS_OUT, {"season": "open", "latest": notices[0]["date"]})
         print(f"[gate-notices] In-season: {len(notices)} notices "
               + ("(updated)." if changed else "(no change)."))
         return 0

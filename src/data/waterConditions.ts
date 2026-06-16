@@ -29,7 +29,6 @@ export type GateNotice = {
 // season "closed" = DWS closed flood-season reporting for winter (low/valve flow).
 export type GateStatus = {
   season: "open" | "closed";
-  checkedAt: string;          // ISO date this was last confirmed
   asOf?: string;              // human date the status was set ("19 May 2026")
   currentRelease?: string;    // ISO date of DWS "Current Release" line
   latest?: string;            // latest notice date when season is open
