@@ -5,19 +5,27 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
-type Category = "carp" | "bass" | "saltwater";
+type Category = "carp" | "barbel" | "freshwater" | "bass" | "saltwater";
 
 const CATEGORIES = [
-  { value: "carp"      as Category, label: "Carp & Freshwater", icon: "🐟" },
-  { value: "bass"      as Category, label: "Bass",       icon: "🎣" },
-  { value: "saltwater" as Category, label: "Saltwater",  icon: "🌊" },
+  { value: "carp"       as Category, label: "Carp",            icon: "🐟" },
+  { value: "barbel"     as Category, label: "Barbel",          icon: "🐡" },
+  { value: "freshwater" as Category, label: "Other Freshwater", icon: "🐠" },
+  { value: "bass"       as Category, label: "Bass",            icon: "🎣" },
+  { value: "saltwater"  as Category, label: "Saltwater",       icon: "🌊" },
 ];
 
 const SPECIES: Record<Category, string[]> = {
   carp: [
     "Common Carp", "Mirror Carp", "Grass Carp", "Bighead Carp",
     "Crucian Carp", "F1 Carp", "Leather Carp", "Ghost Carp",
-    "Barbel", "Mudfish", "Yellowfish",
+  ],
+  barbel: [
+    "Sharptooth Barbel", "Barbel", "Catfish",
+  ],
+  freshwater: [
+    "Smallmouth Yellowfish", "Largemouth Yellowfish", "Yellowfish",
+    "Mudfish", "Tilapia / Kurper", "Tigerfish", "Eel",
   ],
   bass: [
     "Largemouth Bass", "Smallmouth Bass", "Spotted Bass",

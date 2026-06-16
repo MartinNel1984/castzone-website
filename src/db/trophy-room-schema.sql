@@ -7,7 +7,7 @@
 create table if not exists catches (
   id          uuid        primary key default gen_random_uuid(),
   user_id     uuid        not null references profiles(id) on delete cascade,
-  category    text        not null check (category in ('carp', 'bass', 'saltwater')),
+  category    text        not null check (category in ('carp', 'barbel', 'freshwater', 'bass', 'saltwater')),
   species     text        not null,
   weight_kg   numeric(6,3) not null check (weight_kg > 0),
   catch_date  date        not null,

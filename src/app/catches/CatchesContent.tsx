@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
-type Category = "carp" | "bass" | "saltwater";
+type Category = "carp" | "barbel" | "freshwater" | "bass" | "saltwater";
 
 type Catch = {
   id: string;
@@ -16,13 +16,20 @@ type Catch = {
   image_url: string | null;
   approved_at: string;
   profiles: { username: string; avatar_url: string | null } | null;
+  comment_count?: number;
 };
 
 const CATEGORIES = [
-  { value: "carp"      as Category, label: "Carp & Freshwater", icon: "🐟", description: "Carp, barbel, yellowfish, mudfish & freshwater species" },
-  { value: "bass"      as Category, label: "Bass",       icon: "🎣", description: "Largemouth, Smallmouth & Spotted Bass" },
-  { value: "saltwater" as Category, label: "Saltwater",  icon: "🌊", description: "Shore, offshore, kayak & ski-boat species" },
+  { value: "carp"       as Category, label: "Carp",            icon: "🐟", description: "Common, Mirror, Grass, Ghost & other carp" },
+  { value: "barbel"     as Category, label: "Barbel",          icon: "🐡", description: "Sharptooth barbel, catfish & relatives" },
+  { value: "freshwater" as Category, label: "Other Freshwater", icon: "🐠", description: "Yellowfish, mudfish, tilapia, tigerfish & other freshwater species" },
+  { value: "bass"       as Category, label: "Bass",            icon: "🎣", description: "Largemouth, Smallmouth & Spotted Bass" },
+  { value: "saltwater"  as Category, label: "Saltwater",       icon: "🌊", description: "Shore, offshore, kayak & ski-boat species" },
 ];
+
+function commentLabel(n: number): string {
+  return n === 1 ? "1 comment" : `${n} comments`;
+}
 
 const MEDALS  = ["🥇", "🥈", "🥉"];
 const MEDAL_COLOURS = ["text-yellow-400", "text-gray-300", "text-amber-600"];
@@ -284,7 +291,20 @@ export default function TrophyRoomPage() {
         .eq("approved", true)
         .order("weight_kg", { ascending: false })
         .limit(10);
-      setCatches((data as unknown as Catch[]) ?? []);
+      const list = (data as unknown as Catch[]) ?? [];
+      // Comment counts for the visible catches — one query, tallied client-side
+      if (list.length > 0) {
+        const { data: cc } = await supabase
+          .from("catch_comments")
+          .select("catch_id")
+          .in("catch_id", list.map((c) => c.id));
+        const counts = new Map<string, number>();
+        for (const row of (cc as { catch_id: string }[] | null) ?? []) {
+          counts.set(row.catch_id, (counts.get(row.catch_id) ?? 0) + 1);
+        }
+        for (const c of list) c.comment_count = counts.get(c.id) ?? 0;
+      }
+      setCatches(list);
       setLoading(false);
     }
     load();
@@ -319,12 +339,12 @@ export default function TrophyRoomPage() {
       </p>
 
       {/* Category tabs */}
-      <div className="flex border-b border-surface-teal mb-8">
+      <div className="flex border-b border-surface-teal mb-8 overflow-x-auto">
         {CATEGORIES.map((c) => (
           <button
             key={c.value}
             onClick={() => setActiveCategory(c.value)}
-            className={`font-heading font-bold uppercase tracking-wider text-sm px-5 py-3 border-b-2 transition-colors ${
+            className={`font-heading font-bold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeCategory === c.value
                 ? "border-cast-orange text-bone-white"
                 : "border-transparent text-storm hover:text-pale-water"
@@ -379,6 +399,12 @@ export default function TrophyRoomPage() {
                   {champion.venue && <span>📍 {champion.venue}</span>}
                 </div>
                 <DaysHeldBadge approvedAt={champion.approved_at} />
+                <button
+                  onClick={() => setSelectedCatch(champion)}
+                  className="text-storm hover:text-cast-orange font-body text-sm text-left transition-colors w-fit"
+                >
+                  💬 {(champion.comment_count ?? 0) > 0 ? commentLabel(champion.comment_count!) : "Add a comment"}
+                </button>
               </div>
             </div>
           </div>
@@ -429,6 +455,7 @@ export default function TrophyRoomPage() {
                         <p className="text-pale-water font-body text-sm truncate">{c.species}</p>
                         <p className="text-storm text-xs font-body truncate">
                           {formatDate(c.catch_date)}{c.venue ? ` · ${c.venue}` : ""}
+                          {(c.comment_count ?? 0) > 0 ? ` · 💬 ${c.comment_count}` : ""}
                         </p>
                       </div>
                     </div>
