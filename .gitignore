@@ -43,3 +43,6 @@ next-env.d.ts
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Venue photo enrichment output (regenerable via scripts/enrich_venue_photos.py)
+content-onboard/venue-photos/

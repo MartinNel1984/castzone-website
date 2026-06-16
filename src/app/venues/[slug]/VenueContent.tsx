@@ -7,6 +7,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import BiteTimes from "@/components/BiteTimes";
+import VenueSpots from "@/components/VenueSpots";
 import { VENUE_WATER_LEVELS, GATE_NOTICES } from "@/data/waterConditions";
 import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
 import type { Venue } from "@/components/VenueMap";
@@ -416,6 +417,11 @@ export default function VenueContent() {
 
       {/* Best bite times (solunar) */}
       <BiteTimes lat={venue.lat} lng={venue.lng} name={venue.name} />
+
+      {/* Fishing spots & pens — angler-contributed, photo + GPS + tip */}
+      <div className="mt-6">
+        <VenueSpots venueSlug={slug} venueName={venue.name} />
+      </div>
 
       {/* Info grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
