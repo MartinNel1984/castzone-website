@@ -56,7 +56,10 @@ const structuredData = {
       image: "https://castzone.co.za/opengraph-image",
       description:
         "South Africa's home for bass, saltwater, and specimen anglers. Share catches, find venues, buy and sell tackle.",
-      sameAs: ["https://www.facebook.com/profile.php?id=61590869510596"],
+      sameAs: [
+        "https://www.facebook.com/profile.php?id=61590869510596",
+        "https://instagram.com/castzonefishing",
+      ],
     },
     {
       "@type": "WebSite",
