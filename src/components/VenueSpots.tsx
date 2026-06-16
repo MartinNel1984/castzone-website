@@ -57,23 +57,83 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  // Per-user interactions with the visible spots.
+  const [confirmedIds, setConfirmedIds] = useState<Set<string>>(new Set());
+  const [flaggedIds, setFlaggedIds] = useState<Set<string>>(new Set());
+  const [busyId, setBusyId] = useState<string | null>(null);   // confirm in flight
+  const [flaggingId, setFlaggingId] = useState<string | null>(null); // reason picker open
+
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    loadSpots();
-    return () => { if (photoPreview) URL.revokeObjectURL(photoPreview); };
+    let active = true;
+    (async () => {
+      const supabase = createClient();
+      const { data: u } = await supabase.auth.getUser();
+      if (!active) return;
+      setUser(u.user);
+      const rows = await loadSpots();
+      if (active && u.user && rows.length) loadInteractions(u.user.id, rows.map((r) => r.id));
+    })();
+    return () => { active = false; if (photoPreview) URL.revokeObjectURL(photoPreview); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [venueSlug]);
 
-  async function loadSpots() {
+  async function loadSpots(): Promise<Spot[]> {
     const supabase = createClient();
     const { data } = await supabase
       .from("venue_spots")
       .select("*, profiles(username)")
       .eq("venue_slug", venueSlug)
       .order("created_at", { ascending: false });
-    setSpots((data ?? []) as Spot[]);
+    const rows = (data ?? []) as Spot[];
+    setSpots(rows);
     setLoading(false);
+    return rows;
+  }
+
+  // Which of these spots has the current user already confirmed / flagged?
+  // (RLS lets a member read all confirms but only their own flags.)
+  async function loadInteractions(userId: string, spotIds: string[]) {
+    const supabase = createClient();
+    const [{ data: conf }, { data: flag }] = await Promise.all([
+      supabase.from("spot_confirms").select("spot_id").eq("user_id", userId).in("spot_id", spotIds),
+      supabase.from("spot_flags").select("spot_id").eq("user_id", userId).in("spot_id", spotIds),
+    ]);
+    setConfirmedIds(new Set((conf ?? []).map((r: { spot_id: string }) => r.spot_id)));
+    setFlaggedIds(new Set((flag ?? []).map((r: { spot_id: string }) => r.spot_id)));
+  }
+
+  // Toggle "I've fished here too". The DB trigger keeps venue_spots.confirms
+  // correct; we mirror the count locally for instant feedback.
+  async function toggleConfirm(spot: Spot) {
+    if (!user || busyId) return;
+    const supabase = createClient();
+    const already = confirmedIds.has(spot.id);
+    setBusyId(spot.id);
+    try {
+      if (already) {
+        const { error: e } = await supabase.from("spot_confirms").delete().eq("spot_id", spot.id).eq("user_id", user.id);
+        if (e) throw e;
+        setConfirmedIds((s) => { const n = new Set(s); n.delete(spot.id); return n; });
+        setSpots((arr) => arr.map((x) => x.id === spot.id ? { ...x, confirms: Math.max(0, x.confirms - 1) } : x));
+      } else {
+        const { error: e } = await supabase.from("spot_confirms").insert({ spot_id: spot.id, user_id: user.id });
+        if (e) throw e;
+        setConfirmedIds((s) => new Set(s).add(spot.id));
+        setSpots((arr) => arr.map((x) => x.id === spot.id ? { ...x, confirms: x.confirms + 1 } : x));
+      }
+    } catch {
+      // Stay silent on the card; a failed toggle just leaves the prior state.
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function submitFlag(spot: Spot, reason: string) {
+    if (!user) return;
+    const supabase = createClient();
+    const { error: e } = await supabase.from("spot_flags").insert({ spot_id: spot.id, user_id: user.id, reason });
+    setFlaggingId(null);
+    if (!e) setFlaggedIds((s) => new Set(s).add(spot.id));
   }
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -331,8 +391,63 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                       {s.species.map((sp) => <span key={sp} className="text-[11px] bg-deep-water border border-surface-teal px-2 py-0.5 rounded text-pale-water">{sp}</span>)}
                     </div>
                   )}
-                  <div className="text-storm text-[11px] font-body mt-3 pt-3 border-t border-surface-teal/60">
-                    👤 {s.profiles?.username ?? "An angler"}{s.confirms > 0 ? ` · ✓ ${s.confirms} confirms` : ""}
+                  <div className="mt-3 pt-3 border-t border-surface-teal/60">
+                    <p className="text-storm text-[11px] font-body mb-2">
+                      👤 {s.profiles?.username ?? "An angler"}
+                    </p>
+                    {(() => {
+                      const isOwn = user?.id === s.user_id;
+                      const confirmed = confirmedIds.has(s.id);
+                      const flagged = flaggedIds.has(s.id);
+                      return (
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <button
+                            type="button"
+                            onClick={() => toggleConfirm(s)}
+                            disabled={!user || isOwn || busyId === s.id}
+                            title={!user ? "Sign in to confirm" : isOwn ? "You added this spot" : confirmed ? "Remove your confirm" : "I've fished here too"}
+                            className={`inline-flex items-center gap-1.5 text-xs font-body rounded px-2.5 py-1.5 transition-colors disabled:opacity-50 ${
+                              confirmed
+                                ? "bg-cast-orange/20 text-cast-orange border border-cast-orange/50"
+                                : "border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/50"
+                            }`}
+                          >
+                            ✓ {confirmed ? "Confirmed" : "Confirm"}{s.confirms > 0 ? ` · ${s.confirms}` : ""}
+                          </button>
+
+                          {!isOwn && user && (
+                            flagged ? (
+                              <span className="text-storm text-[11px] font-body">⚑ Reported</span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setFlaggingId(flaggingId === s.id ? null : s.id)}
+                                className="inline-flex items-center gap-1.5 text-xs font-body rounded px-2.5 py-1.5 border border-transparent text-storm hover:text-amber-400 transition-colors"
+                                title="Report this spot"
+                              >
+                                ⚑ Flag
+                              </button>
+                            )
+                          )}
+                          {isOwn && <span className="text-storm text-[11px] font-body">Your spot</span>}
+                        </div>
+                      );
+                    })()}
+
+                    {/* Flag reason picker */}
+                    {flaggingId === s.id && (
+                      <div className="mt-2 bg-deep-water border border-surface-teal rounded p-2.5">
+                        <p className="text-storm text-[11px] font-body mb-1.5">What&apos;s wrong with this spot?</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {["Wrong location", "Not fishing here", "Spam / abuse", "Looks unsafe"].map((r) => (
+                            <button key={r} type="button" onClick={() => submitFlag(s, r)}
+                              className="text-[11px] font-body border border-surface-teal text-pale-water hover:text-bone-white hover:border-amber-500/60 rounded px-2 py-1 transition-colors">
+                              {r}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
