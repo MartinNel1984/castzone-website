@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import { compressImage } from "@/lib/imageCompress";
 import type { User } from "@supabase/supabase-js";
 
 type Category = "carp" | "barbel" | "freshwater" | "bass" | "saltwater";
@@ -75,7 +76,7 @@ export default function SubmitCatchPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
@@ -83,9 +84,10 @@ export default function SubmitCatchPage() {
       e.target.value = "";
       return;
     }
+    const compressed = await compressImage(file);
     if (photoPreview) URL.revokeObjectURL(photoPreview);
-    setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    setPhotoFile(compressed);
+    setPhotoPreview(URL.createObjectURL(compressed));
     setError("");
   }
 

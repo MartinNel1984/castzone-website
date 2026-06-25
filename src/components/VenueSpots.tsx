@@ -8,6 +8,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import { compressImage } from "@/lib/imageCompress";
 import type { User } from "@supabase/supabase-js";
 
 type Spot = {
@@ -136,7 +137,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
     if (!e) setFlaggedIds((s) => new Set(s).add(spot.id));
   }
 
-  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
@@ -144,9 +145,10 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
       e.target.value = "";
       return;
     }
+    const compressed = await compressImage(file);
     if (photoPreview) URL.revokeObjectURL(photoPreview);
-    setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    setPhotoFile(compressed);
+    setPhotoPreview(URL.createObjectURL(compressed));
     setError("");
   }
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import { compressImage } from "@/lib/imageCompress";
 import type { User } from "@supabase/supabase-js";
 
 const CATEGORIES = [
@@ -45,7 +46,7 @@ function NewThreadForm() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     const remaining = MAX_FILES - images.length;
     const toAdd = files.slice(0, remaining);
@@ -57,7 +58,8 @@ function NewThreadForm() {
       return;
     }
 
-    const newPreviews: ImagePreview[] = toAdd.map((file) => ({
+    const compressed = await Promise.all(toAdd.map((file) => compressImage(file)));
+    const newPreviews: ImagePreview[] = compressed.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
     }));
