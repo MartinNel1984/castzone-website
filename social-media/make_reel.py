@@ -161,6 +161,7 @@ def make_segment(img_path, seg_path, catch, idx, font_path):
     vf = (
         f"scale={REEL_W}:{REEL_H}:force_original_aspect_ratio=increase,"
         f"crop={REEL_W}:{REEL_H},"
+        f"setsar=1,"
         f"{_drawtext(line1, line2, font_path)},"
         f"fade=in:st=0:d={FADE_DURATION},"
         f"fade=out:st={fade_out_start}:d={FADE_DURATION}"
