@@ -11,14 +11,30 @@ discount % for that run).
 
 ## Setup (one-time)
 
-Nothing new to add if the content-drip bot already works — this reuses the same
-two repo secrets:
+Reuses the content-drip bot's two repo secrets:
 
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_KEY`  (service_role key — bypasses RLS to insert deals)
 
 Also make sure `src/db/deals-schema.sql` has been run in Supabase (creates the
 `deals` table). Until then the bot has nowhere to write.
+
+### Residential proxy (required for blocked retailers)
+
+Big SA retailers (Outdoor Warehouse etc.) sit behind Cloudflare and **403 any
+datacenter IP** — so a plain GitHub Actions run can't read them (it works from a
+home machine, just not the cloud). To fix, the bot routes retailer fetches
+through **ScraperAPI** when a key is present:
+
+1. Sign up free at scraperapi.com (trial = 5,000 credits).
+2. Copy your API key.
+3. Repo → Settings → Secrets and variables → Actions → New secret:
+   `SCRAPER_API_KEY` = your key.
+4. (Optional) If a site still blocks, add a repo *variable* (not secret)
+   `SCRAPER_API_PARAMS` = `country_code=za` (SA IPs; costs more credits).
+
+Without `SCRAPER_API_KEY` the bot fetches sites directly (fine locally, blocked
+in the cloud). The run log prints `proxy=ON/off` so you can see which mode ran.
 
 ## Tuning the discount threshold
 

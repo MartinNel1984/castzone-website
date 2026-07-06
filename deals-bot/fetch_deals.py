@@ -46,6 +46,16 @@ DRY_RUN = os.environ.get("DRY_RUN") == "1"
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 
+# Optional residential-proxy so retailer fetches aren't blocked from cloud IPs.
+# When SCRAPER_API_KEY is set, retailer requests route through ScraperAPI
+# (https://api.scraperapi.com/?api_key=..&url=..). Left empty locally so a
+# normal machine fetches sites directly (its home IP isn't blocked).
+SCRAPER_API_KEY = os.environ.get("SCRAPER_API_KEY", "")
+# Extra ScraperAPI params to tune if a site still blocks, e.g.
+# "country_code=za" (SA IPs) or "country_code=za&premium=true". Costs more
+# credits, so default is empty (standard rotating IPs).
+SCRAPER_API_PARAMS = os.environ.get("SCRAPER_API_PARAMS", "")
+
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
@@ -121,10 +131,20 @@ def get_json(url, referer=None, tries=3):
     }
     if referer:
         headers["Referer"] = referer
+
+    fetch_url = url
+    timeout = 30
+    if SCRAPER_API_KEY:
+        qs = urllib.parse.urlencode({"api_key": SCRAPER_API_KEY, "url": url})
+        if SCRAPER_API_PARAMS:
+            qs += "&" + SCRAPER_API_PARAMS
+        fetch_url = "https://api.scraperapi.com/?" + qs
+        timeout = 75  # proxied fetches are slower
+
     for attempt in range(tries):
         try:
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+            req = urllib.request.Request(fetch_url, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout, context=_CTX) as resp:
                 raw = resp.read().decode("utf-8", "replace")
             return json.loads(raw)
         except Exception as e:  # noqa: BLE001
@@ -262,7 +282,9 @@ def main():
         sys.exit("ERROR: SUPABASE_URL and SUPABASE_SERVICE_KEY are required.")
 
     print(f"CastZone deals bot — min discount {MIN_DISCOUNT}%, "
-          f"expire {EXPIRE_DAYS}d, dry_run={DRY_RUN}")
+          f"expire {EXPIRE_DAYS}d, dry_run={DRY_RUN}, "
+          f"proxy={'ON' if SCRAPER_API_KEY else 'off'}"
+          f"{' (' + SCRAPER_API_PARAMS + ')' if SCRAPER_API_PARAMS else ''}")
 
     seen = set() if DRY_RUN else existing_external_ids()
     print(f"Already in table: {len(seen)} deals")
