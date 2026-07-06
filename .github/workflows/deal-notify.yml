@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "30 6,11,16 * * *"   # 08:30, 13:30, 18:30 SAST
   workflow_dispatch:
+    inputs:
+      test_email:
+        description: "Test send to THIS address only (members not emailed, marker untouched)"
+        required: false
+        default: ""
 
 permissions:
   contents: write   # commit the advanced marker
@@ -30,6 +35,7 @@ jobs:
       MAIL_FROM: ${{ vars.MAIL_FROM || 'CastZone Deals <martin@castzone.co.za>' }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+      TEST_RECIPIENT: ${{ github.event.inputs.test_email }}
       STATE_FILE: .github/deal-notify-state.txt
     steps:
       - uses: actions/checkout@v4

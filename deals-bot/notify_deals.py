@@ -83,6 +83,19 @@ def get_new_approved(since_iso):
     return json.loads(body)
 
 
+def get_recent_approved(limit=20):
+    """Most-recent approved deals regardless of marker — used for test sends."""
+    q = urllib.parse.urlencode({
+        "select": "title,retailer,category,original_price,sale_price,discount_pct,url,image_url,approved_at",
+        "status": "eq.approved",
+        "order": "approved_at.desc",
+        "limit": limit,
+    })
+    _, body = http(f"{SUPABASE_URL}/rest/v1/deals?{q}",
+                   headers={"apikey": ANON_KEY, "Authorization": f"Bearer {ANON_KEY}"})
+    return json.loads(body)
+
+
 def get_member_emails():
     """All confirmed member emails via the admin API, minus opt-outs."""
     emails = []
@@ -217,6 +230,19 @@ def send_whatsapp(total_new, top):
 def main():
     if not SUPABASE_URL or not ANON_KEY:
         sys.exit("ERROR: SUPABASE_URL and SUPABASE_ANON_KEY required.")
+
+    # TEST MODE: send only to one address, using recent approved deals,
+    # without touching the marker or emailing members.
+    test_to = os.environ.get("TEST_RECIPIENT", "").strip()
+    if test_to:
+        deals = get_recent_approved()
+        print(f"TEST MODE → sending to {test_to} only; {len(deals)} recent approved deals")
+        if not deals:
+            print("No approved deals yet — approve one on /specials/review first.")
+            return
+        send_email([test_to], deals, len(deals))
+        print("Test send done. Marker NOT advanced, members NOT emailed.")
+        return
 
     if not os.path.exists(STATE_FILE):
         os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
