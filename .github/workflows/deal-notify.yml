@@ -27,7 +27,7 @@ jobs:
       SMTP_PORT: ${{ secrets.SMTP_PORT }}
       SMTP_USER: ${{ secrets.SMTP_USER }}
       SMTP_PASS: ${{ secrets.SMTP_PASS }}
-      MAIL_FROM: ${{ vars.MAIL_FROM }}
+      MAIL_FROM: ${{ vars.MAIL_FROM || 'CastZone Deals <martin@castzone.co.za>' }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
       STATE_FILE: .github/deal-notify-state.txt
