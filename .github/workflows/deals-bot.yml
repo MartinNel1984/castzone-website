@@ -31,4 +31,6 @@ jobs:
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
           SCRAPER_API_PARAMS: ${{ vars.SCRAPER_API_PARAMS }}
           MIN_DISCOUNT: ${{ github.event.inputs.min_discount || '40' }}
+          AUTO_APPROVE_PCT: ${{ vars.AUTO_APPROVE_PCT || '70' }}
+          AUTO_APPROVE_MIN_PRICE: ${{ vars.AUTO_APPROVE_MIN_PRICE || '300' }}
         run: python3 deals-bot/fetch_deals.py

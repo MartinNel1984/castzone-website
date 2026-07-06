@@ -44,6 +44,10 @@ EXPIRE_DAYS = int(os.environ.get("EXPIRE_DAYS", "21"))
 MAX_NEW = int(os.environ.get("MAX_NEW", "50"))  # cap new deals queued per run
 KEEP_FLOOR = int(os.environ.get("KEEP_FLOOR", "30"))  # keep a live deal while still >= this %
 STALE_GRACE = int(os.environ.get("STALE_GRACE", "2"))  # consecutive misses before auto-removing
+# Deals at/above BOTH thresholds auto-publish (skip review); everything else
+# stays pending. 0 pct = auto-approve disabled.
+AUTO_APPROVE_PCT = int(os.environ.get("AUTO_APPROVE_PCT", "0"))
+AUTO_APPROVE_MIN_PRICE = float(os.environ.get("AUTO_APPROVE_MIN_PRICE", "300"))
 DRY_RUN = os.environ.get("DRY_RUN") == "1"
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
@@ -402,7 +406,9 @@ def main():
     seen = set() if DRY_RUN else existing_external_ids()
     print(f"Already in table: {len(seen)} deals")
 
+    now_iso = datetime.now(timezone.utc).isoformat()
     expires = (datetime.now(timezone.utc) + timedelta(days=EXPIRE_DAYS)).isoformat()
+    auto_approved = 0
     to_insert = []
     batch_seen = set()
     current_map = {}   # external_id -> current {sale_price, discount_pct, original_price}
@@ -441,7 +447,13 @@ def main():
             if d["external_id"] in seen or d["external_id"] in batch_seen:
                 continue
             d["category"] = cat
-            d["status"] = "pending"
+            if (AUTO_APPROVE_PCT and d["discount_pct"] >= AUTO_APPROVE_PCT
+                    and (d["sale_price"] or 0) >= AUTO_APPROVE_MIN_PRICE):
+                d["status"] = "approved"
+                d["approved_at"] = now_iso
+                auto_approved += 1
+            else:
+                d["status"] = "pending"
             d["expires_at"] = expires
             to_insert.append(d)
             batch_seen.add(d["external_id"])
@@ -455,7 +467,10 @@ def main():
         print(f"\nFound {len(to_insert)} new; capping to the top {MAX_NEW} by discount.")
         to_insert = to_insert[:MAX_NEW]
 
-    print(f"\nTotal new deals to queue: {len(to_insert)}")
+    auto_kept = sum(1 for d in to_insert if d.get("status") == "approved")
+    print(f"\nTotal new deals to queue: {len(to_insert)} "
+          f"({auto_kept} auto-approved ≥{AUTO_APPROVE_PCT}%/R{AUTO_APPROVE_MIN_PRICE:.0f}, "
+          f"{len(to_insert) - auto_kept} to review)")
     if DRY_RUN:
         for d in sorted(to_insert, key=lambda x: -x["discount_pct"])[:20]:
             was = f"R{d['original_price']:.0f}->" if d["original_price"] else ""

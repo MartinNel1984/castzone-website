@@ -19,6 +19,7 @@ export default function ReviewContent() {
   const [busy, setBusy] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [live, setLive] = useState<Deal[]>([]);
 
   function toggleOne(id: string) {
     setSelected((prev) => {
@@ -57,9 +58,27 @@ export default function ReviewContent() {
         .order("discount_pct", { ascending: false, nullsFirst: false })
         .order("found_at", { ascending: false });
       setDeals((data ?? []) as Deal[]);
+
+      const { data: liveData } = await supabase
+        .from("deals")
+        .select("*")
+        .eq("status", "approved")
+        .order("approved_at", { ascending: false, nullsFirst: false });
+      setLive((liveData ?? []) as Deal[]);
+
       setStatus("ready");
     })();
   }, []);
+
+  async function removeLive(deal: Deal) {
+    if (!confirm(`Remove "${deal.title.slice(0, 60)}" from the live page?`)) return;
+    setBusy(deal.id);
+    const supabase = createClient();
+    const { error } = await supabase.from("deals").update({ status: "rejected" }).eq("id", deal.id);
+    setBusy(null);
+    if (error) { alert("Could not remove: " + error.message); return; }
+    setLive((prev) => prev.filter((d) => d.id !== deal.id));
+  }
 
   async function decide(deal: Deal, next: "approved" | "rejected") {
     setBusy(deal.id);
@@ -72,6 +91,7 @@ export default function ReviewContent() {
     // Remove from the pending list once decided.
     setDeals((prev) => prev.filter((d) => d.id !== deal.id));
     setSelected((prev) => { const n = new Set(prev); n.delete(deal.id); return n; });
+    if (next === "approved") setLive((prev) => [{ ...deal, status: "approved" }, ...prev]);
   }
 
   async function decideMany(next: "approved" | "rejected") {
@@ -249,6 +269,52 @@ export default function ReviewContent() {
             );
           })}
         </div>
+      )}
+
+      {/* Live on the site — remove any you don't want (incl. auto-approved) */}
+      {live.length > 0 && (
+        <section className="mt-12 pt-8 border-t border-surface-teal">
+          <h2 className="font-heading text-2xl text-bone-white font-bold uppercase tracking-wide mb-1">
+            Live on the site
+          </h2>
+          <p className="text-storm text-sm mb-5">
+            {live.length} deal{live.length === 1 ? "" : "s"} showing on /specials now. Remove any you don&apos;t want.
+          </p>
+          <div className="space-y-2">
+            {live.map((deal) => {
+              const pct = discountPct(deal.original_price, deal.sale_price, deal.discount_pct);
+              return (
+                <div
+                  key={deal.id}
+                  className="bg-deep-water-light border border-surface-teal rounded-lg p-3 flex items-center gap-3"
+                >
+                  <div className="w-12 h-12 flex-shrink-0 bg-deep-water rounded overflow-hidden flex items-center justify-center">
+                    {deal.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={deal.image_url} alt="" className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <span className="text-xl opacity-40">{categoryIcon(deal.category)}</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-bone-white text-sm font-medium truncate">{deal.title}</p>
+                    <p className="text-storm text-xs">
+                      {deal.retailer} · {formatPrice(deal.sale_price ?? 0)}
+                      {pct != null && <span className="text-cast-orange"> · -{pct}%</span>}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removeLive(deal)}
+                    disabled={busy === deal.id}
+                    className="flex-shrink-0 border border-surface-teal text-pale-water text-sm font-semibold px-4 py-2 rounded-lg hover:bg-surface-teal/20 disabled:opacity-50 transition"
+                  >
+                    {busy === deal.id ? "…" : "Remove"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       )}
     </main>
   );
