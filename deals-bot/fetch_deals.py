@@ -258,7 +258,9 @@ def adapter_takealot(r):
                 pv = item.get("product_views") or {}
                 bb = pv.get("buybox_summary") or {}
                 core = pv.get("core") or {}
-                plid = bb.get("product_id")
+                # core.id is the productline id (the real PLID Takealot routes by);
+                # buybox.product_id is a different offer id that 404s in the URL.
+                plid = core.get("id")
                 if not plid:
                     continue
                 now = (bb.get("prices") or [None])[0]
@@ -382,7 +384,7 @@ def revalidate(current_map, sources_ok):
         else:
             n = (row.get("stale_checks") or 0) + 1
             if n >= STALE_GRACE:
-                patch_deal(row["id"], {"status": "expired", "stale_checks": n})
+                patch_deal(row["id"], {"status": "rejected", "stale_checks": n})
                 expired += 1
             else:
                 patch_deal(row["id"], {"stale_checks": n})
