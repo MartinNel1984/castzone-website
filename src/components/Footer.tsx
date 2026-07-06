@@ -77,6 +77,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { label: "The Map", href: "/venues" },
+                { label: "Specials", href: "/specials" },
                 { label: "Bite Times", href: "/bite-times" },
                 { label: "Tournaments", href: "/tournaments" },
                 { label: "Trophy Room", href: "/catches" },

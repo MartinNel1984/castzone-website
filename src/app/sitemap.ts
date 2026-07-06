@@ -19,6 +19,7 @@ const STATIC_ROUTES = [
   "/rules",
   "/search",
   "/tournaments",
+  "/specials",
   "/venues",
   "/venues/suggest",
   "/conditions",

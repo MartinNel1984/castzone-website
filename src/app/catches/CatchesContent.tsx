@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, type FormEvent } from "react";
+import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -275,6 +275,23 @@ export default function TrophyRoomPage() {
   const [user, setUser] = useState<User | null>(null);
   const [selectedCatch, setSelectedCatch] = useState<Catch | null>(null);
 
+  // Mobile tab-scroll affordance — show fade hints only when there's more to swipe
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const [fade, setFade] = useState({ left: false, right: false });
+  const updateFades = useCallback(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    setFade({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    });
+  }, []);
+  useEffect(() => {
+    updateFades();
+    window.addEventListener("resize", updateFades);
+    return () => window.removeEventListener("resize", updateFades);
+  }, [updateFades]);
+
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -339,21 +356,37 @@ export default function TrophyRoomPage() {
       </p>
 
       {/* Category tabs */}
-      <div className="flex border-b border-surface-teal mb-8 overflow-x-auto">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c.value}
-            onClick={() => setActiveCategory(c.value)}
-            className={`font-heading font-bold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
-              activeCategory === c.value
-                ? "border-cast-orange text-bone-white"
-                : "border-transparent text-storm hover:text-pale-water"
-            }`}
-          >
-            <span className="mr-1.5">{c.icon}</span>
-            {c.label}
-          </button>
-        ))}
+      <div className="relative mb-8">
+        <div
+          ref={tabsRef}
+          onScroll={updateFades}
+          className="flex border-b border-surface-teal overflow-x-auto scroll-smooth"
+        >
+          {CATEGORIES.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => setActiveCategory(c.value)}
+              className={`font-heading font-bold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+                activeCategory === c.value
+                  ? "border-cast-orange text-bone-white"
+                  : "border-transparent text-storm hover:text-pale-water"
+              }`}
+            >
+              <span className="mr-1.5">{c.icon}</span>
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mobile-only scroll hints — fade + chevron when more tabs are off-screen */}
+        <div
+          className={`sm:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-deep-water to-transparent transition-opacity duration-200 ${fade.left ? "opacity-100" : "opacity-0"}`}
+        />
+        <div
+          className={`sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-deep-water to-transparent flex items-center justify-end pr-1 transition-opacity duration-200 ${fade.right ? "opacity-100" : "opacity-0"}`}
+        >
+          <span className="text-cast-orange text-2xl leading-none animate-pulse">›</span>
+        </div>
       </div>
 
       {loading ? (
