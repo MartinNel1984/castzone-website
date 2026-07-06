@@ -42,6 +42,8 @@ from datetime import datetime, timedelta, timezone
 MIN_DISCOUNT = int(os.environ.get("MIN_DISCOUNT", "50"))
 EXPIRE_DAYS = int(os.environ.get("EXPIRE_DAYS", "21"))
 MAX_NEW = int(os.environ.get("MAX_NEW", "50"))  # cap new deals queued per run
+KEEP_FLOOR = int(os.environ.get("KEEP_FLOOR", "30"))  # keep a live deal while still >= this %
+STALE_GRACE = int(os.environ.get("STALE_GRACE", "2"))  # consecutive misses before auto-removing
 DRY_RUN = os.environ.get("DRY_RUN") == "1"
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
@@ -338,6 +340,52 @@ def insert_deals(rows):
         return resp.status
 
 
+def patch_deal(deal_id, patch):
+    url = f"{SUPABASE_URL}/rest/v1/deals?id=eq.{deal_id}"
+    req = urllib.request.Request(url, data=json.dumps(patch).encode(), method="PATCH",
+                                 headers=sb_headers({"Prefer": "return=minimal"}))
+    with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+        return resp.status
+
+
+def revalidate(current_map, sources_ok):
+    """Re-check every live/pending deal against what's on promo right now.
+    Still on special -> keep + refresh price. Gone (or discount collapsed) ->
+    age it, and auto-expire after STALE_GRACE consecutive misses. Only touches
+    deals whose retailer fetched healthily this run (never mass-expire on a
+    blocked/failed fetch)."""
+    url = (f"{SUPABASE_URL}/rest/v1/deals?select=id,external_id,source,discount_pct,"
+           f"sale_price,stale_checks&status=in.(pending,approved)")
+    req = urllib.request.Request(url, headers=sb_headers())
+    with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+        rows = json.loads(resp.read().decode())
+
+    refreshed = aged = expired = 0
+    for row in rows:
+        if row.get("source") not in sources_ok:
+            continue  # couldn't check this retailer this run — leave it be
+        cur = current_map.get(row["external_id"])
+        if cur and cur["discount_pct"] >= KEEP_FLOOR:
+            patch = {}
+            if cur["sale_price"] != row.get("sale_price") or cur["discount_pct"] != row.get("discount_pct"):
+                patch.update(sale_price=cur["sale_price"], discount_pct=cur["discount_pct"],
+                             original_price=cur["original_price"])
+            if row.get("stale_checks"):
+                patch["stale_checks"] = 0
+            if patch:
+                patch_deal(row["id"], patch)
+                refreshed += 1
+        else:
+            n = (row.get("stale_checks") or 0) + 1
+            if n >= STALE_GRACE:
+                patch_deal(row["id"], {"status": "expired", "stale_checks": n})
+                expired += 1
+            else:
+                patch_deal(row["id"], {"stale_checks": n})
+                aged += 1
+    print(f"Re-validation: {refreshed} refreshed, {aged} aging, {expired} auto-removed.")
+
+
 # ----------------------------------------------------------------------------
 # Main
 # ----------------------------------------------------------------------------
@@ -357,6 +405,8 @@ def main():
     expires = (datetime.now(timezone.utc) + timedelta(days=EXPIRE_DAYS)).isoformat()
     to_insert = []
     batch_seen = set()
+    current_map = {}   # external_id -> current {sale_price, discount_pct, original_price}
+    sources_ok = set() # retailers that returned a healthy list this run (safe to re-validate)
 
     for r in RETAILERS:
         adapter = ADAPTERS.get(r["platform"])
@@ -368,6 +418,16 @@ def main():
         except Exception as e:  # noqa: BLE001 — never let one site break the run
             print(f"  ! {r['name']}: FAILED ({e}) — skipped")
             continue
+
+        # Snapshot everything currently on promo (any discount) for re-validation.
+        for d in found:
+            current_map[d["external_id"]] = {
+                "sale_price": d["sale_price"],
+                "discount_pct": d["discount_pct"],
+                "original_price": d.get("original_price"),
+            }
+        if len(found) > 5:  # a healthy fetch — safe to expire this source's dead deals
+            sources_ok.add(r["source"])
 
         qualifying = new = 0
         for d in found:
@@ -408,6 +468,12 @@ def main():
         print(f"Inserted (HTTP {status}). Review them at /specials/review")
     else:
         print("Nothing new to queue this run.")
+
+    # Keep the live page honest: drop deals no longer on special.
+    if sources_ok:
+        revalidate(current_map, sources_ok)
+    else:
+        print("Re-validation skipped — no retailer returned a healthy list this run.")
 
 
 if __name__ == "__main__":
