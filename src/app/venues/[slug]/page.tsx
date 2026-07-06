@@ -47,6 +47,8 @@ export const VENUE_SLUGS = [
   "flamingo-bay-resort",
   // Partner venues — venue outreach replies 2026-06-15
   "two-dam-sustainable", "angler-antelope-guesthouse",
+  // Partner venue — Santa Fishing Estate 2026-07-06
+  "santa-fishing-estate",
 ];
 
 function slugToName(slug: string): string {
