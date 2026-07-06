@@ -4,17 +4,23 @@ CastZone Specials — approval notifier.
 
 Runs a few times a day. Finds deals APPROVED since the last run (marker file)
 and, if there are any, sends:
-  * an email digest to members (via Resend) — only if RESEND_API_KEY is set
+  * an email digest to members (via SMTP — any provider) — only if SMTP is set
   * a WhatsApp summary to Martin (via CallMeBot)
 
 The on-site 🔔 bell is already handled by the notify_new_deal() DB trigger, so
 this only adds email + WhatsApp.
 
+Email goes over plain SMTP so it works with any free provider (Brevo, Mailjet,
+MailerSend, Zoho, …) — just set the four SMTP_* secrets. No vendor lock-in.
+
 Env:
   SUPABASE_URL            (required)
   SUPABASE_ANON_KEY       (required — approved deals are anon-readable)
   SUPABASE_SERVICE_KEY    (needed for member emails via the admin API)
-  RESEND_API_KEY          (optional — no key = skip email, still WhatsApps)
+  SMTP_HOST               (e.g. smtp-relay.brevo.com — no host = skip email)
+  SMTP_PORT               (optional, default 587 = STARTTLS; 465 = SSL)
+  SMTP_USER               (SMTP login)
+  SMTP_PASS               (SMTP key / password)
   MAIL_FROM               (optional, default 'CastZone Deals <deals@castzone.co.za>')
   CALLMEBOT_API_KEY       (optional)
   NOTIFY_WHATSAPP_NUMBER  (optional)
@@ -24,17 +30,25 @@ Env:
 
 import json
 import os
+import smtplib
 import ssl
 import sys
+import time
 import urllib.parse
 import urllib.request
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formataddr, parseaddr
 from datetime import datetime, timezone
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
-MAIL_FROM = os.environ.get("MAIL_FROM", "CastZone Deals <deals@castzone.co.za>")
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+MAIL_FROM = os.environ.get("MAIL_FROM") or "CastZone Deals <deals@castzone.co.za>"
 CALLMEBOT_API_KEY = os.environ.get("CALLMEBOT_API_KEY", "")
 WHATSAPP_NUMBER = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
 STATE_FILE = os.environ.get("STATE_FILE", ".github/deal-notify-state.txt")
@@ -144,32 +158,45 @@ def build_email_html(deals, total_new):
 
 
 def send_email(recipients, deals, total_new):
-    if not RESEND_API_KEY:
-        print("No RESEND_API_KEY — skipping email.")
+    if not (SMTP_HOST and SMTP_USER and SMTP_PASS):
+        print("No SMTP config — skipping email.")
         return
     if not recipients:
         print("No recipients — skipping email.")
         return
     html = build_email_html(deals, total_new)
     subject = f"🔥 {total_new} new fishing & camping specials on CastZone"
-    # Resend batch: one personalised email per member (no shared To: leakage), max 100/call.
-    headers = {"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"}
+    from_name, from_addr = parseaddr(MAIL_FROM)
     unsub = "<mailto:unsubscribe@castzone.co.za?subject=unsubscribe>"
+
+    ctx = ssl.create_default_context()
+    if SMTP_PORT == 465:
+        server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30, context=ctx)
+    else:
+        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30)
+        server.starttls(context=ctx)
+    server.login(SMTP_USER, SMTP_PASS)
+
     sent = 0
-    for i in range(0, len(recipients), 100):
-        chunk = recipients[i:i + 100]
-        batch = [{
-            "from": MAIL_FROM, "to": [addr], "subject": subject, "html": html,
-            "headers": {"List-Unsubscribe": unsub},
-        } for addr in chunk]
-        try:
-            status, body = http("https://api.resend.com/emails/batch", method="POST",
-                                 headers=headers, data=batch, timeout=60)
-            print(f"  Resend batch {i//100+1}: HTTP {status}")
-            sent += len(chunk)
-        except Exception as e:  # noqa: BLE001
-            print(f"  Resend batch {i//100+1} FAILED: {e}")
-    print(f"Emailed ~{sent} members.")
+    try:
+        for addr in recipients:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = formataddr((from_name or "CastZone Deals", from_addr))
+            msg["To"] = addr
+            msg["List-Unsubscribe"] = unsub
+            msg.attach(MIMEText("New fishing & camping specials are live: "
+                                f"{SITE}/specials", "plain"))
+            msg.attach(MIMEText(html, "html"))
+            try:
+                server.sendmail(from_addr, [addr], msg.as_string())
+                sent += 1
+            except Exception as e:  # noqa: BLE001 — one bad address shouldn't stop the rest
+                print(f"  send to {addr} failed: {e}")
+            time.sleep(0.15)  # gentle pacing for free-tier rate limits
+    finally:
+        server.quit()
+    print(f"Emailed {sent}/{len(recipients)} members via {SMTP_HOST}.")
 
 
 def send_whatsapp(total_new, top):
