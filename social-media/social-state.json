@@ -1,4 +1,4 @@
 {
-  "next_index": 15,
+  "next_index": 16,
   "_comment": "Points at the next item in social-bank.json. Advances each week and wraps back to 0 when the bank is exhausted so posts cycle. To restart from the beginning set this to 0. The GitHub Action commits this change back after each run."
 }
