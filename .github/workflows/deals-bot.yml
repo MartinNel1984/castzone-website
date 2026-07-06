@@ -1,0 +1,32 @@
+name: Deals bot (Specials)
+
+# Scans curated SA fishing/camping retailers for >= MIN_DISCOUNT% deals and
+# queues them on /specials/review for Martin to approve.
+# Reuses the same Supabase secrets as the content-drip bot.
+
+on:
+  schedule:
+    - cron: "0 5 * * *"   # 07:00 SAST daily
+  workflow_dispatch:
+    inputs:
+      min_discount:
+        description: "Minimum discount % (default 50)"
+        required: false
+        default: "50"
+
+jobs:
+  find-deals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Find deals
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MIN_DISCOUNT: ${{ github.event.inputs.min_discount || '50' }}
+        run: python3 deals-bot/fetch_deals.py
