@@ -17,6 +17,23 @@ export default function ReviewContent() {
   const [status, setStatus] = useState<Status>("loading");
   const [deals, setDeals] = useState<Deal[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setSelected((prev) =>
+      prev.size === deals.length ? new Set() : new Set(deals.map((d) => d.id))
+    );
+  }
 
   useEffect(() => {
     const supabase = createClient();
@@ -54,6 +71,23 @@ export default function ReviewContent() {
     if (error) { alert("Could not save: " + error.message); return; }
     // Remove from the pending list once decided.
     setDeals((prev) => prev.filter((d) => d.id !== deal.id));
+    setSelected((prev) => { const n = new Set(prev); n.delete(deal.id); return n; });
+  }
+
+  async function decideMany(next: "approved" | "rejected") {
+    const ids = [...selected];
+    if (!ids.length) return;
+    if (next === "rejected" && !confirm(`Reject ${ids.length} deal${ids.length === 1 ? "" : "s"}?`)) return;
+    setBulkBusy(true);
+    const supabase = createClient();
+    const patch: Record<string, unknown> = { status: next };
+    if (next === "approved") patch.approved_at = new Date().toISOString();
+    const { error } = await supabase.from("deals").update(patch).in("id", ids);
+    setBulkBusy(false);
+    if (error) { alert("Could not save: " + error.message); return; }
+    const idSet = new Set(ids);
+    setDeals((prev) => prev.filter((d) => !idSet.has(d.id)));
+    setSelected(new Set());
   }
 
   if (status === "loading") {
@@ -100,6 +134,39 @@ export default function ReviewContent() {
         </Link>
       </div>
 
+      {/* Bulk action bar */}
+      {deals.length > 0 && (
+        <div className="flex items-center gap-3 flex-wrap mb-5 pb-4 border-b border-surface-teal">
+          <label className="flex items-center gap-2 text-pale-water text-sm cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={selected.size === deals.length && deals.length > 0}
+              ref={(el) => { if (el) el.indeterminate = selected.size > 0 && selected.size < deals.length; }}
+              onChange={toggleAll}
+              className="w-4 h-4 accent-cast-orange"
+            />
+            Select all
+          </label>
+          <span className="text-storm text-sm">{selected.size} selected</span>
+          <div className="flex gap-2 ml-auto">
+            <button
+              onClick={() => decideMany("approved")}
+              disabled={selected.size === 0 || bulkBusy}
+              className="bg-cast-orange text-white font-semibold px-4 py-2 rounded-lg hover:opacity-90 disabled:opacity-40 transition text-sm"
+            >
+              {bulkBusy ? "…" : `Approve selected${selected.size ? ` (${selected.size})` : ""}`}
+            </button>
+            <button
+              onClick={() => decideMany("rejected")}
+              disabled={selected.size === 0 || bulkBusy}
+              className="border border-surface-teal text-pale-water font-semibold px-4 py-2 rounded-lg hover:bg-surface-teal/20 disabled:opacity-40 transition text-sm"
+            >
+              Reject selected
+            </button>
+          </div>
+        </div>
+      )}
+
       {deals.length === 0 ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
           <div className="text-5xl mb-4">✅</div>
@@ -113,8 +180,18 @@ export default function ReviewContent() {
             return (
               <div
                 key={deal.id}
-                className="bg-deep-water-light border border-surface-teal rounded-lg p-4 flex flex-col sm:flex-row gap-4"
+                className={`bg-deep-water-light border rounded-lg p-4 flex flex-col sm:flex-row gap-4 transition-colors ${
+                  selected.has(deal.id) ? "border-cast-orange" : "border-surface-teal"
+                }`}
               >
+                <label className="flex items-start pt-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(deal.id)}
+                    onChange={() => toggleOne(deal.id)}
+                    className="w-5 h-5 accent-cast-orange"
+                  />
+                </label>
                 <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-deep-water rounded overflow-hidden flex items-center justify-center">
                   {deal.image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element

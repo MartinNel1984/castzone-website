@@ -78,6 +78,21 @@ function DealCard({ deal }: { deal: Deal }) {
 export default function SpecialsContent() {
   const [deals, setDeals] = useState<Deal[] | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+      const { data: adminRow } = await supabase
+        .from("admins")
+        .select("user_id")
+        .eq("user_id", userData.user.id)
+        .maybeSingle();
+      setIsAdmin(!!adminRow);
+    })();
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -111,9 +126,19 @@ export default function SpecialsContent() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="font-heading text-4xl md:text-5xl font-bold text-bone-white uppercase tracking-wide">
-          🔥 Specials
-        </h1>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <h1 className="font-heading text-4xl md:text-5xl font-bold text-bone-white uppercase tracking-wide">
+            🔥 Specials
+          </h1>
+          {isAdmin && (
+            <Link
+              href="/specials/review"
+              className="bg-surface-teal/30 border border-surface-teal text-bone-white text-sm font-medium px-4 py-2 rounded-lg hover:border-cast-orange transition-colors whitespace-nowrap"
+            >
+              🛠️ Review queue →
+            </Link>
+          )}
+        </div>
         <p className="mt-3 text-pale-water leading-relaxed max-w-2xl">
           Hand-checked South African fishing &amp; camping deals — every one at least{" "}
           <span className="text-cast-orange font-semibold">50% off</span>. Our bot scans the

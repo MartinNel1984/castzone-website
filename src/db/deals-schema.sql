@@ -116,3 +116,10 @@ drop trigger if exists on_deal_approved on deals;
 create trigger on_deal_approved
   after update on deals
   for each row execute function notify_new_deal();
+
+
+-- ========================= MAKE YOURSELF ADMIN =========================
+-- EDIT the email below to your CastZone login email before running.
+insert into admins (user_id)
+select id from auth.users where email = 'YOUR-CASTZONE-LOGIN-EMAIL'
+on conflict do nothing;
