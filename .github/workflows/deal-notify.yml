@@ -6,7 +6,7 @@ name: Deal notify (email + WhatsApp)
 
 on:
   schedule:
-    - cron: "30 6,11,16 * * *"   # 08:30, 13:30, 18:30 SAST
+    - cron: "0 15 * * *"   # 17:00 SAST daily — one digest of the day's approvals
   workflow_dispatch:
     inputs:
       test_email:
