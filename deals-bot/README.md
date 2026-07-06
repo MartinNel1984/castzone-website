@@ -52,14 +52,19 @@ Each retailer is one entry in `RETAILERS` in `fetch_deals.py`, keyed by
 
 | Retailer | Platform | Status |
 |---|---|---|
+| Takealot | `takealot` (search API, Featured Deals filter) | ✅ live — deepest deals |
 | Outdoor Warehouse | `cowhills` (products.json + marked_down filter) | ✅ live |
 | Sportsmans Warehouse | Algolia backend | ⏳ needs an `algolia` adapter |
 | Kingfisher / Campworld / Safari Outdoor | custom / redirects | ⏳ bespoke |
-| Takealot / Makro / Game / Cape Union Mart / Mr Price | SPA + bot-protected | best via **affiliate product feeds** |
+| Makro / Game / Cape Union Mart / Mr Price | SPA + bot-protected | ⏳ per-site work |
 
-Affiliate feeds are the robust way to add the big bot-protected retailers: they
-hand over clean product data *with RRP + sale price*, are allowed, and pay
-CastZone commission. Recommended next step for wider coverage.
+All fetches route through the ScraperAPI proxy (above) so datacenter-IP blocks
+don't matter.
+
+## Volume cap
+
+`MAX_NEW` (default 50) caps how many new deals a single run queues, keeping the
+deepest discounts first so the review page never floods. Raise/lower via env.
 
 ## Testing locally
 

@@ -41,6 +41,7 @@ from datetime import datetime, timedelta, timezone
 
 MIN_DISCOUNT = int(os.environ.get("MIN_DISCOUNT", "50"))
 EXPIRE_DAYS = int(os.environ.get("EXPIRE_DAYS", "21"))
+MAX_NEW = int(os.environ.get("MAX_NEW", "50"))  # cap new deals queued per run
 DRY_RUN = os.environ.get("DRY_RUN") == "1"
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
@@ -68,9 +69,16 @@ RETAILERS = [
         "platform": "cowhills",
         "base": "https://www.outdoorwarehouse.co.za",
     },
+    {
+        "source": "takealot",
+        "name": "Takealot",
+        "platform": "takealot",
+        # searched under the "Featured Deals" filter; terms scope it to our niche
+        "terms": ["fishing", "fishing rod", "fishing reel", "fishing tackle",
+                  "camping", "tent", "camping chair", "cooler box",
+                  "sleeping bag", "gazebo", "camping stove"],
+    },
     # Sportsmans Warehouse runs an Algolia backend (different adapter) — TODO.
-    # Takealot / Makro / Game / Cape Union Mart / Mr Price are bot-protected
-    # SPAs; best sourced via affiliate product feeds — see README.
 ]
 
 # ----------------------------------------------------------------------------
@@ -221,8 +229,65 @@ def _cowhills_image(p):
     return None
 
 
+def adapter_takealot(r):
+    """Takealot search API filtered to Featured Deals. buybox_summary gives
+    listing_price (was) + prices (now); when there's no was-price we fall back
+    to a firm 'N%' saving string (skip vague 'Up to N%' to avoid overstating)."""
+    import re
+    api = "https://api.takealot.com/rest/v-1-11-0/searches/products,filters,facets,sort_options"
+    deals = []
+    for term in r.get("terms", []):
+        start = 0
+        for _ in range(3):  # up to 3 pages (150 items) per term
+            qs = urllib.parse.urlencode({
+                "qsearch": term, "rows": 50, "start": start,
+                "filter": "DealType:Featured Deals",
+            })
+            data = get_json(f"{api}?{qs}", referer="https://www.takealot.com/")
+            results = (((data.get("sections") or {}).get("products") or {})
+                       .get("results") or [])
+            if not results:
+                break
+            for item in results:
+                pv = item.get("product_views") or {}
+                bb = pv.get("buybox_summary") or {}
+                core = pv.get("core") or {}
+                plid = bb.get("product_id")
+                if not plid:
+                    continue
+                now = (bb.get("prices") or [None])[0]
+                was = bb.get("listing_price")
+                pct = None
+                if was and now and was > now:
+                    pct = round((was - now) / was * 100)
+                else:
+                    m = re.fullmatch(r"(\d+)%", str(bb.get("saving") or "").strip())
+                    if m:  # firm % only, not "Up to N%"
+                        pct = int(m.group(1))
+                if pct is None or not now:
+                    continue
+                imgs = (pv.get("gallery") or {}).get("images") or []
+                img = imgs[0].replace("{size}", "pdpxl") if imgs else None
+                deals.append({
+                    "external_id": f"takealot:{plid}",
+                    "title": (core.get("title") or "").strip()[:200],
+                    "retailer": r["name"],
+                    "original_price": round(was, 2) if was else None,
+                    "sale_price": round(now, 2),
+                    "discount_pct": pct,
+                    "url": f'https://www.takealot.com/{core.get("slug")}/PLID{plid}',
+                    "image_url": img,
+                    "source": r["source"],
+                    "_category_titles": [term],
+                })
+            start += 50
+            time.sleep(0.4)
+    return deals
+
+
 ADAPTERS = {
     "cowhills": adapter_cowhills,
+    "takealot": adapter_takealot,
 }
 
 
@@ -324,11 +389,18 @@ def main():
         print(f"  · {r['name']}: {len(found)} on promo, "
               f"{qualifying} are >= {MIN_DISCOUNT}% fishing/camping, {new} new")
 
+    # Keep the deepest discounts first; cap per run so review stays manageable.
+    to_insert.sort(key=lambda x: -x["discount_pct"])
+    if len(to_insert) > MAX_NEW:
+        print(f"\nFound {len(to_insert)} new; capping to the top {MAX_NEW} by discount.")
+        to_insert = to_insert[:MAX_NEW]
+
     print(f"\nTotal new deals to queue: {len(to_insert)}")
     if DRY_RUN:
         for d in sorted(to_insert, key=lambda x: -x["discount_pct"])[:20]:
+            was = f"R{d['original_price']:.0f}->" if d["original_price"] else ""
             print(f"  -{d['discount_pct']}%  {d['category']:7} "
-                  f"R{d['original_price']:.0f}->R{d['sale_price']:.0f}  {d['title'][:50]}")
+                  f"{was}R{d['sale_price']:.0f}  {d['title'][:50]}")
         return
 
     if to_insert:
