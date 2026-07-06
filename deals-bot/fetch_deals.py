@@ -103,14 +103,27 @@ def classify(title, category_titles):
 _CTX = ssl.create_default_context()
 
 
-def get_json(url, tries=3):
+def get_json(url, referer=None, tries=3):
     last = None
+    headers = {
+        "User-Agent": UA,
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-ZA,en-GB;q=0.9,en;q=0.8",
+        "Accept-Encoding": "identity",
+        "Connection": "keep-alive",
+        "sec-ch-ua": '"Chromium";v="126", "Not.A/Brand";v="24", "Google Chrome";v="126"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "X-Requested-With": "XMLHttpRequest",
+    }
+    if referer:
+        headers["Referer"] = referer
     for attempt in range(tries):
         try:
-            req = urllib.request.Request(url, headers={
-                "User-Agent": UA,
-                "Accept": "application/json, text/plain, */*",
-            })
+            req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
                 raw = resp.read().decode("utf-8", "replace")
             return json.loads(raw)
@@ -143,7 +156,7 @@ def adapter_cowhills(r):
     total = None
     for page in range(1, 40):  # hard safety cap
         url = f"{base}/products.json?{qs}&page={page}"
-        data = get_json(url)
+        data = get_json(url, referer=f"{base}/")
         results = (data.get("results") or {}).get("results") or []
         if total is None:
             th = (data.get("paginationMeta") or {}).get("total_hits") or {}
