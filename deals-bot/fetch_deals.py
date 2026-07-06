@@ -456,6 +456,7 @@ def main():
                 auto_approved += 1
             else:
                 d["status"] = "pending"
+                d["approved_at"] = None  # keep keys uniform for PostgREST batch insert
             d["expires_at"] = expires
             to_insert.append(d)
             batch_seen.add(d["external_id"])
