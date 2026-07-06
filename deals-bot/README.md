@@ -22,9 +22,9 @@ Also make sure `src/db/deals-schema.sql` has been run in Supabase (creates the
 
 ## Tuning the discount threshold
 
-The default is **50%**. Real-world note: mainstream SA outdoor retailers mostly
-run 10–33% promos, so a strict 50% floor stays empty except during genuine
-clearance. To change it:
+The default is **40%**. Real-world note: mainstream SA outdoor retailers mostly
+run 10–33% promos, so even a 40% floor stays sparse until genuine clearance or
+until more retailers (via affiliate feeds) are added. To change it:
 
 - **For one run:** Actions → Deals bot → *Run workflow* → set *Minimum discount %*.
 - **Permanently:** edit `MIN_DISCOUNT` default in `deals-bot.yml`.

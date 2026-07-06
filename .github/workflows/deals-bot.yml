@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
     inputs:
       min_discount:
-        description: "Minimum discount % (default 50)"
+        description: "Minimum discount % (default 40)"
         required: false
-        default: "50"
+        default: "40"
 
 jobs:
   find-deals:
@@ -28,5 +28,5 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          MIN_DISCOUNT: ${{ github.event.inputs.min_discount || '50' }}
+          MIN_DISCOUNT: ${{ github.event.inputs.min_discount || '40' }}
         run: python3 deals-bot/fetch_deals.py
