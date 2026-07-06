@@ -1,0 +1,51 @@
+name: Deal notify (email + WhatsApp)
+
+# Digests deals approved since the last run and emails members (Resend) +
+# WhatsApps Martin. The on-site bell is handled by a DB trigger, not here.
+# Runs a few times a day so multiple approvals batch into one email.
+
+on:
+  schedule:
+    - cron: "30 6,11,16 * * *"   # 08:30, 13:30, 18:30 SAST
+  workflow_dispatch:
+
+permissions:
+  contents: write   # commit the advanced marker
+
+concurrency:
+  group: deal-notify
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
+      NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+      STATE_FILE: .github/deal-notify-state.txt
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Notify on newly-approved deals
+        run: python3 deals-bot/notify_deals.py
+
+      - name: Commit advanced marker
+        run: |
+          if git diff --quiet -- "$STATE_FILE"; then
+            echo "No marker change — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "CastZone Deal Bot"
+          git config user.email "deals@castzone.co.za"
+          git add "$STATE_FILE"
+          git commit -m "Deal notify: advance marker [skip ci]"
+          git pull --rebase
+          git push
