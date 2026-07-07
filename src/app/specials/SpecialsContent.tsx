@@ -79,11 +79,13 @@ export default function SpecialsContent() {
   const [deals, setDeals] = useState<Deal[] | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
     (async () => {
       const { data: userData } = await supabase.auth.getUser();
+      setSignedIn(!!userData.user);
       if (!userData.user) return;
       const { data: adminRow } = await supabase
         .from("admins")
@@ -95,6 +97,7 @@ export default function SpecialsContent() {
   }, []);
 
   useEffect(() => {
+    if (!signedIn) return;
     const supabase = createClient();
     supabase
       .from("deals")
@@ -106,7 +109,7 @@ export default function SpecialsContent() {
         const live = (data ?? []).filter((d) => !isExpired(d as Deal));
         setDeals(live as Deal[]);
       });
-  }, []);
+  }, [signedIn]);
 
   const filtered = useMemo(() => {
     if (!deals) return [];
@@ -148,6 +151,7 @@ export default function SpecialsContent() {
       </div>
 
       {/* Filter tabs */}
+      {signedIn && (
       <div className="flex flex-wrap gap-2 mb-8">
         {(
           [
@@ -174,9 +178,37 @@ export default function SpecialsContent() {
           </button>
         ))}
       </div>
+      )}
 
       {/* Grid */}
-      {deals === null ? (
+      {signedIn === null ? (
+        <p className="text-storm py-16 text-center">Loading deals…</p>
+      ) : !signedIn ? (
+        <div className="text-center py-16 border border-surface-teal rounded-lg">
+          <div className="text-5xl mb-4">🔒</div>
+          <h2 className="font-heading text-2xl text-bone-white font-bold uppercase">
+            Members-only deals
+          </h2>
+          <p className="mt-2 text-pale-water max-w-md mx-auto">
+            Sign up free to see today&apos;s hand-checked fishing &amp; camping specials — every
+            one at least 50% off.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
+            <Link
+              href="/register"
+              className="inline-block bg-cast-orange text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
+            >
+              Join free →
+            </Link>
+            <Link
+              href="/login"
+              className="inline-block border border-surface-teal text-pale-water font-medium px-6 py-3 rounded-lg hover:border-cast-orange transition"
+            >
+              Sign in
+            </Link>
+          </div>
+        </div>
+      ) : deals === null ? (
         <p className="text-storm py-16 text-center">Loading deals…</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
