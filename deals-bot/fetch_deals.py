@@ -42,6 +42,7 @@ from datetime import datetime, timedelta, timezone
 MIN_DISCOUNT = int(os.environ.get("MIN_DISCOUNT", "50"))
 EXPIRE_DAYS = int(os.environ.get("EXPIRE_DAYS", "21"))
 MAX_NEW = int(os.environ.get("MAX_NEW", "50"))  # cap new deals queued per run
+BACKFILL_MAX = int(os.environ.get("BACKFILL_MAX", "150"))  # existing deals to re-host per run
 KEEP_FLOOR = int(os.environ.get("KEEP_FLOOR", "30"))  # keep a live deal while still >= this %
 STALE_GRACE = int(os.environ.get("STALE_GRACE", "2"))  # consecutive misses before auto-removing
 # Deals at/above BOTH thresholds auto-publish (skip review); everything else
@@ -165,6 +166,64 @@ def get_json(url, referer=None, tries=3):
             last = e
             time.sleep(1.5 * (attempt + 1))
     raise last
+
+
+def fetch_bytes(url, referer=None, tries=2):
+    """Download raw bytes (for images). Same proxy path as get_json so a
+    retailer's image CDN isn't blocked from a cloud IP either."""
+    headers = {
+        "User-Agent": UA,
+        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+    }
+    if referer:
+        headers["Referer"] = referer
+
+    fetch_url = url
+    timeout = 30
+    if SCRAPER_API_KEY:
+        qs = urllib.parse.urlencode({"api_key": SCRAPER_API_KEY, "url": url})
+        if SCRAPER_API_PARAMS:
+            qs += "&" + SCRAPER_API_PARAMS
+        fetch_url = "https://api.scraperapi.com/?" + qs
+        timeout = 75
+
+    last = None
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(fetch_url, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout, context=_CTX) as resp:
+                return resp.read(), (resp.headers.get("Content-Type") or "image/jpeg")
+        except Exception as e:  # noqa: BLE001
+            last = e
+            time.sleep(1.0 * (attempt + 1))
+    raise last
+
+
+def rehost_image(image_url, external_id):
+    """Download a retailer product image once and re-host it in Supabase
+    Storage (bucket 'deal-images'), returning our own public URL. Retailer
+    CDNs (Takealot, Cloudinary) 503 when hotlinked cross-site from a real
+    browser, so linking to them directly leaves /specials with broken images.
+    Returns None on any failure (site falls back to a category icon)."""
+    if not image_url:
+        return None
+    try:
+        data, content_type = fetch_bytes(image_url)
+        ext = "png" if "png" in content_type else "jpg"
+        path = f'{external_id.replace(":", "_").replace("/", "_")}.{ext}'
+        url = f"{SUPABASE_URL}/storage/v1/object/deal-images/{path}"
+        req = urllib.request.Request(url, data=data, method="POST", headers={
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": content_type,
+            "x-upsert": "true",
+        })
+        with urllib.request.urlopen(req, timeout=30, context=_CTX):
+            pass
+        return f"{SUPABASE_URL}/storage/v1/object/public/deal-images/{path}"
+    except Exception as e:  # noqa: BLE001 — a broken image never fails the run
+        print(f"    ! image rehost failed for {external_id}: {e}")
+        return None
 
 
 def to_float(v):
@@ -392,6 +451,28 @@ def revalidate(current_map, sources_ok):
     print(f"Re-validation: {refreshed} refreshed, {aged} aging, {expired} auto-removed.")
 
 
+def backfill_images():
+    """One-time-per-deal migration: any live/pending row still pointing at a
+    retailer CDN (hotlinked, 503s in-browser) gets its image re-hosted to our
+    own Storage. Capped per run so a big backlog doesn't blow the run time."""
+    marker = f"{SUPABASE_URL}/storage/v1/object/public/deal-images/"
+    url = (f"{SUPABASE_URL}/rest/v1/deals?select=id,external_id,image_url"
+           f"&status=in.(pending,approved)&image_url=not.is.null"
+           f"&image_url=not.like.{urllib.parse.quote(marker + '*')}"
+           f"&limit={BACKFILL_MAX}")
+    req = urllib.request.Request(url, headers=sb_headers())
+    with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+        rows = json.loads(resp.read().decode())
+
+    done = 0
+    for row in rows:
+        new_url = rehost_image(row["image_url"], row["external_id"])
+        patch_deal(row["id"], {"image_url": new_url})
+        done += 1
+    if rows:
+        print(f"Backfilled images for {done}/{len(rows)} existing deals.")
+
+
 # ----------------------------------------------------------------------------
 # Main
 # ----------------------------------------------------------------------------
@@ -474,6 +555,18 @@ def main():
     print(f"\nTotal new deals to queue: {len(to_insert)} "
           f"({auto_kept} auto-approved ≥{AUTO_APPROVE_PCT}%/R{AUTO_APPROVE_MIN_PRICE:.0f}, "
           f"{len(to_insert) - auto_kept} to review)")
+
+    if not DRY_RUN:
+        rehosted = 0
+        for d in to_insert:
+            new_url = rehost_image(d.get("image_url"), d["external_id"])
+            if new_url:
+                d["image_url"] = new_url
+                rehosted += 1
+            else:
+                d["image_url"] = None  # hotlinked retailer CDN 503s in-browser — show icon instead
+        print(f"Re-hosted {rehosted}/{len(to_insert)} product images.")
+
     if DRY_RUN:
         for d in sorted(to_insert, key=lambda x: -x["discount_pct"])[:20]:
             was = f"R{d['original_price']:.0f}->" if d["original_price"] else ""
@@ -492,6 +585,8 @@ def main():
         revalidate(current_map, sources_ok)
     else:
         print("Re-validation skipped — no retailer returned a healthy list this run.")
+
+    backfill_images()
 
 
 if __name__ == "__main__":
