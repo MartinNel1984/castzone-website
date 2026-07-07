@@ -169,8 +169,10 @@ def get_json(url, referer=None, tries=3):
 
 
 def fetch_bytes(url, referer=None, tries=2):
-    """Download raw bytes (for images). Same proxy path as get_json so a
-    retailer's image CDN isn't blocked from a cloud IP either."""
+    """Download raw image bytes directly (no proxy). Unlike the retailer
+    product-listing APIs, these CDN image URLs are NOT datacenter-IP-blocked
+    — verified with a direct unproxied fetch — so routing them through
+    ScraperAPI would only burn credits for nothing."""
     headers = {
         "User-Agent": UA,
         "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -178,20 +180,11 @@ def fetch_bytes(url, referer=None, tries=2):
     if referer:
         headers["Referer"] = referer
 
-    fetch_url = url
-    timeout = 30
-    if SCRAPER_API_KEY:
-        qs = urllib.parse.urlencode({"api_key": SCRAPER_API_KEY, "url": url})
-        if SCRAPER_API_PARAMS:
-            qs += "&" + SCRAPER_API_PARAMS
-        fetch_url = "https://api.scraperapi.com/?" + qs
-        timeout = 75
-
     last = None
     for attempt in range(tries):
         try:
-            req = urllib.request.Request(fetch_url, headers=headers)
-            with urllib.request.urlopen(req, timeout=timeout, context=_CTX) as resp:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
                 return resp.read(), (resp.headers.get("Content-Type") or "image/jpeg")
         except Exception as e:  # noqa: BLE001
             last = e
