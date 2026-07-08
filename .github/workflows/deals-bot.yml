@@ -3,10 +3,14 @@ name: Deals bot (Specials)
 # Scans curated SA fishing/camping retailers for >= MIN_DISCOUNT% deals and
 # queues them on /specials/review for Martin to approve.
 # Reuses the same Supabase secrets as the content-drip bot.
+#
+# Runs manually only - the daily 07:00 scan now runs self-hosted on the M2
+# MacBook (see deals-bot/self-host/README.md), since a home IP is not
+# datacenter-blocked by Takealot/Outdoor Warehouse the way GitHub-hosted
+# runners are. Keep this workflow as a manual fallback in case the M2 is
+# ever off for an extended period.
 
 on:
-  schedule:
-    - cron: "0 5 * * *"   # daily at 07:00 SAST
   workflow_dispatch:
     inputs:
       min_discount:
