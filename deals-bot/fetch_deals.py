@@ -202,6 +202,11 @@ def rehost_image(image_url, external_id):
         return None
     try:
         data, content_type = fetch_bytes(image_url)
+        # A flaky fetch can occasionally hand back mangled bytes (seen once:
+        # valid-looking response, garbage content) — a magic-byte check catches
+        # it before a broken file gets stored, instead of silently going live.
+        if not (data[:2] == b"\xff\xd8" or data[:8] == b"\x89PNG\r\n\x1a\n"):
+            raise ValueError(f"downloaded bytes aren't a valid JPEG/PNG ({len(data)} bytes)")
         ext = "png" if "png" in content_type else "jpg"
         path = f'{external_id.replace(":", "_").replace("/", "_")}.{ext}'
         url = f"{SUPABASE_URL}/storage/v1/object/deal-images/{path}"
