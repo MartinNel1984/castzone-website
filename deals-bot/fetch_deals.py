@@ -91,6 +91,12 @@ RETAILERS = [
                   "sleeping bag", "gazebo", "camping stove"],
     },
     # Sportsmans Warehouse runs an Algolia backend (different adapter) — TODO.
+    {
+        "source": "mias-angling",
+        "name": "Mia's Angling",
+        "platform": "shopify",
+        "base": "https://miasangling.co.za",
+    },
 ]
 
 # ----------------------------------------------------------------------------
@@ -358,9 +364,63 @@ def adapter_takealot(r):
     return deals
 
 
+def adapter_shopify(r):
+    """Generic Shopify storefront adapter. The public products.json endpoint
+    exposes compare_at_price (was) vs price (now) per variant natively — no
+    HTML scraping, no bot-protection seen on this platform. Picks each
+    product's best-discounted variant."""
+    base = r["base"]
+    deals = []
+    for page in range(1, 20):  # hard safety cap
+        url = f"{base}/products.json?limit=250&page={page}"
+        data = get_json(url, referer=f"{base}/")
+        products = data.get("products") or []
+        if not products:
+            break
+        for p in products:
+            best = None
+            for v in p.get("variants") or []:
+                price = to_float(v.get("price"))
+                compare = to_float(v.get("compare_at_price"))
+                if not (price and compare and compare > price):
+                    continue
+                pct = round((compare - price) / compare * 100)
+                if best is None or pct > best[0]:
+                    best = (pct, price, compare, v)
+            if not best:
+                continue
+            pct, price, compare, v = best
+            images = p.get("images") or []
+            img = images[0].get("src") if images else None
+            if not img:
+                feat = v.get("featured_image")
+                if isinstance(feat, dict):
+                    img = feat.get("src")
+            tags = p.get("tags") or []
+            if isinstance(tags, str):
+                tags = [t.strip() for t in tags.split(",") if t.strip()]
+            product_type = p.get("product_type") or ""
+            cats = tags + ([product_type] if product_type else [])
+            deals.append({
+                "external_id": f'{r["source"]}:{v.get("id")}',
+                "title": (p.get("title") or "").strip()[:200],
+                "retailer": r["name"],
+                "original_price": round(compare, 2),
+                "sale_price": round(price, 2),
+                "discount_pct": pct,
+                "url": f'{base}/products/{p.get("handle")}',
+                "image_url": img,
+                "source": r["source"],
+                "_category_titles": cats,
+            })
+        time.sleep(0.4)  # be polite
+    return deals
+
+
 ADAPTERS = {
     "cowhills": adapter_cowhills,
     "takealot": adapter_takealot,
+    "shopify": adapter_shopify,
 }
 
 
