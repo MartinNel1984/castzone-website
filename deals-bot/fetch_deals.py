@@ -54,6 +54,11 @@ DRY_RUN = os.environ.get("DRY_RUN") == "1"
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 
+# WhatsApp run notification (CallMeBot) — reuses the same shared credentials
+# as Martin's other site health checks. Optional: skipped if unset.
+CALLMEBOT_API_KEY = os.environ.get("CALLMEBOT_API_KEY", "")
+NOTIFY_WHATSAPP_NUMBER = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
+
 # Optional residential-proxy so retailer fetches aren't blocked from cloud IPs.
 # When SCRAPER_API_KEY is set, retailer requests route through ScraperAPI
 # (https://api.scraperapi.com/?api_key=..&url=..). Left empty locally so a
@@ -449,6 +454,22 @@ def revalidate(current_map, sources_ok):
     print(f"Re-validation: {refreshed} refreshed, {aged} aging, {expired} auto-removed.")
 
 
+def notify_whatsapp(text):
+    if not CALLMEBOT_API_KEY or not NOTIFY_WHATSAPP_NUMBER:
+        return
+    qs = urllib.parse.urlencode({
+        "phone": NOTIFY_WHATSAPP_NUMBER,
+        "text": text,
+        "apikey": CALLMEBOT_API_KEY,
+    })
+    url = f"https://api.callmebot.com/whatsapp.php?{qs}"
+    try:
+        with urllib.request.urlopen(url, timeout=20) as resp:
+            resp.read()
+    except Exception as e:  # noqa: BLE001 — a failed notification must never fail the run
+        print(f"  ! WhatsApp notify failed: {e}")
+
+
 def backfill_images():
     """One-time-per-deal migration: any live/pending row still pointing at a
     retailer CDN (hotlinked, 503s in-browser) gets its image re-hosted to our
@@ -557,12 +578,17 @@ def main():
     if not DRY_RUN:
         rehosted = 0
         for d in to_insert:
-            new_url = rehost_image(d.get("image_url"), d["external_id"])
+            src_url = d.get("image_url")
+            new_url = rehost_image(src_url, d["external_id"])
             if new_url:
                 d["image_url"] = new_url
                 rehosted += 1
-            else:
-                d["image_url"] = None  # hotlinked retailer CDN 503s in-browser — show icon instead
+            # else: leave d["image_url"] as the original retailer link (not
+            # None) so the next run's backfill_images() retries it — a first
+            # attempt can fail transiently (e.g. hit a Cloudflare challenge
+            # page instead of the real image); wiping to None here stranded
+            # those deals with no picture forever, since backfill explicitly
+            # skips rows where image_url is null.
         print(f"Re-hosted {rehosted}/{len(to_insert)} product images.")
 
     if DRY_RUN:
@@ -585,6 +611,13 @@ def main():
         print("Re-validation skipped — no retailer returned a healthy list this run.")
 
     backfill_images()
+
+    to_review = len(to_insert) - auto_kept
+    when = datetime.now().strftime("%H:%M")
+    notify_whatsapp(
+        f"CastZone deals bot ran {when} — {len(to_insert)} new deals queued "
+        f"({auto_kept} auto-approved, {to_review} awaiting your review at /specials/review)"
+    )
 
 
 if __name__ == "__main__":
