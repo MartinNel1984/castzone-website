@@ -26,6 +26,7 @@ Env:
   DRY_RUN               (optional, "1" = find + print but don't write)
 """
 
+import html
 import json
 import os
 import ssl
@@ -96,6 +97,12 @@ RETAILERS = [
         "name": "Mia's Angling",
         "platform": "shopify",
         "base": "https://miasangling.co.za",
+    },
+    {
+        "source": "camp-and-climb",
+        "name": "Camp & Climb",
+        "platform": "woocommerce",
+        "base": "https://campandclimb.co.za",
     },
 ]
 
@@ -417,10 +424,56 @@ def adapter_shopify(r):
     return deals
 
 
+def adapter_woocommerce(r):
+    """Generic WooCommerce Store API adapter. The public
+    /wp-json/wc/store/v1/products endpoint supports on_sale=true server-side
+    filtering, so we only ever fetch products actually on promo — no need to
+    page through the full catalog. regular_price/sale_price are integer
+    strings in the store's minor currency unit (cents)."""
+    base = r["base"]
+    deals = []
+    for page in range(1, 30):  # hard safety cap
+        url = f"{base}/wp-json/wc/store/v1/products?per_page=100&on_sale=true&page={page}"
+        data = get_json(url, referer=f"{base}/")
+        if not data:
+            break
+        for p in data:
+            pr = p.get("prices") or {}
+            minor = 10 ** int(pr.get("currency_minor_unit", 2))
+            reg = to_float(pr.get("regular_price"))
+            sale = to_float(pr.get("sale_price"))
+            if not (reg and sale):
+                continue
+            reg, sale = reg / minor, sale / minor
+            if not (reg > sale):
+                continue
+            pct = round((reg - sale) / reg * 100)
+            images = p.get("images") or []
+            img = images[0].get("src") if images else None
+            cats = [c.get("name") for c in (p.get("categories") or []) if c.get("name")]
+            deals.append({
+                "external_id": f'{r["source"]}:{p.get("id")}',
+                "title": html.unescape(p.get("name") or "").strip()[:200],
+                "retailer": r["name"],
+                "original_price": round(reg, 2),
+                "sale_price": round(sale, 2),
+                "discount_pct": pct,
+                "url": p.get("permalink") or base,
+                "image_url": img,
+                "source": r["source"],
+                "_category_titles": cats,
+            })
+        if len(data) < 100:
+            break
+        time.sleep(0.4)  # be polite
+    return deals
+
+
 ADAPTERS = {
     "cowhills": adapter_cowhills,
     "takealot": adapter_takealot,
     "shopify": adapter_shopify,
+    "woocommerce": adapter_woocommerce,
 }
 
 
