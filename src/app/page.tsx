@@ -52,7 +52,7 @@ const featureCards = [
   { title: "Tournaments", description: "SA tournament calendar — bass, carp, saltwater and more.", href: "/tournaments", icon: "🥇" },
 ];
 
-type Stats = { members: number; threads: number; posts: number; categories: number; venues: number };
+type Stats = { members: number; threads: number; posts: number; categories: number; venues: number; specials: number };
 
 type RecentCatch = {
   id: string;
@@ -113,6 +113,7 @@ export default function HomePage() {
         { count: threads },
         { count: posts },
         { count: venues },
+        { count: specials },
         { data: cats },
         { data: latest },
         { data: latestCatches },
@@ -121,11 +122,12 @@ export default function HomePage() {
         supabase.from("threads").select("*", { count: "exact", head: true }),
         supabase.from("posts").select("*", { count: "exact", head: true }),
         supabase.from("venues").select("*", { count: "exact", head: true }),
+        supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "approved"),
         supabase.from("categories").select("slug,thread_count,post_count"),
         supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
         supabase.from("catches").select("id,species,weight_kg,category,venue,image_url,profiles(username)").eq("approved", true).order("approved_at", { ascending: false }).limit(3),
       ]);
-      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0 });
+      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0, specials: specials ?? 0 });
       if (cats) {
         const map: Record<string, { thread_count: number; post_count: number }> = {};
         cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
@@ -204,13 +206,14 @@ export default function HomePage() {
             {stats ? (
               <>
                 <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></Link>
+                <Link href="/specials" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.specials.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Specials</p></Link>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p></div>
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p></div>
                 {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.venues.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Venues</p></Link>}
                 <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.categories.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
               </>
             ) : (
-              [1, 2, 3, 4].map((i) => (
+              [1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="animate-pulse">
                   <div className="h-6 w-12 bg-surface-teal rounded mb-1" />
                   <div className="h-3 w-16 bg-surface-teal/50 rounded" />
