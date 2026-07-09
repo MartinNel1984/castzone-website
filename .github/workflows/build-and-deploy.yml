@@ -1,0 +1,98 @@
+name: Build and Deploy
+
+# Cloudflare Pages here doesn't run a build step — it just serves whatever's
+# already committed under out/ (see wrangler.toml: pages_build_output_dir).
+# So any commit that touches source but doesn't also rebuild + commit out/
+# silently never goes live. This workflow does that rebuild automatically
+# whenever source changes land on main, so a plain `git push` is enough.
+#
+# Requires repo secrets (both are PUBLIC keys, already shipped in the client
+# bundle — needed at BUILD time so pages that fetch Supabase data at build
+# time, like /fishing-near, keep their content):
+#   SUPABASE_URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.ts'
+      - 'postcss.config.mjs'
+      - 'tsconfig.json'
+      - '.github/workflows/build-and-deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Remove any iCloud/duplicate junk
+        run: find out -name '* 2*' -print -delete 2>/dev/null || true
+
+      - name: Safety check — build must not be degraded
+        run: |
+          # Same checks as update-conditions.yml: abort rather than deploy a
+          # build where build-time Supabase fetches silently came back empty.
+          if ! grep -q 'href="/venues/' out/fishing-near/johannesburg.html; then
+            echo "::error::Degraded build — /fishing-near/johannesburg has no venues. Aborting."
+            exit 1
+          fi
+          VENUE_LINKS=$(grep -o 'href="/venues/[a-z0-9-]*"' out/venues.html | sort -u | wc -l)
+          COND_LINKS=$(grep -o 'href="/conditions/[a-z0-9-]*"' out/conditions.html | sort -u | wc -l)
+          echo "/venues.html has $VENUE_LINKS venue links, /conditions.html has $COND_LINKS dam links."
+          if [ "$VENUE_LINKS" -lt 200 ]; then
+            echo "::error::Degraded build — /venues has only $VENUE_LINKS server-rendered venue links. Aborting."
+            exit 1
+          fi
+          if [ "$COND_LINKS" -lt 150 ]; then
+            echo "::error::Degraded build — /conditions has only $COND_LINKS server-rendered dam links. Aborting."
+            exit 1
+          fi
+          echo "Build looks healthy."
+
+      - name: Detect build output changes
+        id: changed
+        run: |
+          git add out/
+          if git diff --cached --quiet -- out/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Rebuilt out/ is identical to what's committed — nothing to deploy."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit & push rebuilt out/
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          git config user.name "CastZone Bot"
+          git config user.email "bot@castzone.co.za"
+          # No "[skip ci]" — Cloudflare Pages treats that tag in a commit
+          # message as an instruction to skip deploying it entirely.
+          git commit -m "Rebuild out/ for ${{ github.sha }}"
+          git pull --rebase origin main   # tolerate concurrent bot commits
+          git push
