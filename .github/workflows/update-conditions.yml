@@ -15,6 +15,11 @@ on:
   schedule:
     - cron: '0 5 * * *'   # 07:00 SAST daily
   workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: "Rebuild + deploy out/ even if water data didn't change (e.g. after a src/ change to a page that isn't auto-rebuilt elsewhere)"
+        type: boolean
+        default: false
 
 jobs:
   update:
@@ -42,7 +47,10 @@ jobs:
       - name: Detect data changes
         id: changed
         run: |
-          if git diff --quiet src/data/waterConditions.ts src/data/gateNotices.json src/data/gateStatus.json; then
+          if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Forced rebuild requested — building regardless of data changes."
+          elif git diff --quiet src/data/waterConditions.ts src/data/gateNotices.json src/data/gateStatus.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No data changes — nothing to build or deploy."
           else
@@ -81,7 +89,23 @@ jobs:
             echo "::error::Degraded build — /fishing-near/johannesburg has no venues. Aborting."
             exit 1
           fi
-          echo "Build looks healthy (fishing-near venues present)."
+          # /venues and /conditions hubs must server-render real links to
+          # their ~296/~218 detail pages — that's the whole fix for the
+          # "Discovered — currently not indexed" Search Console issue found
+          # 2026-07-09. A build with too few links here means the hub went
+          # back to a client-only blank shell — abort before deploying that.
+          VENUE_LINKS=$(grep -o 'href="/venues/[a-z0-9-]*"' out/venues.html | sort -u | wc -l)
+          COND_LINKS=$(grep -o 'href="/conditions/[a-z0-9-]*"' out/conditions.html | sort -u | wc -l)
+          echo "/venues.html has $VENUE_LINKS venue links, /conditions.html has $COND_LINKS dam links."
+          if [ "$VENUE_LINKS" -lt 200 ]; then
+            echo "::error::Degraded build — /venues has only $VENUE_LINKS server-rendered venue links. Aborting."
+            exit 1
+          fi
+          if [ "$COND_LINKS" -lt 150 ]; then
+            echo "::error::Degraded build — /conditions has only $COND_LINKS server-rendered dam links. Aborting."
+            exit 1
+          fi
+          echo "Build looks healthy (fishing-near venues, venue hub links, and conditions hub links all present)."
 
       - name: Commit & push (source + built out/)
         if: steps.changed.outputs.changed == 'true'

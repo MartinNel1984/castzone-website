@@ -35,9 +35,9 @@ const TYPE_DOT: Record<string, string> = {
   saltwater: "#1d3557",
 };
 
-export default function VenuesPage() {
-  const [venues, setVenues] = useState<Venue[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }) {
+  const [venues, setVenues] = useState<Venue[]>(initialVenues);
+  const [loading, setLoading] = useState(initialVenues.length === 0);
   const [province, setProvince] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");

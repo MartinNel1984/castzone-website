@@ -14,6 +14,22 @@ import {
   type DamLevel,
 } from "@/data/waterConditions";
 
+// Every dam grouped by province, always rendered as plain links (not gated
+// behind the interactive province-tab state below) so every dam page has a
+// real crawlable internal link from this hub — otherwise only the active
+// tab's dams ever appear in the page's HTML.
+const ALL_PROVINCE_DAMS = [
+  { label: "Western Cape",  dams: WC_DAMS },
+  { label: "Free State",    dams: FS_DAMS },
+  { label: "North West",    dams: NW_DAMS },
+  { label: "Gauteng",       dams: GP_DAMS },
+  { label: "Mpumalanga",    dams: MP_DAMS },
+  { label: "Limpopo",       dams: LP_DAMS },
+  { label: "KwaZulu-Natal", dams: KZN_DAMS },
+  { label: "Eastern Cape",  dams: EC_DAMS },
+  { label: "Northern Cape", dams: NC_DAMS },
+];
+
 // ─── helpers ──────────────────────────────────────────────────────────────
 
 function levelTextClass(pct: number) {
@@ -467,6 +483,34 @@ export default function ConditionsContent() {
               : `Show all ${GATE_NOTICES.length} notices ↓`}
           </button>
         )}
+      </div>
+
+      {/* ── Browse all dams ── */}
+      <div className="border-t border-surface-teal pt-6 mb-6">
+        <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-storm mb-4">
+          Browse all {ALL_DAMS.length} dams by province
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
+          {ALL_PROVINCE_DAMS.map((p) => (
+            <div key={p.label}>
+              <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-cast-orange mb-2">
+                {p.label} ({p.dams.length})
+              </h3>
+              <ul className="flex flex-wrap gap-x-3 gap-y-1">
+                {p.dams.map((d) => (
+                  <li key={d.name}>
+                    <Link
+                      href={`/conditions/${damSlug(d.name)}`}
+                      className="text-xs font-body text-pale-water hover:text-bone-white underline decoration-surface-teal underline-offset-2"
+                    >
+                      {d.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ── Footer note ── */}
