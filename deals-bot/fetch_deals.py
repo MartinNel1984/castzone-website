@@ -104,6 +104,66 @@ RETAILERS = [
         "platform": "woocommerce",
         "base": "https://campandclimb.co.za",
     },
+    {
+        "source": "jacita",
+        "name": "Jacita Bait & Tackle",
+        "platform": "woocommerce",
+        "base": "https://jacita.co.za",
+    },
+    {
+        "source": "fish-on-tackle-store",
+        "name": "Fish On Tackle Store",
+        "platform": "shopify",
+        "base": "https://fishontacklestore.co.za",
+    },
+    {
+        "source": "big-catch",
+        "name": "Big Catch",
+        "platform": "shopify",
+        "base": "https://bigcatch.co.za",
+    },
+    {
+        "source": "oztrail-store",
+        "name": "Oztrail Store",
+        "platform": "shopify",
+        "base": "https://oztrailstore.co.za",
+    },
+    {
+        "source": "tackle-cabin",
+        "name": "Tackle Cabin",
+        "platform": "shopify",
+        "base": "https://tacklecabin.co.za",
+    },
+    {
+        "source": "naturehike",
+        "name": "Naturehike",
+        "platform": "shopify",
+        "base": "https://www.naturehike.co.za",
+    },
+    {
+        "source": "drifters",
+        "name": "Drifters",
+        "platform": "shopify",
+        "base": "https://www.driftersshop.co.za",
+    },
+    {
+        "source": "just-like-papa",
+        "name": "Just Like Papa",
+        "platform": "shopify",
+        "base": "https://justlikepapa.com",
+    },
+    {
+        "source": "outdoor-gear-online",
+        "name": "Outdoor Gear Online",
+        "platform": "woocommerce",
+        "base": "https://outdoorgearonline.co.za",
+    },
+    {
+        "source": "all-out-angling",
+        "name": "All Out Angling",
+        "platform": "shopify",
+        "base": "https://alloutangling.com",
+    },
 ]
 
 # ----------------------------------------------------------------------------
