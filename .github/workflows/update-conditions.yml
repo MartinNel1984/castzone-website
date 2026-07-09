@@ -114,6 +114,10 @@ jobs:
           git config user.email "bot@castzone.co.za"
           # 'git add out/' (NOT -u) so newly-hashed chunk files are captured.
           git add out/ src/data/waterConditions.ts src/data/gateNotices.json src/data/gateStatus.json
-          git commit -m "Update water conditions $(date +'%Y-%m-%d') [skip ci]"
+          # No "[skip ci]" here: no workflow in this repo triggers on push, so
+          # there's no loop to prevent — but Cloudflare Pages treats that tag
+          # as "skip this deploy", which was silently telling it to never
+          # deploy this bot's commits at all (discovered 2026-07-09).
+          git commit -m "Update water conditions $(date +'%Y-%m-%d')"
           git pull --rebase origin main   # tolerate the hourly new-member-alert bot
           git push
