@@ -210,9 +210,12 @@ def rehost_image(image_url, external_id):
         # A flaky fetch can occasionally hand back mangled bytes (seen once:
         # valid-looking response, garbage content) — a magic-byte check catches
         # it before a broken file gets stored, instead of silently going live.
-        if not (data[:2] == b"\xff\xd8" or data[:8] == b"\x89PNG\r\n\x1a\n"):
-            raise ValueError(f"downloaded bytes aren't a valid JPEG/PNG ({len(data)} bytes)")
-        ext = "png" if "png" in content_type else "jpg"
+        is_jpeg = data[:2] == b"\xff\xd8"
+        is_png = data[:8] == b"\x89PNG\r\n\x1a\n"
+        is_webp = data[:4] == b"RIFF" and data[8:12] == b"WEBP"
+        if not (is_jpeg or is_png or is_webp):
+            raise ValueError(f"downloaded bytes are not a valid JPEG/PNG/WebP ({len(data)} bytes)")
+        ext = "png" if is_png else "webp" if is_webp else "jpg"
         path = f'{external_id.replace(":", "_").replace("/", "_")}.{ext}'
         url = f"{SUPABASE_URL}/storage/v1/object/deal-images/{path}"
         req = urllib.request.Request(url, data=data, method="POST", headers={
