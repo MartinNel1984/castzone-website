@@ -1,0 +1,70 @@
+name: Deals bot heartbeat check
+
+# The deals bot itself runs on Martin's M2 MacBook (self-hosted, not GitHub
+# Actions), so GHA can't reach it directly to ask "are you alive?" — the M2
+# has no public endpoint. Instead, fetch_deals.py writes a heartbeat
+# timestamp to Supabase at the end of every real run; this workflow just
+# checks how stale that timestamp is and WhatsApps Martin ONLY if the M2
+# looks like it's gone quiet (off, asleep, or the bot is broken).
+#
+# Checks run ~2h after the bot's scheduled 07:00 and 19:00 SAST runs, so a
+# healthy heartbeat is always fresh (~2h old) at check time — see
+# STALE_HOURS below for why 5h avoids false alarms across the normal
+# overnight gap.
+
+on:
+  schedule:
+    - cron: "0 7 * * *"    # 09:00 SAST — confirms the 07:00 run happened
+    - cron: "0 19 * * *"   # 21:00 SAST — confirms the 13:00/19:00 runs happened
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
+      NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+      STALE_HOURS: "5"
+    steps:
+      - name: Check heartbeat freshness
+        run: |
+          python3 - <<'EOF'
+          import json, os, urllib.parse, urllib.request
+          from datetime import datetime, timezone
+
+          url = os.environ["SUPABASE_URL"]
+          key = os.environ["SUPABASE_SERVICE_KEY"]
+          stale_hours = float(os.environ["STALE_HOURS"])
+
+          req = urllib.request.Request(
+              f"{url}/rest/v1/deals_bot_heartbeat?select=last_run_at&id=eq.1",
+              headers={"apikey": key, "Authorization": f"Bearer {key}"},
+          )
+          with urllib.request.urlopen(req, timeout=30) as resp:
+              rows = json.loads(resp.read().decode())
+
+          msg = None
+          if not rows:
+              msg = ("CastZone deals bot: heartbeat table is empty — has "
+                     "src/db/deals-bot-heartbeat.sql been run yet?")
+          else:
+              last = datetime.fromisoformat(rows[0]["last_run_at"].replace("Z", "+00:00"))
+              age_hours = (datetime.now(timezone.utc) - last).total_seconds() / 3600
+              print(f"Last heartbeat: {last.isoformat()} ({age_hours:.1f}h ago)")
+              if age_hours > stale_hours:
+                  msg = (f"CastZone deals bot on the M2 hasn't checked in for "
+                         f"{age_hours:.1f}h (last run {last.strftime('%Y-%m-%d %H:%M UTC')}). "
+                         f"The M2 may be off/asleep or the bot may be broken — please check.")
+
+          if msg:
+              print("ALERTING:", msg)
+              callmebot_key = os.environ.get("CALLMEBOT_API_KEY")
+              phone = os.environ.get("NOTIFY_WHATSAPP_NUMBER")
+              if callmebot_key and phone:
+                  qs = urllib.parse.urlencode({"phone": phone, "text": msg, "apikey": callmebot_key})
+                  urllib.request.urlopen(f"https://api.callmebot.com/whatsapp.php?{qs}", timeout=20)
+          else:
+              print("Heartbeat is fresh — no alert.")
+          EOF

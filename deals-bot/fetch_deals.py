@@ -630,6 +630,22 @@ def revalidate(current_map, sources_ok):
     print(f"Re-validation: {refreshed} refreshed, {aged} aging, {expired} auto-removed.")
 
 
+def send_heartbeat():
+    """Upsert a single-row timestamp so a GitHub Actions health check (which
+    can't reach the M2 directly) can tell the bot actually ran on schedule —
+    independent of whether any deals changed this run."""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/deals_bot_heartbeat?on_conflict=id"
+        body = json.dumps([{"id": 1, "last_run_at": datetime.now(timezone.utc).isoformat()}]).encode()
+        req = urllib.request.Request(url, data=body, method="POST", headers=sb_headers({
+            "Prefer": "resolution=merge-duplicates,return=minimal",
+        }))
+        with urllib.request.urlopen(req, timeout=15, context=_CTX):
+            pass
+    except Exception as e:  # noqa: BLE001 — a failed heartbeat must never fail the run
+        print(f"  ! heartbeat write failed: {e}")
+
+
 def notify_whatsapp(text):
     if not CALLMEBOT_API_KEY or not NOTIFY_WHATSAPP_NUMBER:
         return
@@ -787,6 +803,7 @@ def main():
         print("Re-validation skipped — no retailer returned a healthy list this run.")
 
     backfill_images()
+    send_heartbeat()
 
     to_review = len(to_insert) - auto_kept
     when = datetime.now().strftime("%H:%M")
