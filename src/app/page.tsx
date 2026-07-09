@@ -9,6 +9,9 @@ import BiteTimes from "@/components/BiteTimes";
 import GateNoticeStaleness from "@/components/GateNoticeStaleness";
 import { GATE_NOTICES, GATE_STATUS } from "@/data/waterConditions";
 import { useSpot, JOHANNESBURG } from "@/lib/geo";
+import { categoryIcon, discountPct, formatPrice, isExpired, type Deal } from "@/lib/deals";
+
+type DealPreview = Pick<Deal, "id" | "title" | "retailer" | "category" | "original_price" | "sale_price" | "discount_pct" | "image_url"> & { url?: string };
 
 const forumCategories = [
   {
@@ -98,6 +101,7 @@ export default function HomePage() {
   const [categories, setCategories] = useState<Record<string, { thread_count: number; post_count: number }>>({});
   const [recentThreads, setRecentThreads] = useState<RecentThread[]>([]);
   const [recentCatches, setRecentCatches] = useState<RecentCatch[]>([]);
+  const [dealsPreview, setDealsPreview] = useState<DealPreview[] | null>(null);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
   const { spot, locateMe, locating, geoError } = useSpot(JOHANNESBURG);
 
@@ -113,7 +117,7 @@ export default function HomePage() {
         { count: threads },
         { count: posts },
         { count: venues },
-        { count: specials },
+        { data: specials },
         { data: cats },
         { data: latest },
         { data: latestCatches },
@@ -122,12 +126,12 @@ export default function HomePage() {
         supabase.from("threads").select("*", { count: "exact", head: true }),
         supabase.from("posts").select("*", { count: "exact", head: true }),
         supabase.from("venues").select("*", { count: "exact", head: true }),
-        supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "approved"),
+        supabase.rpc("get_deals_public_count"),
         supabase.from("categories").select("slug,thread_count,post_count"),
         supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
         supabase.from("catches").select("id,species,weight_kg,category,venue,image_url,profiles(username)").eq("approved", true).order("approved_at", { ascending: false }).limit(3),
       ]);
-      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0, specials: specials ?? 0 });
+      setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0, specials: (specials as unknown as number) ?? 0 });
       if (cats) {
         const map: Record<string, { thread_count: number; post_count: number }> = {};
         cats.forEach((c) => { map[c.slug] = { thread_count: c.thread_count, post_count: c.post_count }; });
@@ -143,6 +147,28 @@ export default function HomePage() {
 
   const username = user?.user_metadata?.username ?? user?.email?.split("@")[0];
   const loggedIn = user !== undefined && user !== null;
+
+  useEffect(() => {
+    if (user === undefined) return; // still loading auth state
+    const supabase = createClient();
+    if (user) {
+      supabase
+        .from("deals")
+        .select("id,title,retailer,category,original_price,sale_price,discount_pct,image_url,url,expires_at")
+        .eq("status", "approved")
+        .order("discount_pct", { ascending: false, nullsFirst: false })
+        .order("found_at", { ascending: false })
+        .limit(8)
+        .then(({ data }) => {
+          const live = (data as unknown as Deal[] ?? []).filter((d) => !isExpired(d));
+          setDealsPreview(live.slice(0, 4));
+        });
+    } else {
+      supabase.rpc("get_deals_public_preview", { limit_count: 4 }).then(({ data }) => {
+        setDealsPreview((data as DealPreview[]) ?? []);
+      });
+    }
+  }, [user]);
 
   return (
     <div>
@@ -223,6 +249,99 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Specials teaser */}
+      {dealsPreview && dealsPreview.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">🔥 Latest Specials</h2>
+            <Link href="/specials" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
+              See all deals →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+            {dealsPreview.map((deal) => {
+              const pct = discountPct(deal.original_price, deal.sale_price, deal.discount_pct);
+              const locked = !deal.url;
+              const CardInner = (
+                <>
+                  <div className="aspect-[4/3] bg-deep-water relative overflow-hidden">
+                    {deal.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={deal.image_url}
+                        alt={locked ? "Locked deal" : deal.title}
+                        loading="lazy"
+                        className={`w-full h-full object-contain p-3 transition-transform duration-500 ${locked ? "blur-sm scale-105" : "group-hover:scale-105"}`}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-5xl opacity-40">
+                        {categoryIcon(deal.category)}
+                      </div>
+                    )}
+                    {pct != null && (
+                      <span className="absolute top-2 right-2 bg-cast-orange text-white text-sm font-heading font-bold px-2.5 py-1 rounded-full shadow">
+                        -{pct}%
+                      </span>
+                    )}
+                    {locked && (
+                      <div className="absolute inset-0 bg-deep-water/60 flex items-center justify-center">
+                        <span className="text-3xl">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3 flex-1 flex flex-col">
+                    <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">{deal.retailer}</p>
+                    <h3 className={`text-bone-white text-sm font-body font-medium leading-snug line-clamp-2 ${locked ? "" : "group-hover:text-cast-orange"} transition-colors`}>
+                      {locked ? "Sign up to reveal this deal" : deal.title}
+                    </h3>
+                    {deal.sale_price != null && (
+                      <div className="mt-auto pt-2">
+                        {deal.original_price != null && (
+                          <span className="text-storm text-xs line-through mr-2">{formatPrice(deal.original_price)}</span>
+                        )}
+                        <span className="text-cast-orange font-heading font-bold text-base leading-none">{formatPrice(deal.sale_price)}</span>
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+              return locked ? (
+                <Link
+                  key={deal.id}
+                  href="/register"
+                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors flex flex-col"
+                >
+                  {CardInner}
+                </Link>
+              ) : (
+                <a
+                  key={deal.id}
+                  href={deal.url}
+                  target="_blank"
+                  rel="nofollow sponsored noopener noreferrer"
+                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors flex flex-col"
+                >
+                  {CardInner}
+                </a>
+              );
+            })}
+          </div>
+          <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 flex flex-wrap items-center justify-between gap-4">
+            <p className="text-pale-water font-body">
+              {loggedIn
+                ? `${stats?.specials ?? "More"} live deals waiting — fishing & camping gear at 50%+ off.`
+                : "Loads more deals inside — sign up to unlock every one. It's free."}
+            </p>
+            <Link
+              href={loggedIn ? "/specials" : "/register"}
+              className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors whitespace-nowrap"
+            >
+              {loggedIn ? "See all specials" : "Join free — see all deals"}
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Bite forecast widget */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
