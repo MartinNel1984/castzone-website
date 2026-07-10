@@ -49,7 +49,7 @@ jobs:
 
       - name: Commit advanced marker
         run: |
-          if git diff --quiet -- "$STATE_FILE"; then
+          if [ -z "$(git status --porcelain -- "$STATE_FILE")" ]; then
             echo "No marker change — nothing to commit."
             exit 0
           fi

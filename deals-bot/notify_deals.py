@@ -15,8 +15,8 @@ MailerSend, Zoho, …) — just set the four SMTP_* secrets. No vendor lock-in.
 
 Env:
   SUPABASE_URL            (required)
-  SUPABASE_ANON_KEY       (required — approved deals are anon-readable)
-  SUPABASE_SERVICE_KEY    (needed for member emails via the admin API)
+  SUPABASE_SERVICE_KEY    (required — deals RLS now requires a logged-in user,
+                           so reads use the service key, same as member emails)
   SMTP_HOST               (e.g. smtp-relay.brevo.com — no host = skip email)
   SMTP_PORT               (optional, default 587 = STARTTLS; 465 = SSL)
   SMTP_USER               (SMTP login)
@@ -42,7 +42,6 @@ from email.utils import formataddr, parseaddr
 from datetime import datetime, timezone
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
-ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
@@ -79,7 +78,7 @@ def get_new_approved(since_iso):
         "order": "discount_pct.desc",
     })
     _, body = http(f"{SUPABASE_URL}/rest/v1/deals?{q}",
-                   headers={"apikey": ANON_KEY, "Authorization": f"Bearer {ANON_KEY}"})
+                   headers={"apikey": SERVICE_KEY, "Authorization": f"Bearer {SERVICE_KEY}"})
     return json.loads(body)
 
 
@@ -92,7 +91,7 @@ def get_recent_approved(limit=20):
         "limit": limit,
     })
     _, body = http(f"{SUPABASE_URL}/rest/v1/deals?{q}",
-                   headers={"apikey": ANON_KEY, "Authorization": f"Bearer {ANON_KEY}"})
+                   headers={"apikey": SERVICE_KEY, "Authorization": f"Bearer {SERVICE_KEY}"})
     return json.loads(body)
 
 
@@ -119,7 +118,7 @@ def get_member_emails():
     try:  # tolerate the column not existing yet
         q = urllib.parse.urlencode({"select": "id", "email_opt_out": "eq.true"})
         _, body = http(f"{SUPABASE_URL}/rest/v1/profiles?{q}",
-                       headers={"apikey": ANON_KEY, "Authorization": f"Bearer {ANON_KEY}"})
+                       headers={"apikey": SERVICE_KEY, "Authorization": f"Bearer {SERVICE_KEY}"})
         opt_out = {r["id"] for r in json.loads(body)}
     except Exception:
         pass
@@ -228,8 +227,8 @@ def send_whatsapp(total_new, top):
 
 
 def main():
-    if not SUPABASE_URL or not ANON_KEY:
-        sys.exit("ERROR: SUPABASE_URL and SUPABASE_ANON_KEY required.")
+    if not SUPABASE_URL or not SERVICE_KEY:
+        sys.exit("ERROR: SUPABASE_URL and SUPABASE_SERVICE_KEY required.")
 
     # TEST MODE: send only to one address, using recent approved deals,
     # without touching the marker or emailing members.
