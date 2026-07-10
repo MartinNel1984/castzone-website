@@ -103,8 +103,7 @@ export default function SpecialsContent() {
       .from("deals")
       .select("*")
       .eq("status", "approved")
-      .order("discount_pct", { ascending: false, nullsFirst: false })
-      .order("found_at", { ascending: false })
+      .order("approved_at", { ascending: false, nullsFirst: false })
       .then(({ data }) => {
         const live = (data ?? []).filter((d) => !isExpired(d as Deal));
         setDeals(live as Deal[]);
