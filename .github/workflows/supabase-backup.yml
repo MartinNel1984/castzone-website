@@ -1,0 +1,57 @@
+name: Weekly Supabase Backup
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Every Monday 6am UTC = 8am SA time
+  workflow_dispatch:        # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+    steps:
+      - name: Fetch all Supabase tables and build backup file
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json, os
+          from datetime import date
+
+          URL = os.environ['SUPABASE_URL'] + '/rest/v1'
+          KEY = os.environ['SUPABASE_SERVICE_KEY']
+
+          TABLES = [
+            'profiles', 'categories', 'threads', 'posts',
+            'catches', 'venues', 'venue_suggestions', 'tournaments',
+            'listings', 'bookmarks', 'venue_reviews', 'notifications'
+          ]
+
+          backup = {'backup_date': str(date.today()), 'tables': {}}
+
+          for table in TABLES:
+              req = urllib.request.Request(
+                  f'{URL}/{table}?select=*',
+                  headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}'}
+              )
+              with urllib.request.urlopen(req) as r:
+                  data = json.loads(r.read())
+              backup['tables'][table] = data
+              print(f'  {table}: {len(data)} rows')
+
+          filename = f'castzone-backup-{date.today()}.json'
+          with open(filename, 'w') as f:
+              json.dump(backup, f, indent=2, default=str)
+
+          total = sum(len(v) for v in backup['tables'].values())
+          print(f'Total rows backed up: {total}')
+          print(f'File: {filename}')
+          PYEOF
+
+      - name: Upload backup as artifact (retained 90 days)
+        uses: actions/upload-artifact@v4
+        with:
+          name: castzone-backup-${{ github.run_id }}
+          path: castzone-backup-*.json
+          retention-days: 90
