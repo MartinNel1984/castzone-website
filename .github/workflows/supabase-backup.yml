@@ -28,15 +28,20 @@ jobs:
             'listings', 'bookmarks', 'venue_reviews', 'notifications'
           ]
 
-          backup = {'backup_date': str(date.today()), 'tables': {}}
+          backup = {'backup_date': str(date.today()), 'tables': {}, 'skipped_tables': []}
 
           for table in TABLES:
               req = urllib.request.Request(
                   f'{URL}/{table}?select=*',
                   headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}'}
               )
-              with urllib.request.urlopen(req) as r:
-                  data = json.loads(r.read())
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      data = json.loads(r.read())
+              except urllib.error.HTTPError as e:
+                  print(f'  {table}: SKIPPED (HTTP {e.code} — table may not exist)')
+                  backup['skipped_tables'].append(table)
+                  continue
               backup['tables'][table] = data
               print(f'  {table}: {len(data)} rows')
 
