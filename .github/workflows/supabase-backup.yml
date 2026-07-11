@@ -30,14 +30,27 @@ jobs:
 
           backup = {'backup_date': str(date.today()), 'tables': {}, 'skipped_tables': []}
 
-          for table in TABLES:
-              req = urllib.request.Request(
-                  f'{URL}/{table}?select=*',
-                  headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}'}
-              )
-              try:
+          PAGE_SIZE = 1000
+
+          def fetch_all(table):
+              rows = []
+              offset = 0
+              while True:
+                  req = urllib.request.Request(
+                      f'{URL}/{table}?select=*&order=id&limit={PAGE_SIZE}&offset={offset}',
+                      headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}'}
+                  )
                   with urllib.request.urlopen(req) as r:
-                      data = json.loads(r.read())
+                      page = json.loads(r.read())
+                  rows.extend(page)
+                  if len(page) < PAGE_SIZE:
+                      break
+                  offset += PAGE_SIZE
+              return rows
+
+          for table in TABLES:
+              try:
+                  data = fetch_all(table)
               except urllib.error.HTTPError as e:
                   print(f'  {table}: SKIPPED (HTTP {e.code} — table may not exist)')
                   backup['skipped_tables'].append(table)
