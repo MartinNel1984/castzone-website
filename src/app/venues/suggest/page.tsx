@@ -56,19 +56,19 @@ export default function SuggestVenuePage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-5xl mb-6">🎣</div>
-        <h1 className="text-3xl font-heading font-bold text-bone-white uppercase mb-3">
+        <h1 className="text-3xl font-heading font-semibold text-bone-white mb-3">
           Thanks for the tip!
         </h1>
         <p className="text-pale-water font-body mb-8">
           We&apos;ll review your suggestion and add it to The Map if it&apos;s a good fit.
         </p>
         <div className="flex justify-center gap-3">
-          <Link href="/venues" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm">
+          <Link href="/venues" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-5 py-2.5 rounded transition-colors text-sm">
             Back to The Map
           </Link>
           <button
             onClick={() => { setDone(false); setName(""); setProvince(""); setType(""); setGps(""); setNotes(""); setSubmittedBy(""); }}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
           >
             Suggest Another
           </button>
@@ -86,7 +86,7 @@ export default function SuggestVenuePage() {
         <span className="text-pale-water">Suggest a Venue</span>
       </nav>
 
-      <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-2">
+      <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">
         Suggest a Venue
       </h1>
       <p className="text-storm font-body text-sm mb-8">
@@ -206,7 +206,7 @@ export default function SuggestVenuePage() {
           <button
             type="submit"
             disabled={submitting || !name.trim() || !province || !type}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             {submitting ? "Submitting..." : "Submit Suggestion"}
           </button>

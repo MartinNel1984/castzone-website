@@ -81,7 +81,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
         <span className="text-pale-water">{d.name}</span>
       </nav>
 
-      <h1 className="text-4xl sm:text-5xl font-heading font-bold text-bone-white uppercase leading-none mb-2">
+      <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white leading-none mb-2">
         {d.name} Water Level
       </h1>
       <p className="text-storm font-body mb-8">
@@ -92,7 +92,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 mb-6">
         <div className="flex flex-wrap items-end gap-x-6 gap-y-2">
           <p className="text-cast-orange font-heading font-bold text-6xl leading-none">{d.pct.toFixed(1)}%</p>
-          <p className={`font-heading font-bold uppercase text-xl ${tone}`}>{label}</p>
+          <p className={`font-mono font-semibold uppercase text-xl ${tone}`}>{label}</p>
         </div>
         {/* Fill bar */}
         <div className="mt-5 h-3 w-full bg-deep-water rounded-full overflow-hidden">
@@ -135,14 +135,14 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       {/* CTAs / cross-links */}
       <div className="flex flex-wrap gap-3 mb-10">
         {d.venueSlug && (
-          <Link href={`/venues/${d.venueSlug}`} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+          <Link href={`/venues/${d.venueSlug}`} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
             Fish {d.name} — venue guide →
           </Link>
         )}
-        <Link href="/conditions" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/conditions" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded text-sm transition-colors">
           All SA dam levels
         </Link>
-        <Link href="/register" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/register" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded text-sm transition-colors">
           Join free for venue updates
         </Link>
       </div>
@@ -150,7 +150,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       {/* Nearby dams */}
       {nearby.length > 0 && (
         <div>
-          <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">More {d.province} Dam Levels</h2>
+          <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">More {d.province} Dam Levels</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {nearby.map((n) => (
               <Link

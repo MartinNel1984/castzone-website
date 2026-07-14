@@ -7,9 +7,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-1 mb-3">
-              <span className="text-cast-orange text-2xl font-heading font-bold">C</span>
-              <span className="text-bone-white text-lg font-heading font-bold tracking-widest uppercase">ASTZONE</span>
+            <div className="font-heading font-semibold text-xl text-bone-white mb-3">
+              Cast<em className="italic text-cast-orange">Zone</em>
             </div>
             <p className="text-storm text-sm leading-relaxed">
               Where South Africa Fishes.
@@ -19,7 +18,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow CastZone on Instagram"
-              className="inline-flex items-center gap-2 mt-4 text-storm hover:text-cast-orange text-sm transition-colors"
+              className="inline-flex items-center gap-2 mt-4 text-storm hover:text-cast-orange text-sm cz-transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +36,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow CastZone on Facebook"
-              className="flex items-center gap-2 mt-2 text-storm hover:text-cast-orange text-sm transition-colors"
+              className="flex items-center gap-2 mt-2 text-storm hover:text-cast-orange text-sm cz-transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +53,7 @@ export default function Footer() {
 
           {/* Forum */}
           <div>
-            <h4 className="text-bone-white font-heading font-semibold uppercase tracking-wider text-sm mb-3">Forum</h4>
+            <h4 className="text-bone-white font-mono uppercase tracking-wider text-xs mb-3">Forum</h4>
             <ul className="space-y-2">
               {[
                 { label: "Bass Fishing", href: "/forum/bass" },
@@ -63,7 +62,7 @@ export default function Footer() {
                 { label: "General", href: "/forum/general" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm transition-colors">
+                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -73,7 +72,7 @@ export default function Footer() {
 
           {/* Community */}
           <div>
-            <h4 className="text-bone-white font-heading font-semibold uppercase tracking-wider text-sm mb-3">Community</h4>
+            <h4 className="text-bone-white font-mono uppercase tracking-wider text-xs mb-3">Community</h4>
             <ul className="space-y-2">
               {[
                 { label: "The Map", href: "/venues" },
@@ -83,7 +82,7 @@ export default function Footer() {
                 { label: "Trophy Room", href: "/catches" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm transition-colors">
+                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -93,7 +92,7 @@ export default function Footer() {
 
           {/* Info */}
           <div>
-            <h4 className="text-bone-white font-heading font-semibold uppercase tracking-wider text-sm mb-3">Info</h4>
+            <h4 className="text-bone-white font-mono uppercase tracking-wider text-xs mb-3">Info</h4>
             <ul className="space-y-2">
               {[
                 { label: "About", href: "/about" },
@@ -102,7 +101,7 @@ export default function Footer() {
                 { label: "Advertise", href: "/advertise" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm transition-colors">
+                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -112,10 +111,10 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-surface-teal mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-storm text-xs">
+          <p className="text-storm text-xs font-mono">
             © {new Date().getFullYear()} CastZone. All rights reserved.
           </p>
-          <p className="text-storm text-xs">
+          <p className="text-storm text-xs font-mono">
             Built for South African anglers.
           </p>
         </div>

@@ -43,12 +43,12 @@ export default function ForumPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase">Forum</h1>
+          <h1 className="text-4xl font-heading font-semibold text-bone-white ">Forum</h1>
           <p className="text-storm font-body mt-1">South Africa&apos;s fishing discussion</p>
         </div>
         <Link
           href="/forum/new"
-          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
+          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
         >
           + New Thread
         </Link>
@@ -73,7 +73,7 @@ export default function ForumPage() {
                 {cat.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
+                <h2 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange transition-colors">
                   {cat.name}
                 </h2>
                 <p className="text-storm text-sm font-body mt-0.5">{cat.description}</p>

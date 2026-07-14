@@ -57,7 +57,7 @@ function TournamentCard({ t }: { t: Tournament }) {
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="text-sm">{disc.icon}</span>
-              <span className="text-xs font-heading font-bold uppercase tracking-wider"
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider"
                 style={{ color: disc.color }}>
                 {disc.label}
               </span>
@@ -65,7 +65,7 @@ function TournamentCard({ t }: { t: Tournament }) {
                 <span className="text-storm text-xs font-body">· {t.organizer}</span>
               )}
             </div>
-            <h3 className="text-bone-white font-heading font-bold text-xl uppercase leading-tight mb-3">
+            <h3 className="text-bone-white font-heading font-semibold text-xl leading-tight mb-3">
               {t.title}
             </h3>
             <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-body text-pale-water mb-3">
@@ -85,7 +85,7 @@ function TournamentCard({ t }: { t: Tournament }) {
               href={t.registration_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded transition-colors"
+              className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded transition-colors"
             >
               Register
             </a>
@@ -125,8 +125,8 @@ export default function TournamentsPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap mb-2">
         <div>
-          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">Tournaments</h1>
-          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+          <h1 className="text-5xl font-heading font-semibold text-bone-white ">Tournaments</h1>
+          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
             SA Angling Calendar
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function TournamentsPage() {
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
-            className={`font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
+            className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
               filter === f.value
                 ? "bg-cast-orange border-cast-orange text-white"
                 : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
@@ -166,7 +166,7 @@ export default function TournamentsPage() {
         <>
           {upcoming.length > 0 && (
             <section className="mb-12">
-              <h2 className="text-xl font-heading font-bold text-bone-white uppercase mb-5">
+              <h2 className="text-xl font-heading font-semibold text-bone-white mb-5">
                 Upcoming Events
               </h2>
               <div className="space-y-4">
@@ -177,7 +177,7 @@ export default function TournamentsPage() {
 
           {past.length > 0 && (
             <section>
-              <h2 className="text-xl font-heading font-bold text-storm uppercase mb-5">
+              <h2 className="text-xl font-mono font-semibold text-storm uppercase mb-5">
                 Past Events
               </h2>
               <div className="space-y-4 opacity-60">

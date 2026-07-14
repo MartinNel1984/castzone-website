@@ -64,10 +64,10 @@ export default function SavedContent() {
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water font-body text-lg mb-6">Sign in to see your saved threads.</p>
         <div className="flex justify-center gap-3">
-          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -79,7 +79,7 @@ export default function SavedContent() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase">Saved Threads</h1>
+          <h1 className="text-4xl font-heading font-semibold text-bone-white ">Saved Threads</h1>
           <p className="text-storm font-body text-sm mt-1">Threads you&apos;ve bookmarked</p>
         </div>
         <Link href="/forum" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
@@ -95,7 +95,7 @@ export default function SavedContent() {
         </div>
       ) : saved.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
-          <p className="text-pale-water font-heading font-bold uppercase text-lg mb-2">No saved threads yet</p>
+          <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No saved threads yet</p>
           <p className="text-storm font-body text-sm mb-6">
             Tap the ☆ on any thread to save it here for later.
           </p>

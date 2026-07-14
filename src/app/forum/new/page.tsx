@@ -163,10 +163,10 @@ function NewThreadForm() {
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water font-body text-lg mb-6">You need to be signed in to start a thread.</p>
         <div className="flex justify-center gap-3">
-          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -183,7 +183,7 @@ function NewThreadForm() {
         <span className="text-pale-water">New Thread</span>
       </nav>
 
-      <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-8">Start a Thread</h1>
+      <h1 className="text-4xl font-heading font-semibold text-bone-white mb-8">Start a Thread</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
@@ -297,7 +297,7 @@ function NewThreadForm() {
           <button
             type="submit"
             disabled={submitting || !title.trim() || !content.trim()}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             {submitting ? "Posting..." : "Post Thread"}
           </button>

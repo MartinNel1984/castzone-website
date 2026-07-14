@@ -172,10 +172,10 @@ export default function SubmitCatchPage() {
           You need to be signed in to submit a catch.
         </p>
         <div className="flex justify-center gap-3">
-          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -187,7 +187,7 @@ export default function SubmitCatchPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-5">🏆</div>
-        <h1 className="text-3xl font-heading font-bold text-bone-white uppercase mb-3">
+        <h1 className="text-3xl font-heading font-semibold text-bone-white mb-3">
           Catch Submitted!
         </h1>
         <p className="text-pale-water font-body mb-2">
@@ -199,7 +199,7 @@ export default function SubmitCatchPage() {
         <div className="flex justify-center gap-3">
           <Link
             href="/catches"
-            className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-5 py-2.5 rounded transition-colors text-sm"
           >
             View Trophy Room
           </Link>
@@ -213,7 +213,7 @@ export default function SubmitCatchPage() {
               setNotes("");
               removePhoto();
             }}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
           >
             Submit Another
           </button>
@@ -233,7 +233,7 @@ export default function SubmitCatchPage() {
         <span className="text-pale-water">Submit a Catch</span>
       </nav>
 
-      <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-2">
+      <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">
         Submit a Catch
       </h1>
       <p className="text-storm font-body text-sm mb-8">
@@ -259,7 +259,7 @@ export default function SubmitCatchPage() {
                 key={c.value}
                 type="button"
                 onClick={() => { setCategory(c.value); setSpecies(""); }}
-                className={`flex flex-col items-center gap-2 py-4 rounded border-2 transition-colors font-heading font-bold uppercase text-sm tracking-wider ${
+                className={`flex flex-col items-center gap-2 py-4 rounded border-2 transition-colors font-mono font-semibold uppercase text-sm tracking-wider ${
                   category === c.value
                     ? "border-cast-orange bg-cast-orange/10 text-bone-white"
                     : "border-surface-teal bg-deep-water text-storm hover:border-pale-water/50 hover:text-pale-water"
@@ -401,7 +401,7 @@ export default function SubmitCatchPage() {
               >
                 <span className="text-3xl">📷</span>
                 <div className="text-left">
-                  <p className="font-heading font-bold uppercase text-sm tracking-wider">Add trophy photo</p>
+                  <p className="font-mono font-semibold uppercase text-sm tracking-wider">Add trophy photo</p>
                   <p className="text-xs mt-0.5">JPEG, PNG or WEBP · max {MAX_SIZE_MB}MB · required</p>
                 </div>
               </button>
@@ -416,7 +416,7 @@ export default function SubmitCatchPage() {
           <button
             type="submit"
             disabled={!species.trim() || !weightKg || !catchDate || !photoFile}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             Review Catch →
           </button>
@@ -428,7 +428,7 @@ export default function SubmitCatchPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
           <div className="bg-deep-water-light border border-surface-teal rounded-xl max-w-md w-full overflow-hidden">
             <div className="bg-cast-orange/10 border-b border-cast-orange/30 px-6 py-4">
-              <h2 className="text-bone-white font-heading font-bold uppercase text-lg">Confirm Your Catch</h2>
+              <h2 className="text-bone-white font-heading font-semibold text-lg">Confirm Your Catch</h2>
               <p className="text-storm text-sm font-body mt-0.5">Check everything looks right before submitting.</p>
             </div>
             {photoPreview && (
@@ -458,14 +458,14 @@ export default function SubmitCatchPage() {
               <button
                 onClick={() => { setReviewing(false); setError(""); }}
                 disabled={submitting}
-                className="flex-1 border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider py-3 rounded transition-colors text-sm"
+                className="flex-1 border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold py-3 rounded transition-colors text-sm"
               >
                 Edit
               </button>
               <button
                 onClick={handleConfirmSubmit}
                 disabled={submitting}
-                className="flex-1 bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider py-3 rounded transition-colors text-sm"
+                className="flex-1 bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-3 rounded transition-colors text-sm"
               >
                 {submitting ? "Submitting..." : "Confirm & Submit"}
               </button>

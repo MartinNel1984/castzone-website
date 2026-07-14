@@ -129,7 +129,7 @@ export default function SpecialsContent() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between gap-3 flex-wrap">
-          <h1 className="font-heading text-4xl md:text-5xl font-bold text-bone-white uppercase tracking-wide">
+          <h1 className="font-heading text-4xl md:text-5xl font-semibold text-bone-white">
             🔥 Specials
           </h1>
           {isAdmin && (
@@ -185,7 +185,7 @@ export default function SpecialsContent() {
       ) : !signedIn ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
           <div className="text-5xl mb-4">🔒</div>
-          <h2 className="font-heading text-2xl text-bone-white font-bold uppercase">
+          <h2 className="font-heading text-2xl text-bone-white font-semibold ">
             Members-only deals
           </h2>
           <p className="mt-2 text-pale-water max-w-md mx-auto">
@@ -212,7 +212,7 @@ export default function SpecialsContent() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
           <div className="text-5xl mb-4">🎣</div>
-          <h2 className="font-heading text-2xl text-bone-white font-bold uppercase">No live specials right now</h2>
+          <h2 className="font-heading text-2xl text-bone-white font-semibold ">No live specials right now</h2>
           <p className="mt-2 text-pale-water max-w-md mx-auto">
             Our bot checks the SA retailers every day — new 50%-off fishing and camping deals
             land here as soon as we approve them. Sign up free to get notified the moment they do.

@@ -230,14 +230,14 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
   return (
     <section className="mb-6">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-bone-white font-heading font-bold uppercase text-lg">
+        <h2 className="text-bone-white font-heading font-semibold text-lg">
           📍 Fishing Spots &amp; Pens
         </h2>
         {!formOpen && (
           <button
             onClick={() => (user ? setFormOpen(true) : null)}
             disabled={!user}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-40 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
+            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-40 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
             title={user ? "Add a spot" : "Sign in to add a spot"}
           >
             ＋ Add a spot
@@ -274,7 +274,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                   className="flex items-center gap-3 w-full border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded-lg px-5 py-6 text-storm hover:text-pale-water transition-colors">
                   <span className="text-2xl">📷</span>
                   <div className="text-left">
-                    <p className="font-heading font-bold uppercase text-sm tracking-wider">Take / add a photo</p>
+                    <p className="font-mono font-semibold uppercase text-sm tracking-wider">Take / add a photo</p>
                     <p className="text-xs mt-0.5">Stand at the spot and shoot the water you cast into · max {MAX_SIZE_MB}MB</p>
                   </div>
                 </button>
@@ -352,7 +352,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           <div className="flex items-center justify-between pt-1">
             <button type="button" onClick={() => { resetForm(); setFormOpen(false); }} className="text-storm hover:text-pale-water text-sm font-body transition-colors">Cancel</button>
             <button type="submit" disabled={submitting || !photoFile || !name.trim()}
-              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-6 py-2.5 rounded transition-colors text-sm">
+              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-2.5 rounded transition-colors text-sm">
               {submitting ? "Adding…" : "Add this spot"}
             </button>
           </div>
@@ -367,7 +367,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           <p className="text-pale-water font-body mb-1">No spots added yet.</p>
           <p className="text-storm text-sm font-body mb-4">Know a good spot here? Be the first to put it on the map.</p>
           {user ? (
-            <button onClick={() => setFormOpen(true)} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider text-xs px-5 py-2.5 rounded transition-colors">＋ Add the first spot</button>
+            <button onClick={() => setFormOpen(true)} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-5 py-2.5 rounded transition-colors">＋ Add the first spot</button>
           ) : (
             <Link href="/login" className="text-cast-orange hover:underline font-body text-sm">Sign in to add a spot</Link>
           )}

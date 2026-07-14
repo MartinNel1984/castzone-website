@@ -112,7 +112,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
       {open && (
         <div className="absolute right-0 top-9 w-80 bg-deep-water-light border border-surface-teal rounded-lg shadow-2xl z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-surface-teal/40 flex items-center justify-between">
-            <span className="text-bone-white font-heading font-bold uppercase text-sm tracking-wider">Notifications</span>
+            <span className="text-bone-white font-heading font-semibold text-sm">Notifications</span>
             {notifications.length > 0 && (
               <span className="text-storm text-xs font-body">{notifications.length} recent</span>
             )}

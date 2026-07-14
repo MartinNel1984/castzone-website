@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-8 max-w-md w-full text-center">
           <div className="text-5xl mb-4">📧</div>
-          <h1 className="text-2xl font-heading font-bold text-bone-white uppercase mb-3">
+          <h1 className="text-2xl font-heading font-semibold text-bone-white mb-3">
             Check Your Inbox
           </h1>
           <p className="text-pale-water font-body mb-2">
@@ -55,10 +55,9 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-1 mb-6">
-            <span className="text-cast-orange text-3xl font-heading font-bold">C</span>
-            <span className="text-bone-white text-xl font-heading font-bold tracking-widest uppercase">ASTZONE</span>
+            <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase">Reset Password</h1>
+          <h1 className="text-4xl font-heading font-semibold text-bone-white ">Reset Password</h1>
           <p className="text-storm mt-2 font-body">Enter your email and we&apos;ll send a reset link</p>
         </div>
 
@@ -87,7 +86,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>

@@ -114,7 +114,7 @@ function CatchComments({ catchId, user }: { catchId: string; user: User | null }
 
   return (
     <div className="mt-5 pt-5 border-t border-surface-teal/40">
-      <p className="text-pale-water font-heading font-bold uppercase tracking-wider text-sm mb-4">
+      <p className="text-pale-water font-mono font-semibold uppercase tracking-wider text-sm mb-4">
         💬 Comments{comments.length > 0 ? ` (${comments.length})` : ""}
       </p>
 
@@ -166,7 +166,7 @@ function CatchComments({ catchId, user }: { catchId: string; user: User | null }
             <button
               type="submit"
               disabled={!body.trim() || posting}
-              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-heading font-bold uppercase tracking-wider text-sm px-5 py-2 rounded transition-colors"
+              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider text-sm px-5 py-2 rounded transition-colors"
             >
               {posting ? "Posting…" : "Post"}
             </button>
@@ -185,7 +185,7 @@ function DaysHeldBadge({ approvedAt }: { approvedAt: string }) {
   const days = daysHeld(approvedAt);
   const label = days === 0 ? "Claimed today" : days === 1 ? "#1 for 1 day" : `#1 for ${days} days`;
   return (
-    <span className="inline-flex items-center gap-2 bg-cast-orange/10 border border-cast-orange/40 text-cast-orange text-sm font-heading font-bold uppercase tracking-wider rounded px-4 py-2">
+    <span className="inline-flex items-center gap-2 bg-cast-orange/10 border border-cast-orange/40 text-cast-orange text-sm font-mono font-semibold uppercase tracking-wider rounded px-4 py-2">
       <span>👑</span>
       {label}
     </span>
@@ -196,7 +196,7 @@ function EmptyState({ cat, user }: { cat: typeof CATEGORIES[number]; user: User 
   return (
     <div className="py-24 text-center">
       <div className="text-7xl mb-5">{cat.icon}</div>
-      <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-3">
+      <h2 className="text-2xl font-heading font-semibold text-bone-white mb-3">
         No catches yet
       </h2>
       <p className="text-pale-water font-body mb-8 max-w-xs mx-auto">
@@ -204,7 +204,7 @@ function EmptyState({ cat, user }: { cat: typeof CATEGORIES[number]; user: User 
       </p>
       <Link
         href={user ? "/catches/submit" : "/login"}
-        className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+        className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
       >
         Submit Your Catch
       </Link>
@@ -231,7 +231,7 @@ function CatchModal({ c, cat, user, onClose }: { c: Catch; cat: typeof CATEGORIE
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-surface-teal/40 flex-shrink-0">
-          <span className="text-cast-orange font-heading font-bold uppercase tracking-wider text-sm">{cat.icon} {cat.label}</span>
+          <span className="text-cast-orange font-heading font-semibold text-sm">{cat.icon} {cat.label}</span>
           <button onClick={onClose} className="text-storm hover:text-bone-white text-3xl leading-none transition-colors" aria-label="Close">×</button>
         </div>
 
@@ -337,16 +337,16 @@ export default function TrophyRoomPage() {
       {/* Page header */}
       <div className="flex items-end justify-between mb-2 gap-4">
         <div>
-          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase leading-tight">
+          <h1 className="text-5xl font-heading font-semibold text-bone-white leading-tight">
             Trophy Room
           </h1>
-          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
             South Africa&apos;s Biggest Catches
           </p>
         </div>
         <Link
           href={user ? "/catches/submit" : "/login"}
-          className="hidden sm:inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm flex-shrink-0"
+          className="hidden sm:inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm flex-shrink-0"
         >
           Submit a Catch
         </Link>
@@ -366,7 +366,7 @@ export default function TrophyRoomPage() {
             <button
               key={c.value}
               onClick={() => setActiveCategory(c.value)}
-              className={`font-heading font-bold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+              className={`font-mono font-semibold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                 activeCategory === c.value
                   ? "border-cast-orange text-bone-white"
                   : "border-transparent text-storm hover:text-pale-water"
@@ -399,7 +399,7 @@ export default function TrophyRoomPage() {
           <div className="bg-deep-water-light border-2 border-cast-orange rounded-xl overflow-hidden mb-8">
             <div className="bg-cast-orange/10 px-6 py-3 flex items-center gap-2 border-b border-cast-orange/30">
               <span className="text-2xl">🏆</span>
-              <span className="text-cast-orange font-heading font-bold uppercase tracking-widest text-sm">
+              <span className="text-cast-orange font-heading font-semibold text-sm">
                 Current Champion — {cat.label}
               </span>
             </div>
@@ -446,7 +446,7 @@ export default function TrophyRoomPage() {
           {rest.length > 0 && (
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-pale-water font-heading font-bold uppercase text-sm tracking-wider">
+                <span className="text-pale-water font-mono font-semibold uppercase text-sm tracking-wider">
                   All-Time Leaderboard
                 </span>
                 <span className="text-storm text-sm font-body">— top {catches.length}</span>
@@ -509,7 +509,7 @@ export default function TrophyRoomPage() {
       <div className="sm:hidden mt-2">
         <Link
           href={user ? "/catches/submit" : "/login"}
-          className="block w-full text-center bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-3 rounded transition-colors"
+          className="block w-full text-center bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors"
         >
           Submit a Catch
         </Link>

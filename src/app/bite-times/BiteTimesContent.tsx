@@ -53,14 +53,14 @@ export default function BiteTimesContent() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
-      <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">Best Bite Times</h1>
-      <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1 mb-6">
+      <h1 className="text-5xl font-heading font-semibold text-bone-white ">Best Bite Times</h1>
+      <p className="text-cast-orange font-heading font-semibold text-sm mt-1 mb-6">
         When the fish are most likely to feed
       </p>
 
       {/* Spot picker */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6">
-        <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-3">
+        <p className="text-pale-water text-xs font-mono font-semibold uppercase tracking-wider mb-3">
           Pick your spot
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -84,7 +84,7 @@ export default function BiteTimesContent() {
           <button
             onClick={handleLocateMe}
             disabled={locating}
-            className="flex-shrink-0 border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white text-sm font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded transition-colors disabled:opacity-50"
+            className="flex-shrink-0 border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white text-sm font-heading font-semibold px-4 py-2.5 rounded transition-colors disabled:opacity-50"
           >
             📍 {locating ? "Finding you…" : "Use my location"}
           </button>
@@ -110,7 +110,7 @@ export default function BiteTimesContent() {
 
       {/* How it works — also good for search engines */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mt-2">
-        <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-3">How It Works</h2>
+        <h2 className="text-bone-white font-heading font-semibold text-lg mb-3">How It Works</h2>
         <div className="space-y-3 text-sm font-body text-pale-water leading-relaxed">
           <p>
             <span className="text-bone-white font-medium">Solunar periods.</span> Fish tend to feed more
@@ -134,11 +134,11 @@ export default function BiteTimesContent() {
       {/* Cross-links */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
         <Link href="/venues" className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors">
-          <p className="text-bone-white font-heading font-bold uppercase group-hover:text-cast-orange transition-colors">🗺️ The Map</p>
+          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors">🗺️ The Map</p>
           <p className="text-storm text-sm font-body mt-1">Every venue has its own bite forecast, water conditions and depth map.</p>
         </Link>
         <Link href="/conditions" className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors">
-          <p className="text-bone-white font-heading font-bold uppercase group-hover:text-cast-orange transition-colors">🌊 Water Conditions</p>
+          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors">🌊 Water Conditions</p>
           <p className="text-storm text-sm font-body mt-1">Dam levels and Vaal gate notices before you tow the boat.</p>
         </Link>
       </div>

@@ -230,7 +230,7 @@ function ProfileContent() {
   if (notFound || !profile) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-pale-water text-xl font-heading font-bold uppercase mb-3">Member not found</p>
+        <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Member not found</p>
         <p className="text-storm font-body text-sm mb-6">That username doesn&apos;t exist on CastZone.</p>
         <Link href="/forum" className="text-cast-orange hover:underline font-body text-sm">← Back to Forum</Link>
       </div>
@@ -287,7 +287,7 @@ function ProfileContent() {
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3">
-              <h1 className="text-3xl font-heading font-bold text-bone-white uppercase leading-tight">
+              <h1 className="text-3xl font-heading font-semibold text-bone-white leading-tight">
                 {profile.username}
               </h1>
               {isOwn && !editing && (
@@ -300,7 +300,7 @@ function ProfileContent() {
               )}
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-3">
-              <span className={`text-xs font-heading font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${levelClass}`}>
+              <span className={`text-xs font-mono font-semibold uppercase tracking-wider border rounded px-2 py-0.5 ${levelClass}`}>
                 {profile.member_level}
               </span>
               <span className="text-storm text-sm font-body">
@@ -372,7 +372,7 @@ function ProfileContent() {
                 <button
                   onClick={handleSave}
                   disabled={saving || (usernameInput !== profile.username && usernameStatus !== "available")}
-                  className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
+                  className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                 >
                   {saving ? "Saving..." : "Save"}
                 </button>
@@ -394,7 +394,7 @@ function ProfileContent() {
       </div>
 
       {/* Threads */}
-      <h2 className="text-xl font-heading font-bold text-bone-white uppercase mb-4">
+      <h2 className="text-xl font-heading font-semibold text-bone-white mb-4">
         Threads by {profile.username}
       </h2>
 

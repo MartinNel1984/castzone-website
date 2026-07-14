@@ -19,7 +19,7 @@ export default function ClassifiedsPage() {
     <main className="min-h-[70vh] flex items-center justify-center px-6 py-20">
       <div className="max-w-xl text-center">
         <div className="text-5xl mb-6">🎣</div>
-        <h1 className="font-heading text-4xl md:text-5xl font-bold text-bone-white uppercase tracking-wide">
+        <h1 className="font-heading text-4xl md:text-5xl font-semibold text-bone-white">
           Tackle Box
         </h1>
         <p className="mt-3 text-cast-orange font-semibold uppercase tracking-widest text-sm">

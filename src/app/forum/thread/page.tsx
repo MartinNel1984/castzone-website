@@ -288,7 +288,7 @@ function ThreadContent() {
 
       {/* Thread title */}
       <div className="flex items-start justify-between gap-3 mb-8">
-        <h1 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase leading-tight flex-1">
+        <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white leading-tight flex-1">
           {loading ? <span className="animate-pulse bg-surface-teal rounded h-8 block w-3/4" /> : thread?.title}
         </h1>
         {user && !loading && (
@@ -382,7 +382,7 @@ function ThreadContent() {
                     <button
                       onClick={() => handleEditSave(post.id)}
                       disabled={editSaving || !editContent.trim()}
-                      className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
+                      className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                     >
                       {editSaving ? "Saving…" : "Save Edit"}
                     </button>
@@ -415,7 +415,7 @@ function ThreadContent() {
           </div>
         ) : user ? (
           <form onSubmit={handleReply} className="bg-deep-water-light border border-surface-teal rounded-lg p-5">
-            <h3 className="text-bone-white font-heading font-bold uppercase mb-4">Post a Reply</h3>
+            <h3 className="text-bone-white font-heading font-semibold mb-4">Post a Reply</h3>
             {replyError && (
               <div className="bg-red-900/30 border border-red-700 text-red-300 rounded px-4 py-3 text-sm mb-4">
                 {replyError}
@@ -480,7 +480,7 @@ function ThreadContent() {
               <button
                 type="submit"
                 disabled={submitting || !reply.trim()}
-                className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors"
+                className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
               >
                 {submitting ? "Posting..." : "Post Reply"}
               </button>
@@ -490,10 +490,10 @@ function ThreadContent() {
           <div className="bg-deep-water-light border border-surface-teal rounded-lg p-6 text-center">
             <p className="text-pale-water font-body mb-4">Sign in to join the conversation.</p>
             <div className="flex justify-center gap-3">
-              <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-5 py-2 rounded transition-colors text-sm">
+              <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-5 py-2 rounded transition-colors text-sm">
                 Sign In
               </Link>
-              <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2 rounded transition-colors text-sm">
+              <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2 rounded transition-colors text-sm">
                 Join Free
               </Link>
             </div>

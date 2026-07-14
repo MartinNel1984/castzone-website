@@ -85,7 +85,7 @@ function SortTh({ col, label, sortKey, sortAsc, onSort }: {
   return (
     <th
       onClick={() => onSort(col)}
-      className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
+      className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
     >
       {label}{" "}
       {active ? (sortAsc ? "↑" : "↓") : <span className="opacity-30">↕</span>}
@@ -134,10 +134,10 @@ export default function ConditionsContent() {
       {/* ── Page header ── */}
       <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
         <div>
-          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">
+          <h1 className="text-5xl font-heading font-semibold text-bone-white ">
             Water Conditions
           </h1>
-          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
             Live dam levels &amp; Vaal system gate alerts
           </p>
         </div>
@@ -157,7 +157,7 @@ export default function ConditionsContent() {
           { label: "Vaal Dam Gates",    value: "CLOSED",                    sub: "Season reporting closed",                   cls: "text-green-400" },
         ].map((s) => (
           <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-4">
-            <div className="text-xs font-heading font-bold uppercase tracking-wider text-storm mb-1">{s.label}</div>
+            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-storm mb-1">{s.label}</div>
             <div className={`text-2xl font-heading font-bold ${s.cls}`}>{s.value}</div>
             <div className="text-xs font-body text-storm mt-1">{s.sub}</div>
           </div>
@@ -168,7 +168,7 @@ export default function ConditionsContent() {
       <div className="border border-amber-700/50 rounded-lg overflow-hidden mb-8">
         <div className="bg-amber-900/20 border-b border-amber-700/50 px-5 py-3 flex items-center gap-3 flex-wrap">
           <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0 animate-pulse" />
-          <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-amber-300">
+          <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-amber-300">
             Vaal System — Gate &amp; Discharge Operations
           </h2>
           <span className="ml-auto text-xs font-body bg-green-900/40 border border-green-700 text-green-300 px-2 py-0.5 rounded">
@@ -180,7 +180,7 @@ export default function ConditionsContent() {
           {/* Vaal Dam */}
           <div className="border border-surface-teal rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="font-heading font-bold uppercase text-bone-white">Vaal Dam</h3>
+              <h3 className="font-heading font-semibold text-bone-white">Vaal Dam</h3>
               <span className="text-xs font-body bg-green-900/40 border border-green-700 text-green-300 px-2 py-0.5 rounded uppercase tracking-wider">
                 Gates Closed
               </span>
@@ -215,7 +215,7 @@ export default function ConditionsContent() {
           {/* Bloemhof Dam */}
           <div className="border border-surface-teal rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="font-heading font-bold uppercase text-bone-white">Bloemhof Dam</h3>
+              <h3 className="font-heading font-semibold text-bone-white">Bloemhof Dam</h3>
               <span className="text-xs font-body bg-amber-900/40 border border-amber-600 text-amber-300 px-2 py-0.5 rounded uppercase tracking-wider">
                 Controlled
               </span>
@@ -249,7 +249,7 @@ export default function ConditionsContent() {
 
           {/* River Safety */}
           <div className="sm:col-span-2 border border-red-900/50 rounded-lg p-4 bg-red-900/10">
-            <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-red-400 mb-3 flex items-center gap-2">
+            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-red-400 mb-3 flex items-center gap-2">
               <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
                 <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
@@ -283,7 +283,7 @@ export default function ConditionsContent() {
       {/* ── Province Tabs + Dam Table ── */}
       <div className="mb-8">
         <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
-          <h2 className="text-xl font-heading font-bold text-bone-white uppercase">
+          <h2 className="text-xl font-heading font-semibold text-bone-white ">
             Dam Levels — {PROVINCES.find((p) => p.key === province)?.label ?? ""}
           </h2>
           <div className="flex bg-deep-water-light border border-surface-teal rounded-lg p-1 gap-1 overflow-x-auto max-w-full">
@@ -291,7 +291,7 @@ export default function ConditionsContent() {
               <button
                 key={p.key}
                 onClick={() => { setProvince(p.key); setSearch(""); }}
-                className={`px-3 py-1.5 rounded text-xs font-heading font-bold uppercase tracking-wider transition-colors whitespace-nowrap flex-shrink-0 ${
+                className={`px-3 py-1.5 rounded text-xs font-mono font-semibold uppercase tracking-wider transition-colors whitespace-nowrap flex-shrink-0 ${
                   province === p.key
                     ? "bg-cast-orange text-white"
                     : "text-pale-water hover:text-bone-white"
@@ -346,7 +346,7 @@ export default function ConditionsContent() {
               <button
                 key={k}
                 onClick={() => toggleSort(k)}
-                className={`px-3 py-2 rounded text-xs font-heading font-bold uppercase tracking-wider border transition-colors ${
+                className={`px-3 py-2 rounded text-xs font-mono font-semibold uppercase tracking-wider border transition-colors ${
                   sortKey === k
                     ? "bg-cast-orange border-cast-orange text-white"
                     : "border-surface-teal text-pale-water hover:border-cast-orange"
@@ -366,12 +366,12 @@ export default function ConditionsContent() {
               <thead>
                 <tr className="bg-deep-water border-b border-surface-teal">
                   <SortTh col="name" label="Dam"        sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
-                  <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">River</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">River</th>
                   <SortTh col="fsc"  label="FSC (Mm³)" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                   <SortTh col="pct"  label="This Week"  sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
-                  <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">Last Wk</th>
-                  <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">Last Yr</th>
-                  <th className="px-4 py-3 text-left text-xs font-heading font-bold uppercase tracking-wider text-storm">vs Last Yr</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">Last Wk</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">Last Yr</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">vs Last Yr</th>
                 </tr>
               </thead>
               <tbody>
@@ -434,7 +434,7 @@ export default function ConditionsContent() {
       {/* ── Gate Notices History ── */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <h2 className="text-xl font-heading font-bold text-bone-white uppercase">Gate Notice History</h2>
+          <h2 className="text-xl font-heading font-semibold text-bone-white ">Gate Notice History</h2>
           <a
             href="https://mobi.reservoir.org.za/dws-comms/"
             target="_blank"
@@ -455,7 +455,7 @@ export default function ConditionsContent() {
             >
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="text-xs font-body text-storm">{notice.date}</span>
-                <span className={`text-xs font-heading font-bold uppercase tracking-wider border rounded px-2 py-0.5 ${
+                <span className={`text-xs font-mono font-semibold uppercase tracking-wider border rounded px-2 py-0.5 ${
                   notice.dam === "vaal"
                     ? "bg-green-900/30 border-green-700 text-green-300"
                     : notice.dam === "barrage"
@@ -487,13 +487,13 @@ export default function ConditionsContent() {
 
       {/* ── Browse all dams ── */}
       <div className="border-t border-surface-teal pt-6 mb-6">
-        <h2 className="text-sm font-heading font-bold uppercase tracking-wider text-storm mb-4">
+        <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-storm mb-4">
           Browse all {ALL_DAMS.length} dams by province
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
           {ALL_PROVINCE_DAMS.map((p) => (
             <div key={p.label}>
-              <h3 className="text-xs font-heading font-bold uppercase tracking-wider text-cast-orange mb-2">
+              <h3 className="text-xs font-heading font-semibold text-cast-orange mb-2">
                 {p.label} ({p.dams.length})
               </h3>
               <ul className="flex flex-wrap gap-x-3 gap-y-1">

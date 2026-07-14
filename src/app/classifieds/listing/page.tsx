@@ -113,7 +113,7 @@ function ListingDetail() {
   if (!id || !listing) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <p className="text-pale-water text-xl font-heading font-bold uppercase mb-3">Listing not found</p>
+        <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Listing not found</p>
         <p className="text-storm font-body text-sm mb-6">It may have been removed or sold.</p>
         <Link href="/classifieds" className="text-cast-orange hover:underline font-body text-sm">← Back to the Tackle Box</Link>
       </div>
@@ -142,11 +142,11 @@ function ListingDetail() {
           <p className="text-pale-water font-body text-sm">This is your listing.</p>
           <div className="flex gap-2">
             <button onClick={toggleSold} disabled={working}
-              className="border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/60 disabled:opacity-50 font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors">
+              className="border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/60 disabled:opacity-50 font-heading font-semibold text-xs px-4 py-2 rounded transition-colors">
               {isSold ? "Mark as Active" : "Mark as Sold"}
             </button>
             <button onClick={deleteListing} disabled={working}
-              className="border border-red-700/60 text-red-300 hover:bg-red-900/30 disabled:opacity-50 font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors">
+              className="border border-red-700/60 text-red-300 hover:bg-red-900/30 disabled:opacity-50 font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors">
               Delete
             </button>
           </div>
@@ -165,7 +165,7 @@ function ListingDetail() {
             )}
             {isSold && (
               <div className="absolute inset-0 bg-deep-water/70 flex items-center justify-center">
-                <span className="bg-storm text-bone-white font-heading font-bold uppercase tracking-widest text-2xl px-8 py-3 rounded -rotate-12">Sold</span>
+                <span className="bg-storm text-bone-white font-heading font-semibold text-2xl px-8 py-3 rounded -rotate-12">Sold</span>
               </div>
             )}
           </div>
@@ -187,7 +187,7 @@ function ListingDetail() {
           <span className="inline-block bg-surface-teal/20 text-pale-water text-xs font-body px-2.5 py-1 rounded-full mb-3">
             {categoryIcon(listing.category)} {categoryLabel(listing.category)}
           </span>
-          <h1 className="text-3xl font-heading font-bold text-bone-white uppercase leading-tight mb-2">{listing.title}</h1>
+          <h1 className="text-3xl font-heading font-semibold text-bone-white leading-tight mb-2">{listing.title}</h1>
           <p className="text-cast-orange font-heading font-bold text-4xl mb-4">{formatPrice(listing.price)}</p>
 
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm font-body text-pale-water mb-6">
@@ -205,12 +205,12 @@ function ListingDetail() {
               {wa && (
                 <a href={`https://wa.me/${wa}?text=${encodeURIComponent(`Hi, is your "${listing.title}" still available on CastZone?`)}`}
                   target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded transition-colors">
+                  className="flex items-center justify-center gap-2 w-full bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3.5 rounded transition-colors">
                   💬 WhatsApp Seller
                 </a>
               )}
               <a href={`tel:${listing.contact_phone.replace(/\s/g, "")}`}
-                className="flex items-center justify-center gap-2 w-full border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/60 font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded transition-colors">
+                className="flex items-center justify-center gap-2 w-full border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/60 font-heading font-semibold px-6 py-3.5 rounded transition-colors">
                 📞 {listing.contact_phone}
               </a>
             </div>
@@ -242,7 +242,7 @@ function ListingDetail() {
       {/* More from this seller */}
       {otherListings.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-4">
+          <h2 className="text-bone-white font-heading font-semibold text-lg mb-4">
             More from {listing.profiles?.username ?? "this seller"}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -275,7 +275,7 @@ function ListingDetail() {
 
       {/* Description */}
       <div className="mt-8 bg-deep-water-light border border-surface-teal rounded-lg p-6">
-        <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-3">Description</h2>
+        <h2 className="text-bone-white font-heading font-semibold text-lg mb-3">Description</h2>
         <p className="text-pale-water font-body text-sm leading-relaxed whitespace-pre-wrap">{listing.description}</p>
       </div>
 

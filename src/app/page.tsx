@@ -10,6 +10,9 @@ import GateNoticeStaleness from "@/components/GateNoticeStaleness";
 import { GATE_NOTICES, GATE_STATUS } from "@/data/waterConditions";
 import { useSpot, JOHANNESBURG } from "@/lib/geo";
 import { categoryIcon, discountPct, formatPrice, isExpired, type Deal } from "@/lib/deals";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 
 type DealPreview = Pick<Deal, "id" | "title" | "retailer" | "category" | "original_price" | "sale_price" | "discount_pct" | "image_url"> & { url?: string };
 
@@ -170,57 +173,90 @@ export default function HomePage() {
     }
   }, [user]);
 
+  // Vaal River gate status — computed once, used by both the hero readout and the Angler Safety section.
+  const latestVaal = GATE_NOTICES.find((n) => n.dam === "vaal" && n.latest);
+  const latestBloemhof = GATE_NOTICES.find((n) => n.dam === "bloemhof" && n.latest);
+  const latestBarrage = GATE_NOTICES.find((n) => n.dam === "barrage" && n.latest);
+  const bloemhofLevel = latestBloemhof ? vaalAlertLevel(latestBloemhof.text) : "normal";
+  const bannerColour =
+    bloemhofLevel === "danger" ? "border-red-600/60 bg-red-900/10" :
+    bloemhofLevel === "caution" ? "border-amber-600/60 bg-amber-900/10" :
+    "border-surface-teal bg-deep-water-light";
+  const titleColour =
+    bloemhofLevel === "danger" ? "text-red-400" :
+    bloemhofLevel === "caution" ? "text-amber-400" :
+    "text-pale-water";
+  const safetyIcon = bloemhofLevel === "danger" ? "🚨" : bloemhofLevel === "caution" ? "⚠️" : "ℹ️";
+
   return (
     <div>
-      {/* Hero with background photo */}
-      <section className="relative border-b border-surface-teal overflow-hidden min-h-[520px] flex items-center">
-        {/* Background photo */}
+      {/* Hero */}
+      <section className="relative border-b border-surface-teal overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1541742425281-c1d3fc8aff96?w=1920&q=80&auto=format&fit=crop')" }}
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: "repeating-linear-gradient(180deg, transparent 0 38px, var(--color-pale-water) 38px 39px)",
+            maskImage: "linear-gradient(180deg, transparent, black 25%, black 75%, transparent)",
+          }}
         />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-deep-water/85" />
-        {/* Orange glow */}
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 70% 50%, #f26522 0%, transparent 60%)" }} />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-10 lg:gap-14 items-end">
+            <div>
+              <p className="cz-eyebrow text-cast-orange mb-3">South Africa&apos;s Fishing Community</p>
+              <h1 className="text-[clamp(2.6rem,2rem+4.5vw,5rem)] leading-[0.98] font-heading font-semibold text-bone-white">
+                Where South Africa <em className="italic text-cast-orange">Fishes</em>
+              </h1>
+              <p className="text-pale-water text-lg leading-relaxed mt-6 font-body max-w-xl">
+                Bass, saltwater, specimen and everything in between. Join the forum built for SA anglers — share catches, find venues, buy gear, and connect.
+              </p>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
-          <div className="max-w-2xl">
-            <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mb-3">
-              South Africa&apos;s Fishing Community
-            </p>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-bone-white leading-none mb-6 uppercase">
-              Where South<br />Africa Fishes
-            </h1>
-            <p className="text-pale-water text-lg leading-relaxed mb-8 font-body max-w-xl">
-              Bass, saltwater, specimen and everything in between. Join the forum built for SA anglers — share catches, find venues, buy gear, and connect.
-            </p>
-
-            {/* Auth-aware CTAs */}
-            {user === undefined ? null : loggedIn ? (
-              <div className="flex flex-wrap gap-4 items-center">
-                <Link href="/forum" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                  Go to Forum
-                </Link>
-                <Link href="/forum/new" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                  Start a Thread
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="flex flex-wrap gap-4">
-                  <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                    Join Free
-                  </Link>
-                  <Link href="/forum" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-                    Browse Forum
-                  </Link>
+              {/* Auth-aware CTAs */}
+              {user === undefined ? null : loggedIn ? (
+                <div className="flex flex-wrap gap-4 items-center mt-8">
+                  <Button href="/forum" size="lg">Go to Forum</Button>
+                  <Button href="/forum/new" variant="line" size="lg">Start a Thread</Button>
                 </div>
-                <p className="text-pale-water/70 text-sm font-body mt-4">
-                  Free forever · Dam &amp; gate-level alerts · Find venues near you
-                </p>
-              </>
-            )}
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-4 mt-8">
+                    <Button href="/register" size="lg">Join Free</Button>
+                    <Button href="/forum" variant="line" size="lg">Browse Forum</Button>
+                  </div>
+                  <p className="text-pale-water/70 text-sm font-body mt-4">
+                    Free forever · Dam &amp; gate-level alerts · Find venues near you
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Live readout — real Vaal River gate data, not a stock photo */}
+            <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5">
+              <div className="flex items-center justify-between mb-4">
+                <p className="cz-eyebrow text-cast-orange">Vaal River — Live Reading</p>
+                <span className="font-mono text-xs text-storm">{latestBloemhof?.date ?? "—"}</span>
+              </div>
+              <div className="divide-y divide-surface-teal/40">
+                <div className="flex items-center justify-between py-2 font-mono text-sm">
+                  <span className="text-storm">Bloemhof release</span>
+                  <span className={titleColour}>{latestBloemhof?.text ?? "No recent notice"}</span>
+                </div>
+                <div className="flex items-center justify-between py-2 font-mono text-sm">
+                  <span className="text-storm">Vaal Dam gate</span>
+                  <span className="text-bone-white">{latestVaal?.text ?? "No recent notice"}</span>
+                </div>
+                <div className="flex items-center justify-between py-2 font-mono text-sm">
+                  <span className="text-storm">Barrage flow</span>
+                  <span className="text-bone-white">{latestBarrage?.text ?? "No recent notice"}</span>
+                </div>
+                <div className="flex items-center justify-between py-2 font-mono text-sm">
+                  <span className="text-storm">Your spot</span>
+                  <span className="text-bone-white">{spot.label}</span>
+                </div>
+              </div>
+              <Link href="/conditions" className="font-mono text-xs uppercase tracking-wider text-cast-orange hover:text-bone-white cz-transition mt-4 inline-block">
+                Full dam levels &amp; conditions →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -228,15 +264,15 @@ export default function HomePage() {
       {/* Live stats banner */}
       <section className="bg-deep-water-light border-b border-surface-teal">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center">
+          <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center sm:text-left">
             {stats ? (
               <>
-                <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.members.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Members</p></Link>
-                <Link href="/specials" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.specials.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Specials</p></Link>
-                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.threads.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Threads</p></div>
-                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.posts.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Posts</p></div>
-                {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange group-hover:text-bone-white font-heading font-bold text-xl uppercase transition-colors">{stats.venues.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Venues</p></Link>}
-                <div><p className="text-cast-orange font-heading font-bold text-xl uppercase">{stats.categories.toLocaleString()}</p><p className="text-storm text-xs uppercase tracking-wider mt-0.5">Categories</p></div>
+                <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.members.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Members</p></Link>
+                <Link href="/specials" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.specials.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Specials</p></Link>
+                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.threads.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Threads</p></div>
+                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.posts.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Posts</p></div>
+                {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.venues.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Venues</p></Link>}
+                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.categories.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Categories</p></div>
               </>
             ) : (
               [1, 2, 3, 4, 5].map((i) => (
@@ -252,19 +288,13 @@ export default function HomePage() {
 
       {/* Specials teaser */}
       {dealsPreview && dealsPreview.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">🔥 Latest Specials</h2>
-            <Link href="/specials" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
-              See all deals →
-            </Link>
-          </div>
+        <Section title="Latest Specials" action={{ label: "See all deals", href: "/specials" }}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {dealsPreview.map((deal) => {
               const pct = discountPct(deal.original_price, deal.sale_price, deal.discount_pct);
               const locked = !deal.url;
-              const CardInner = (
-                <>
+              return (
+                <Card key={deal.id} href={locked ? "/register" : deal.url} external={!locked} className="flex flex-col">
                   <div className="aspect-[4/3] bg-deep-water relative overflow-hidden">
                     {deal.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -280,7 +310,7 @@ export default function HomePage() {
                       </div>
                     )}
                     {pct != null && (
-                      <span className="absolute top-2 right-2 bg-cast-orange text-white text-sm font-heading font-bold px-2.5 py-1 rounded-full shadow">
+                      <span className="absolute top-2 right-2 bg-cast-orange text-white text-sm font-mono font-semibold px-2.5 py-1 rounded-full shadow">
                         -{pct}%
                       </span>
                     )}
@@ -291,39 +321,20 @@ export default function HomePage() {
                     )}
                   </div>
                   <div className="p-3 flex-1 flex flex-col">
-                    <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">{deal.retailer}</p>
-                    <h3 className={`text-bone-white text-sm font-body font-medium leading-snug line-clamp-2 ${locked ? "" : "group-hover:text-cast-orange"} transition-colors`}>
+                    <p className="text-storm text-xs font-mono uppercase tracking-wider mb-1">{deal.retailer}</p>
+                    <h3 className={`text-bone-white text-sm font-body font-medium leading-snug line-clamp-2 ${locked ? "" : "group-hover:text-cast-orange"} cz-transition`}>
                       {locked ? "Sign up to reveal this deal" : deal.title}
                     </h3>
                     {deal.sale_price != null && (
-                      <div className="mt-auto pt-2">
+                      <div className="mt-auto pt-2 font-mono">
                         {deal.original_price != null && (
                           <span className="text-storm text-xs line-through mr-2">{formatPrice(deal.original_price)}</span>
                         )}
-                        <span className="text-cast-orange font-heading font-bold text-base leading-none">{formatPrice(deal.sale_price)}</span>
+                        <span className="text-cast-orange font-semibold text-base leading-none">{formatPrice(deal.sale_price)}</span>
                       </div>
                     )}
                   </div>
-                </>
-              );
-              return locked ? (
-                <Link
-                  key={deal.id}
-                  href="/register"
-                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors flex flex-col"
-                >
-                  {CardInner}
-                </Link>
-              ) : (
-                <a
-                  key={deal.id}
-                  href={deal.url}
-                  target="_blank"
-                  rel="nofollow sponsored noopener noreferrer"
-                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors flex flex-col"
-                >
-                  {CardInner}
-                </a>
+                </Card>
               );
             })}
           </div>
@@ -333,14 +344,11 @@ export default function HomePage() {
                 ? `${stats?.specials ?? "More"} live deals waiting — fishing & camping gear at 50%+ off.`
                 : "Loads more deals inside — sign up to unlock every one. It's free."}
             </p>
-            <Link
-              href={loggedIn ? "/specials" : "/register"}
-              className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors whitespace-nowrap"
-            >
+            <Button href={loggedIn ? "/specials" : "/register"}>
               {loggedIn ? "See all specials" : "Join free — see all deals"}
-            </Link>
+            </Button>
           </div>
-        </section>
+        </Section>
       )}
 
       {/* Bite forecast widget */}
@@ -350,7 +358,7 @@ export default function HomePage() {
           <button
             onClick={locateMe}
             disabled={locating}
-            className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded transition-colors disabled:opacity-50"
+            className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white text-xs font-mono uppercase tracking-wider px-3 py-1.5 rounded cz-transition disabled:opacity-50"
           >
             📍 {locating ? "Finding you…" : "Use my location"}
           </button>
@@ -359,221 +367,153 @@ export default function HomePage() {
       </section>
 
       {/* Angler Safety — Vaal River */}
-      {(() => {
-        const latestVaal      = GATE_NOTICES.find((n) => n.dam === "vaal"     && n.latest);
-        const latestBloemhof  = GATE_NOTICES.find((n) => n.dam === "bloemhof" && n.latest);
-        const latestBarrage   = GATE_NOTICES.find((n) => n.dam === "barrage"  && n.latest);
-        const bloemhofLevel   = latestBloemhof ? vaalAlertLevel(latestBloemhof.text) : "normal";
-        const bannerColour =
-          bloemhofLevel === "danger"  ? "border-red-600/60 bg-red-900/10"   :
-          bloemhofLevel === "caution" ? "border-amber-600/60 bg-amber-900/10" :
-          "border-surface-teal bg-deep-water-light";
-        const titleColour =
-          bloemhofLevel === "danger"  ? "text-red-400"    :
-          bloemhofLevel === "caution" ? "text-amber-400"  :
-          "text-pale-water";
-        const icon = bloemhofLevel === "danger" ? "🚨" : bloemhofLevel === "caution" ? "⚠️" : "ℹ️";
-        return (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">
-                {icon} Angler Safety — Vaal River
-              </h2>
-              <Link href="/conditions" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
-                Full dam levels →
-              </Link>
-            </div>
-
-            {/* Gate status cards */}
-            <div className={`border rounded-lg p-5 mb-5 ${bannerColour}`}>
-              <p className={`font-heading font-bold uppercase text-sm mb-3 ${titleColour}`}>
-                Latest Gate Notices — Updated by DWS
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { label: "Vaal Dam",  notice: latestVaal,     colour: "text-blue-300"  },
-                  { label: "Bloemhof",  notice: latestBloemhof, colour: titleColour       },
-                  { label: "Barrage",   notice: latestBarrage,  colour: "text-teal-300"  },
-                ].map(({ label, notice, colour }) => (
-                  <div key={label} className="bg-black/20 rounded p-3">
-                    <p className={`text-xs font-body font-bold uppercase tracking-wider mb-1 ${colour}`}>{label}</p>
-                    {notice ? (
-                      <>
-                        <p className="text-bone-white text-sm font-body leading-snug">{notice.text}</p>
-                        <p className="text-storm text-xs mt-1">{notice.date}</p>
-                      </>
-                    ) : (
-                      <p className="text-storm text-sm font-body">No recent notice</p>
-                    )}
-                  </div>
-                ))}
+      <Section title={`${safetyIcon} Angler Safety — Vaal River`} action={{ label: "Full dam levels", href: "/conditions" }}>
+        <div className={`border rounded-lg p-5 mb-5 ${bannerColour}`}>
+          <p className={`font-mono uppercase tracking-wider text-xs mb-3 ${titleColour}`}>
+            Latest Gate Notices — Updated by DWS
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { label: "Vaal Dam", notice: latestVaal, colour: "text-blue-300" },
+              { label: "Bloemhof", notice: latestBloemhof, colour: titleColour },
+              { label: "Barrage", notice: latestBarrage, colour: "text-teal-300" },
+            ].map(({ label, notice, colour }) => (
+              <div key={label} className="bg-black/20 rounded p-3">
+                <p className={`text-xs font-mono font-semibold uppercase tracking-wider mb-1 ${colour}`}>{label}</p>
+                {notice ? (
+                  <>
+                    <p className="text-bone-white text-sm font-body leading-snug">{notice.text}</p>
+                    <p className="text-storm text-xs mt-1 font-mono">{notice.date}</p>
+                  </>
+                ) : (
+                  <p className="text-storm text-sm font-body">No recent notice</p>
+                )}
               </div>
-              {bloemhofLevel !== "normal" && (
-                <p className={`mt-4 text-sm font-body font-medium ${titleColour}`}>
-                  {bloemhofLevel === "danger"
-                    ? "⚠ Bloemhof releasing at high volume — avoid all Vaal River banks. Strong current and rising water levels expected downstream."
-                    : "⚠ Bloemhof releasing water — exercise caution near Vaal River banks. Current stronger than normal downstream of Parys."}
-                </p>
-              )}
-            </div>
+            ))}
+          </div>
+          {bloemhofLevel !== "normal" && (
+            <p className={`mt-4 text-sm font-body font-medium ${titleColour}`}>
+              {bloemhofLevel === "danger"
+                ? "⚠ Bloemhof releasing at high volume — avoid all Vaal River banks. Strong current and rising water levels expected downstream."
+                : "⚠ Bloemhof releasing water — exercise caution near Vaal River banks. Current stronger than normal downstream of Parys."}
+            </p>
+          )}
+        </div>
 
-            <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} status={GATE_STATUS} />
+        <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} status={GATE_STATUS} />
 
-            {/* Vaal sections guide */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                {
-                  section: "Upper Vaal",
-                  stretch: "Vaal Dam → Parys (~150 km)",
-                  slug: "vaal-river-parys",
-                  tip: "Responds to Vaal Dam gate openings within 24–48 hours. Check the Vaal Dam gate notice before fishing the Parys banks.",
-                },
-                {
-                  section: "Middle Vaal",
-                  stretch: "Parys → Vereeniging / Barrage (~180 km)",
-                  slug: "vaal-barrage",
-                  tip: "Affected by Bloemhof releases 3–5 days after discharge. When Bloemhof is releasing over 300 m³/s, bank levels rise significantly.",
-                },
-                {
-                  section: "Lower Vaal",
-                  stretch: "Barrage → Boegoeberg (~400 km)",
-                  slug: "vaal-river-vereeniging",
-                  tip: "Barrage controls flow into the lower reach. Controlled releases make this section more predictable — but always check current notices.",
-                },
-              ].map(({ section, stretch, slug, tip }) => (
-                <Link
-                  key={section}
-                  href={`/venues/${slug}`}
-                  className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors"
-                >
-                  <p className="text-cast-orange font-heading font-bold uppercase text-sm group-hover:text-bone-white transition-colors mb-1">{section}</p>
-                  <p className="text-pale-water text-xs font-body mb-2">{stretch}</p>
-                  <p className="text-storm text-xs font-body leading-relaxed">{tip}</p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        );
-      })()}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            {
+              section: "Upper Vaal",
+              stretch: "Vaal Dam → Parys (~150 km)",
+              slug: "vaal-river-parys",
+              tip: "Responds to Vaal Dam gate openings within 24–48 hours. Check the Vaal Dam gate notice before fishing the Parys banks.",
+            },
+            {
+              section: "Middle Vaal",
+              stretch: "Parys → Vereeniging / Barrage (~180 km)",
+              slug: "vaal-barrage",
+              tip: "Affected by Bloemhof releases 3–5 days after discharge. When Bloemhof is releasing over 300 m³/s, bank levels rise significantly.",
+            },
+            {
+              section: "Lower Vaal",
+              stretch: "Barrage → Boegoeberg (~400 km)",
+              slug: "vaal-river-vereeniging",
+              tip: "Barrage controls flow into the lower reach. Controlled releases make this section more predictable — but always check current notices.",
+            },
+          ].map(({ section, stretch, slug, tip }) => (
+            <Card key={section} href={`/venues/${slug}`} className="p-4">
+              <p className="text-cast-orange font-mono font-semibold uppercase text-sm group-hover:text-bone-white cz-transition mb-1">{section}</p>
+              <p className="text-pale-water text-xs font-body mb-2">{stretch}</p>
+              <p className="text-storm text-xs font-body leading-relaxed">{tip}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
 
       {/* Forum categories with photos */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">Forum Categories</h2>
+      <Section title="Forum Categories">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {forumCategories.map((cat) => {
             const catStats = categories[cat.slug];
             return (
-              <Link
-                key={cat.slug}
-                href={`/forum/${cat.slug}`}
-                className="group relative border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-all"
-              >
-                {/* Background photo */}
+              <Card key={cat.slug} href={`/forum/${cat.slug}`} className="relative">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${cat.photo}')` }} />
-                <div className="absolute inset-0 bg-deep-water/80 group-hover:bg-deep-water/70 transition-colors" />
+                <div className="absolute inset-0 bg-deep-water/80 group-hover:bg-deep-water/70 cz-transition" />
 
                 <div className="relative p-5 flex items-start gap-4">
                   <div className={`${cat.colour} rounded-lg w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0`}>
                     {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-bone-white font-heading font-bold text-xl uppercase group-hover:text-cast-orange transition-colors">
+                    <h3 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange cz-transition">
                       {cat.name}
                     </h3>
                     <p className="text-pale-water/80 text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
-                    <div className="flex gap-4 mt-3">
+                    <div className="flex gap-4 mt-3 font-mono">
                       <span className="text-pale-water text-xs">{catStats?.thread_count ?? 0} threads</span>
                       <span className="text-pale-water text-xs">{catStats?.post_count ?? 0} posts</span>
                     </div>
                   </div>
-                  <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-storm group-hover:text-cast-orange cz-transition flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
-              </Link>
+              </Card>
             );
           })}
         </div>
-      </section>
+      </Section>
 
       {/* Feature cards */}
-      <section className="bg-deep-water-light border-t border-b border-surface-teal py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-heading font-bold text-bone-white uppercase mb-8">More Than a Forum</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featureCards.map((card) => (
-              <Link key={card.title} href={card.href} className="group bg-deep-water border border-surface-teal hover:border-cast-orange rounded-lg p-6 transition-all">
-                <div className="text-3xl mb-3">{card.icon}</div>
-                <h3 className="text-bone-white font-heading font-bold text-lg uppercase mb-2 group-hover:text-cast-orange transition-colors">{card.title}</h3>
-                <p className="text-storm text-sm leading-relaxed font-body">{card.description}</p>
-              </Link>
-            ))}
-          </div>
+      <Section title="More Than a Forum" bleed>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {featureCards.map((card) => (
+            <Card key={card.title} href={card.href} className="bg-deep-water p-6">
+              <div className="text-3xl mb-3">{card.icon}</div>
+              <h3 className="text-bone-white font-heading font-semibold text-lg mb-2 group-hover:text-cast-orange cz-transition">{card.title}</h3>
+              <p className="text-storm text-sm leading-relaxed font-body">{card.description}</p>
+            </Card>
+          ))}
         </div>
-      </section>
+      </Section>
 
       {/* Recent Forum Activity */}
       {recentThreads.length > 0 && (
-        <section className="bg-deep-water-light border-t border-b border-surface-teal py-14">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">Latest from the Community</h2>
-              <Link href="/forum" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
-                All threads →
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {recentThreads.map((thread) => (
-                <Link
-                  key={thread.id}
-                  href={`/forum/thread?id=${thread.id}`}
-                  className="group flex items-center gap-4 bg-deep-water border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors"
-                >
-                  <span className="flex-shrink-0 text-2xl w-9 text-center">
-                    {thread.categories?.icon ?? "🎣"}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate text-sm">
-                      {thread.title}
-                    </p>
-                    <p className="text-storm text-xs mt-0.5">
-                      <span className="text-pale-water">{thread.profiles?.username ?? "Angler"}</span>
-                      {" · "}{thread.categories?.name ?? "General"}
-                      {" · "}{threadTimeAgo(thread.created_at)}
-                    </p>
-                  </div>
-                  <span className="flex-shrink-0 text-storm text-xs whitespace-nowrap">{thread.reply_count} replies</span>
-                </Link>
-              ))}
-            </div>
-            <div className="mt-5 text-center">
-              <Link
-                href="/forum/new"
-                className="inline-block border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-2.5 rounded text-sm transition-colors"
-              >
-                + Start a Thread
-              </Link>
-            </div>
+        <Section title="Latest from the Community" action={{ label: "All threads", href: "/forum" }} bleed>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {recentThreads.map((thread) => (
+              <Card key={thread.id} href={`/forum/thread?id=${thread.id}`} className="bg-deep-water flex items-center gap-4 p-4">
+                <span className="flex-shrink-0 text-2xl w-9 text-center">
+                  {thread.categories?.icon ?? "🎣"}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange cz-transition truncate text-sm">
+                    {thread.title}
+                  </p>
+                  <p className="text-storm text-xs mt-0.5 font-mono">
+                    <span className="text-pale-water">{thread.profiles?.username ?? "Angler"}</span>
+                    {" · "}{thread.categories?.name ?? "General"}
+                    {" · "}{threadTimeAgo(thread.created_at)}
+                  </p>
+                </div>
+                <span className="flex-shrink-0 text-storm text-xs whitespace-nowrap font-mono">{thread.reply_count} replies</span>
+              </Card>
+            ))}
           </div>
-        </section>
+          <div className="mt-5 text-center">
+            <Button href="/forum/new" variant="line" size="md">+ Start a Thread</Button>
+          </div>
+        </Section>
       )}
 
       {/* Latest Catches */}
       {recentCatches.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-heading font-bold text-bone-white uppercase">Latest Catches</h2>
-            <Link href="/catches" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
-              Trophy Room →
-            </Link>
-          </div>
+        <Section title="Latest Catches" action={{ label: "Trophy Room", href: "/catches" }}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {recentCatches.map((c) => (
-              <Link
-                key={c.id}
-                href="/catches"
-                className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors"
-              >
+              <Card key={c.id} href="/catches">
                 {c.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -585,24 +525,24 @@ export default function HomePage() {
                   <div className="w-full h-44 bg-surface-teal/10 flex items-center justify-center text-5xl opacity-40">🐟</div>
                 )}
                 <div className="p-4">
-                  <p className="text-cast-orange font-heading font-bold text-xl leading-none mb-1">
+                  <p className="text-cast-orange font-mono font-semibold text-xl leading-none mb-1">
                     {Number(c.weight_kg).toFixed(2)} kg
                   </p>
                   <p className="text-bone-white font-body font-medium">{c.species}</p>
-                  <p className="text-storm text-xs mt-1">
+                  <p className="text-storm text-xs mt-1 font-mono">
                     by <span className="text-pale-water">{c.profiles?.username ?? "Angler"}</span>
                     {c.venue ? ` · ${c.venue}` : ""}
                   </p>
                 </div>
-              </Link>
+              </Card>
             ))}
           </div>
-        </section>
+        </Section>
       )}
 
       {/* Share */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
-        <h2 className="text-2xl sm:text-3xl font-heading font-bold text-bone-white uppercase mb-2">Know an Angler? Reel Them In</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center border-b border-surface-teal">
+        <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-bone-white mb-2">Know an Angler? Reel Them In</h2>
         <p className="text-storm font-body mb-7 max-w-xl mx-auto">
           Help build South Africa&apos;s fishing community — share CastZone with your fishing mates.
         </p>
@@ -612,32 +552,26 @@ export default function HomePage() {
       {/* Bottom CTA — hide for logged-in users */}
       {!loggedIn && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h2 className="text-4xl sm:text-5xl font-heading font-bold text-bone-white uppercase mb-4">Ready to Cast?</h2>
+          <h2 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white mb-4">Ready to Cast?</h2>
           <p className="text-pale-water text-lg font-body mb-8 max-w-xl mx-auto">
             Registration is free. Join the community that&apos;s building the best SA angling platform online.
           </p>
-          <Link href="/register" className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-10 py-4 rounded text-lg transition-colors">
-            Create Your Account
-          </Link>
+          <Button href="/register" size="lg">Create Your Account</Button>
         </section>
       )}
 
       {/* Welcome section for logged-in users */}
       {loggedIn && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h2 className="text-4xl sm:text-5xl font-heading font-bold text-bone-white uppercase mb-4">
+          <h2 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white mb-4">
             Welcome back{username ? `, ${username}` : ""}!
           </h2>
           <p className="text-pale-water text-lg font-body mb-8 max-w-xl mx-auto">
             The fish aren&apos;t going to catch themselves.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/forum" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-              Go to Forum
-            </Link>
-            <Link href="/forum/new" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors">
-              Start a Thread
-            </Link>
+            <Button href="/forum" size="lg">Go to Forum</Button>
+            <Button href="/forum/new" variant="line" size="lg">Start a Thread</Button>
           </div>
         </section>
       )}
