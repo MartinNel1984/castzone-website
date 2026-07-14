@@ -66,14 +66,14 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
         <span className="text-pale-water">Fishing near {c.name}</span>
       </nav>
 
-      <h1 className="text-4xl sm:text-5xl font-heading font-bold text-bone-white uppercase leading-none mb-3">
+      <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white leading-none mb-3">
         Fishing Near {c.name}
       </h1>
       <p className="text-pale-water font-body leading-relaxed mb-8 max-w-2xl">{c.blurb}</p>
 
       {nearest.length > 0 ? (
         <>
-          <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">
+          <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">
             Closest Fishing Venues to {c.name}
           </h2>
           <div className="grid grid-cols-1 gap-2 mb-10">
@@ -110,20 +110,20 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
 
       {/* CTAs */}
       <div className="flex flex-wrap gap-3 mb-12">
-        <Link href="/venues" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/venues" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
           Explore the full map →
         </Link>
-        <Link href="/conditions" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/conditions" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded text-sm transition-colors">
           Check dam levels
         </Link>
-        <Link href="/register" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/register" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded text-sm transition-colors">
           Join free
         </Link>
       </div>
 
       {/* Other cities */}
       <div>
-        <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-4">Fishing Near Other Towns</h2>
+        <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">Fishing Near Other Towns</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {otherCities.map((o) => (
             <Link

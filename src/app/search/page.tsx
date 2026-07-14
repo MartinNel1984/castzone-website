@@ -106,7 +106,7 @@ function SearchContent() {
         <span className="text-pale-water">Search</span>
       </nav>
 
-      <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-6">Search</h1>
+      <h1 className="text-4xl font-heading font-semibold text-bone-white mb-6">Search</h1>
 
       {/* Search form */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
@@ -121,7 +121,7 @@ function SearchContent() {
         <button
           type="submit"
           disabled={!inputValue.trim() || loading}
-          className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors flex-shrink-0"
+          className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors flex-shrink-0"
         >
           {loading ? "Searching..." : "Search"}
         </button>
@@ -176,7 +176,7 @@ function SearchContent() {
 
           {results.length === 0 && (
             <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
-              <p className="text-pale-water font-heading font-bold uppercase text-lg mb-2">No results found</p>
+              <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No results found</p>
               <p className="text-storm font-body text-sm mb-6">Try a different search — species, dam name, technique or brand.</p>
               <Link href="/forum" className="text-cast-orange hover:underline font-body text-sm">
                 Browse the forum instead →

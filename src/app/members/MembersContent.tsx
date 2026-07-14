@@ -43,8 +43,8 @@ export default function MembersContent() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
-        <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">Members</h1>
-        <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+        <h1 className="text-5xl font-heading font-semibold text-bone-white ">Members</h1>
+        <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
           The CastZone Community
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function MembersContent() {
             <button
               key={s}
               onClick={() => setSortBy(s)}
-              className={`font-heading font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded border transition-colors ${
+              className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded border transition-colors ${
                 sortBy === s
                   ? "bg-cast-orange border-cast-orange text-white"
                   : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
@@ -83,7 +83,7 @@ export default function MembersContent() {
         </div>
       ) : visible.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-pale-water font-heading font-bold uppercase text-lg mb-2">No members found</p>
+          <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No members found</p>
           <p className="text-storm font-body text-sm">Try a different search.</p>
         </div>
       ) : (

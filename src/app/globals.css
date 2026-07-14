@@ -16,19 +16,60 @@
   --color-specimen-brown: #6b4226;
   --color-tournament-gold: #c9a84c;
 
-  --font-heading: var(--font-barlow-condensed);
-  --font-body: var(--font-inter);
+  --ease-cast: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --font-heading: var(--font-newsreader);
+  --font-body: var(--font-manrope);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
   background-color: #1a3a3a;
   color: #f9f7f4;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-barlow-condensed), system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@layer utilities {
+  .cz-transition {
+    transition-timing-function: var(--ease-cast);
+    transition-duration: 350ms;
+  }
+  .cz-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .nav-link {
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 0;
+    background: var(--color-cast-orange);
+    transition: width 350ms var(--ease-cast);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
 }

@@ -63,7 +63,7 @@ const rules = [
 export default function RulesPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-      <h1 className="text-5xl font-heading font-bold text-bone-white uppercase mb-2">Community Rules</h1>
+      <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">Community Rules</h1>
       <p className="text-storm font-body mb-10">
         CastZone is built on mutual respect between anglers. These rules keep it that way.
         Breaking them may result in warnings, post removal, or a ban at the discretion of the moderation team.
@@ -76,7 +76,7 @@ export default function RulesPage() {
               {rule.number}
             </span>
             <div>
-              <h2 className="text-bone-white font-heading font-bold text-lg uppercase mb-2">{rule.title}</h2>
+              <h2 className="text-bone-white font-heading font-semibold text-lg mb-2">{rule.title}</h2>
               <p className="text-pale-water font-body text-sm leading-relaxed">{rule.body}</p>
             </div>
           </div>

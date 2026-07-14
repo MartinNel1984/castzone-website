@@ -133,8 +133,8 @@ export default function NewListingPage() {
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water font-body text-lg mb-6">You need to be signed in to post a listing.</p>
         <div className="flex justify-center gap-3">
-          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">Sign In</Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase px-6 py-3 rounded transition-colors">Join Free</Link>
+          <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">Sign In</Link>
+          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">Join Free</Link>
         </div>
       </div>
     );
@@ -152,7 +152,7 @@ export default function NewListingPage() {
         <span className="text-pale-water">Post a Listing</span>
       </nav>
 
-      <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-2">Post a Listing</h1>
+      <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">Post a Listing</h1>
       <p className="text-storm font-body text-sm mb-8">
         Listings are free and go live immediately. Be honest about condition and add clear photos.
       </p>
@@ -226,7 +226,7 @@ export default function NewListingPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.preview} alt={`Photo ${i + 1}`} className="w-24 h-24 object-cover rounded border border-surface-teal" />
                 {i === 0 && (
-                  <span className="absolute bottom-1 left-1 bg-cast-orange text-white text-[10px] font-heading font-bold uppercase px-1.5 py-0.5 rounded">Cover</span>
+                  <span className="absolute bottom-1 left-1 bg-cast-orange text-white text-[10px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded">Cover</span>
                 )}
                 <button type="button" onClick={() => removeImage(i)} aria-label="Remove photo"
                   className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs flex items-center justify-center leading-none transition-colors">×</button>
@@ -246,7 +246,7 @@ export default function NewListingPage() {
         <div className="flex items-center justify-between pt-2">
           <Link href="/classifieds" className="text-storm hover:text-pale-water text-sm font-body transition-colors">Cancel</Link>
           <button type="submit" disabled={submitting || !title.trim() || !description.trim() || !price || !province || !phone.trim() || images.length === 0}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors">
+            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors">
             {submitting ? "Posting…" : "Post Listing"}
           </button>
         </div>

@@ -98,7 +98,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
 
         <div className="flex items-baseline gap-2">
           <span className="font-heading font-bold text-4xl leading-none" style={{ color }}>{score}%</span>
-          <span className="font-heading font-bold uppercase text-base" style={{ color }}>{rating}</span>
+          <span className="font-mono font-semibold uppercase text-base" style={{ color }}>{rating}</span>
         </div>
         <p className="text-pale-water text-xs font-body mt-1 mb-3">
           {today.moon.emoji} {today.moon.name}
@@ -133,7 +133,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
   return (
     <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6">
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="text-bone-white font-heading font-bold uppercase text-lg flex items-center gap-2">
+        <h2 className="text-bone-white font-heading font-semibold text-lg flex items-center gap-2">
           🎣 Best Bite Times
         </h2>
         <span className="text-storm text-xs font-body">{dateLabel}</span>
@@ -144,7 +144,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         <div>
           <div className="flex items-baseline gap-2">
             <span className="font-heading font-bold text-4xl leading-none" style={{ color }}>{score}%</span>
-            <span className="font-heading font-bold uppercase text-base" style={{ color }}>{rating}</span>
+            <span className="font-mono font-semibold uppercase text-base" style={{ color }}>{rating}</span>
           </div>
           <p className="text-storm text-xs font-body mt-1">
             Overall bite rating for today{cond ? "" : " · solunar only"}
@@ -192,7 +192,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
       {/* Windows */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
         <div className="bg-deep-water border border-cast-orange/30 rounded-md p-3">
-          <p className="text-cast-orange text-xs font-heading font-bold uppercase tracking-wider mb-2">Major (prime)</p>
+          <p className="text-cast-orange text-xs font-heading font-semibold mb-2">Major (prime)</p>
           {majors.length === 0 ? (
             <p className="text-storm text-xs font-body">—</p>
           ) : majors.map((p, i) => (
@@ -202,7 +202,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
           ))}
         </div>
         <div className="bg-deep-water border border-surface-teal rounded-md p-3">
-          <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-2">Minor</p>
+          <p className="text-pale-water text-xs font-mono font-semibold uppercase tracking-wider mb-2">Minor</p>
           {minors.length === 0 ? (
             <p className="text-storm text-xs font-body">—</p>
           ) : minors.map((p, i) => (
@@ -215,7 +215,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
 
       {/* 7-day bite + weather outlook */}
       <div className="mb-4">
-        <p className="text-pale-water text-xs font-heading font-bold uppercase tracking-wider mb-2">
+        <p className="text-pale-water text-xs font-mono font-semibold uppercase tracking-wider mb-2">
           7-Day Outlook{forecast ? " · Bite + Weather" : ""}
         </p>
         <div className="relative grid grid-cols-7 gap-1">
@@ -257,7 +257,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
               style={{ left: `${(FREE_DAYS / 7) * 100}%` }}
             >
               <span className="text-xl leading-none mb-1.5">🔒</span>
-              <span className="bg-cast-orange group-hover:bg-bone-white text-deep-water text-[11px] sm:text-xs font-heading font-bold uppercase tracking-wider rounded px-2.5 py-1.5 transition-colors">
+              <span className="bg-cast-orange group-hover:bg-bone-white text-deep-water text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-wider rounded px-2.5 py-1.5 transition-colors">
                 Sign up free
               </span>
               <span className="text-pale-water text-[10px] sm:text-[11px] font-body mt-1.5 leading-tight drop-shadow">

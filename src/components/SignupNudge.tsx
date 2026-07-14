@@ -59,7 +59,7 @@ export default function SignupNudge() {
         </p>
         <Link
           href="/register"
-          className="flex-shrink-0 bg-cast-orange hover:bg-bone-white text-deep-water text-xs sm:text-sm font-heading font-bold uppercase tracking-wider rounded px-3 sm:px-4 py-2 transition-colors"
+          className="flex-shrink-0 bg-cast-orange hover:bg-bone-white text-deep-water text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider rounded px-3 sm:px-4 py-2 transition-colors"
         >
           Sign up free
         </Link>

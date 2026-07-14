@@ -35,10 +35,9 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-1 mb-6">
-            <span className="text-cast-orange text-3xl font-heading font-bold">C</span>
-            <span className="text-bone-white text-xl font-heading font-bold tracking-widest uppercase">ASTZONE</span>
+            <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase">Welcome Back</h1>
+          <h1 className="text-4xl font-heading font-semibold text-bone-white ">Welcome Back</h1>
           <p className="text-storm mt-2 font-body">Sign in to your account</p>
         </div>
 
@@ -81,7 +80,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>

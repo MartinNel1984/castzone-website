@@ -74,14 +74,14 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">The Map</h1>
-          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+          <h1 className="text-5xl font-heading font-semibold text-bone-white ">The Map</h1>
+          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
             {venues.length > 0 ? `${venues.length} SA Venues & Dams` : "SA Venues & Dam Database"}
           </p>
         </div>
         <Link
           href="/venues/suggest"
-          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors mt-1"
+          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-semibold px-4 py-2 rounded transition-colors mt-1"
         >
           + Suggest a Venue
         </Link>
@@ -189,7 +189,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
               className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors block"
             >
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-bone-white font-heading font-bold uppercase group-hover:text-cast-orange transition-colors leading-tight">
+                <h3 className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors leading-tight">
                   {venue.name}
                 </h3>
                 <div className="flex-shrink-0 ml-2 flex flex-col items-end gap-1">

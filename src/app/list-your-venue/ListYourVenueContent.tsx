@@ -110,7 +110,7 @@ export default function ListYourVenueContent() {
       <div className="min-h-screen flex items-center justify-center px-4 py-20">
         <div className="max-w-lg w-full text-center">
           <div className="text-6xl mb-6">🎣</div>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase mb-3">
+          <h1 className="text-4xl font-heading font-semibold text-bone-white mb-3">
             We&apos;ll be in touch!
           </h1>
           <p className="text-pale-water font-body mb-2">
@@ -122,7 +122,7 @@ export default function ListYourVenueContent() {
           </p>
           <Link
             href="/venues"
-            className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             See The Map
           </Link>
@@ -140,7 +140,7 @@ export default function ListYourVenueContent() {
           <div className="inline-block bg-cast-orange/10 border border-cast-orange/30 rounded-full px-4 py-1.5 text-cast-orange text-sm font-body font-medium mb-6 uppercase tracking-wider">
             Free for venue owners
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-bone-white uppercase leading-tight mb-4">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-semibold text-bone-white leading-tight mb-4">
             List Your Venue<br />
             <span className="text-cast-orange">on The Map</span>
           </h1>
@@ -166,7 +166,7 @@ export default function ListYourVenueContent() {
           <div className="mt-10">
             <a
               href="#submit"
-              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-10 py-4 rounded text-lg transition-colors"
+              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-10 py-4 rounded text-lg transition-colors"
             >
               List My Venue — It&apos;s Free
             </a>
@@ -176,7 +176,7 @@ export default function ListYourVenueContent() {
 
       {/* ── What you get ── */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase text-center mb-2">
+        <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white text-center mb-2">
           What you get
         </h2>
         <p className="text-storm font-body text-center mb-10">Everything included. Nothing to pay.</p>
@@ -188,7 +188,7 @@ export default function ListYourVenueContent() {
               className="bg-deep-water-light border border-surface-teal/40 rounded-lg p-5 hover:border-cast-orange/40 transition-colors"
             >
               <div className="text-3xl mb-3">{b.icon}</div>
-              <h3 className="text-lg font-heading font-bold text-bone-white uppercase mb-2">{b.title}</h3>
+              <h3 className="text-lg font-heading font-semibold text-bone-white mb-2">{b.title}</h3>
               <p className="text-storm font-body text-sm leading-relaxed">{b.body}</p>
             </div>
           ))}
@@ -200,7 +200,7 @@ export default function ListYourVenueContent() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase mb-4">
+              <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white mb-4">
                 What your venue page looks like
               </h2>
               <p className="text-pale-water font-body mb-4">
@@ -236,7 +236,7 @@ export default function ListYourVenueContent() {
                       <span className="text-xs bg-cast-orange/20 text-cast-orange font-body font-medium px-2 py-0.5 rounded uppercase tracking-wider">Dam</span>
                       <span className="text-xs text-storm font-body">Limpopo</span>
                     </div>
-                    <h3 className="text-xl font-heading font-bold text-bone-white uppercase">Your Venue Name</h3>
+                    <h3 className="text-xl font-heading font-semibold text-bone-white ">Your Venue Name</h3>
                     <p className="text-storm text-xs font-body mt-0.5">Private Dam · Permit required</p>
                   </div>
                   <div className="text-right flex-shrink-0">
@@ -293,7 +293,7 @@ export default function ListYourVenueContent() {
 
       {/* ── Who we're looking for ── */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase text-center mb-2">
+        <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white text-center mb-2">
           Who can list
         </h2>
         <p className="text-storm font-body text-center mb-10 max-w-2xl mx-auto">
@@ -309,7 +309,7 @@ export default function ListYourVenueContent() {
             <div key={item.label} className="flex items-start gap-4 bg-deep-water-light border border-surface-teal/30 rounded-lg p-4">
               <span className="text-2xl flex-shrink-0">{item.icon}</span>
               <div>
-                <p className="text-bone-white font-heading font-bold text-base uppercase">{item.label}</p>
+                <p className="text-bone-white font-heading font-semibold text-base ">{item.label}</p>
                 <p className="text-storm font-body text-sm mt-0.5">{item.desc}</p>
               </div>
             </div>
@@ -321,7 +321,7 @@ export default function ListYourVenueContent() {
       <section id="submit" className="border-t border-surface-teal/30 bg-deep-water-light/30 py-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-heading font-bold text-bone-white uppercase mb-3">
+            <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white mb-3">
               List your venue
             </h2>
             <p className="text-pale-water font-body">
@@ -472,7 +472,7 @@ export default function ListYourVenueContent() {
               <button
                 type="submit"
                 disabled={submitting || !canSubmit}
-                className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
+                className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
               >
                 {submitting ? "Submitting..." : "List My Venue — It's Free"}
               </button>

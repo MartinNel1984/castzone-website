@@ -185,7 +185,7 @@ export default function VenueContent() {
   if (!venue) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-pale-water text-xl font-heading font-bold uppercase mb-3">Venue not found</p>
+        <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Venue not found</p>
         <Link href="/venues" className="text-cast-orange hover:underline font-body text-sm">← Back to The Map</Link>
       </div>
     );
@@ -285,7 +285,7 @@ export default function VenueContent() {
 
       {/* Header */}
       <div className="flex flex-wrap items-start gap-3 mb-2">
-        <h1 className="text-4xl sm:text-5xl font-heading font-bold text-bone-white uppercase leading-tight flex-1">
+        <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white leading-tight flex-1">
           {venue.name}
         </h1>
         <span className={`text-sm font-body border rounded px-3 py-1 mt-1 flex-shrink-0 ${typeClass}`}>
@@ -315,7 +315,7 @@ export default function VenueContent() {
           href={gpsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-heading font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+          className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-mono font-semibold uppercase tracking-wider px-4 py-2 rounded transition-colors"
         >
           Open in Maps
         </a>
@@ -457,7 +457,7 @@ export default function VenueContent() {
       {/* Contact & bookings — for private/partner venues */}
       {(venue.contact_name || venue.contact_phone || venue.contact_email || venue.website) && (
         <div className="bg-surface-teal/10 border border-surface-teal/40 rounded-lg p-5 mb-6">
-          <h2 className="text-surface-teal font-heading font-bold uppercase text-sm mb-3">
+          <h2 className="text-surface-teal font-mono font-semibold uppercase text-sm mb-3">
             Contact &amp; Bookings
           </h2>
           <ul className="space-y-2">
@@ -508,7 +508,7 @@ export default function VenueContent() {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-md border border-surface-teal/60 px-4 py-2 text-sm font-heading font-bold uppercase text-surface-teal hover:bg-surface-teal hover:text-white transition-colors"
+            className="mt-4 inline-flex items-center gap-2 rounded-md border border-surface-teal/60 px-4 py-2 text-sm font-mono font-semibold uppercase text-surface-teal hover:bg-surface-teal hover:text-white transition-colors"
           >
             <span>★</span> See reviews on Google
           </a>
@@ -520,7 +520,7 @@ export default function VenueContent() {
         <div className="bg-cast-orange/10 border border-cast-orange/40 rounded-lg p-5 mb-6 flex gap-3">
           <span className="text-cast-orange text-lg flex-shrink-0">⚠</span>
           <div>
-            <p className="text-cast-orange font-heading font-bold uppercase text-sm mb-1">Permit Required</p>
+            <p className="text-cast-orange font-heading font-semibold text-sm mb-1">Permit Required</p>
             <p className="text-pale-water font-body text-sm">{venue.permit_info}</p>
           </div>
         </div>
@@ -539,7 +539,7 @@ export default function VenueContent() {
       {/* Forum threads about this venue */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-bone-white font-heading font-bold uppercase text-lg">
+          <h2 className="text-bone-white font-heading font-semibold text-lg">
             Forum Threads
           </h2>
           <Link
@@ -557,7 +557,7 @@ export default function VenueContent() {
             </p>
             <Link
               href={newThreadUrl}
-              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
             >
               Start a Thread
             </Link>
@@ -600,7 +600,7 @@ export default function VenueContent() {
       {/* Angler Reviews */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4">
-          <h2 className="text-bone-white font-heading font-bold uppercase text-lg">Angler Reviews</h2>
+          <h2 className="text-bone-white font-heading font-semibold text-lg">Angler Reviews</h2>
           {reviewCount > 0 && avgRating !== null && (
             <span className="text-sm font-body text-storm">
               <span className="text-cast-orange">{"★".repeat(Math.round(avgRating))}</span>
@@ -645,7 +645,7 @@ export default function VenueContent() {
               <button
                 onClick={handleSubmitReview}
                 disabled={draftRating === 0 || reviewSubmitting}
-                className="ml-auto bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
+                className="ml-auto bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
               >
                 {reviewSubmitting ? "Saving…" : myReview ? "Update Review" : "Post Review"}
               </button>
@@ -690,7 +690,7 @@ export default function VenueContent() {
       {/* More in this province */}
       {nearby.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-bone-white font-heading font-bold uppercase text-lg mb-4">
+          <h2 className="text-bone-white font-heading font-semibold text-lg mb-4">
             More in {venue.province}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -700,7 +700,7 @@ export default function VenueContent() {
                 href={`/venues/${v.slug}`}
                 className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors block"
               >
-                <p className="text-bone-white font-heading font-bold uppercase text-sm group-hover:text-cast-orange transition-colors leading-tight mb-1">
+                <p className="text-bone-white font-heading font-semibold text-sm group-hover:text-cast-orange transition-colors leading-tight mb-1">
                   {v.name}
                 </p>
                 <p className="text-storm text-xs font-body capitalize mb-2">{v.type}</p>
@@ -725,7 +725,7 @@ export default function VenueContent() {
         </div>
         <Link
           href="/venues/suggest"
-          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+          className="flex-shrink-0 border border-surface-teal text-pale-water hover:text-bone-white hover:border-cast-orange text-sm font-heading font-semibold px-4 py-2 rounded transition-colors"
         >
           Suggest
         </Link>

@@ -88,14 +88,14 @@ export default function CategoryView({ category }: { category: string }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-4xl font-heading font-bold text-bone-white uppercase">
+          <h1 className="text-4xl font-heading font-semibold text-bone-white ">
             {cat?.icon} {cat?.name}
           </h1>
           <p className="text-storm font-body mt-1 text-sm">{cat?.description}</p>
         </div>
         <Link
           href={`/forum/new?category=${category}`}
-          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm flex-shrink-0 ml-4"
+          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm flex-shrink-0 ml-4"
         >
           + New Thread
         </Link>
@@ -110,11 +110,11 @@ export default function CategoryView({ category }: { category: string }) {
         </div>
       ) : threads.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
-          <p className="text-pale-water text-lg font-heading font-bold uppercase mb-2">No threads yet</p>
+          <p className="text-pale-water text-lg font-mono font-semibold uppercase mb-2">No threads yet</p>
           <p className="text-storm font-body text-sm mb-6">Be the first to start a cast.</p>
           <Link
             href={`/forum/new?category=${category}`}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors"
+            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
           >
             Start the first thread
           </Link>

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import NotificationBell from "@/components/NotificationBell";
+import Button from "@/components/ui/Button";
 
 const navLinks = [
   { label: "Forum",        href: "/forum" },
@@ -45,7 +46,7 @@ export default function Navbar() {
   const username = user?.user_metadata?.username ?? user?.email?.split("@")[0] ?? "Angler";
 
   const avatarBadge = (
-    <span className="w-7 h-7 rounded-full bg-surface-teal overflow-hidden flex items-center justify-center text-bone-white text-xs font-heading font-bold flex-shrink-0">
+    <span className="w-7 h-7 rounded-full bg-surface-teal overflow-hidden flex items-center justify-center text-bone-white text-xs font-mono font-semibold flex-shrink-0">
       {avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={avatarUrl} alt={username} className="w-full h-full object-cover" />
@@ -60,20 +61,17 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-cast-orange text-4xl sm:text-5xl font-heading font-bold leading-none">C</span>
-            <span className="text-bone-white text-2xl sm:text-3xl font-heading font-bold tracking-widest uppercase leading-none">
-              ASTZONE
-            </span>
+          <Link href="/" className="flex items-center flex-shrink-0 font-heading font-semibold text-2xl sm:text-3xl text-bone-white leading-none">
+            Cast<em className="italic text-cast-orange">Zone</em>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-pale-water hover:text-bone-white text-sm font-body font-medium uppercase tracking-wider transition-colors"
+                className="nav-link text-pale-water hover:text-bone-white text-xs font-mono uppercase tracking-wider cz-transition"
               >
                 {link.label}
               </Link>
@@ -109,15 +107,10 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-pale-water hover:text-bone-white text-sm font-medium transition-colors">
+                <Link href="/login" className="text-pale-water hover:text-bone-white text-sm cz-transition">
                   Sign In
                 </Link>
-                <Link
-                  href="/register"
-                  className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
-                >
-                  Join Free
-                </Link>
+                <Button href="/register" size="md">Join Free</Button>
               </>
             )}
           </div>
@@ -149,7 +142,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="block text-pale-water hover:text-bone-white font-medium uppercase tracking-wider text-sm py-2"
+                className="block text-pale-water hover:text-bone-white font-mono uppercase tracking-wider text-sm py-2 cz-transition"
               >
                 {link.label}
               </Link>
@@ -157,7 +150,7 @@ export default function Navbar() {
             <Link
               href="/search"
               onClick={() => setMobileOpen(false)}
-              className="block text-pale-water hover:text-bone-white font-medium uppercase tracking-wider text-sm py-2"
+              className="block text-pale-water hover:text-bone-white font-mono uppercase tracking-wider text-sm py-2 cz-transition"
             >
               Search
             </Link>
@@ -176,13 +169,8 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="text-pale-water text-sm font-medium py-2">Sign In</Link>
-                  <Link
-                    href="/register"
-                    className="bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-semibold px-4 py-3 rounded text-center transition-colors"
-                  >
-                    Join Free
-                  </Link>
+                  <Link href="/login" className="text-pale-water text-sm py-2">Sign In</Link>
+                  <Button href="/register" size="lg" className="w-full">Join Free</Button>
                 </>
               )}
             </div>

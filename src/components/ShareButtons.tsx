@@ -25,7 +25,7 @@ export default function ShareButtons() {
   }
 
   const base =
-    "flex items-center gap-2 text-white font-heading font-bold uppercase tracking-wider text-sm px-5 py-3 rounded transition-colors";
+    "flex items-center gap-2 text-white font-mono font-semibold uppercase tracking-wider text-sm px-5 py-3 rounded transition-colors";
 
   return (
     <div className="flex flex-wrap justify-center gap-3">

@@ -126,14 +126,14 @@ export default function ClassifiedsContent() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-5xl font-heading font-bold text-bone-white uppercase">Tackle Box</h1>
-          <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mt-1">
+          <h1 className="text-5xl font-heading font-semibold text-bone-white ">Tackle Box</h1>
+          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
             Buy &amp; Sell with SA Anglers
           </p>
         </div>
         <Link
           href={postHref}
-          className="flex-shrink-0 self-center bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
+          className="flex-shrink-0 self-center bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
         >
           + Post a Listing
         </Link>
@@ -157,7 +157,7 @@ export default function ClassifiedsContent() {
       <div className="flex flex-wrap gap-2 mb-8">
         <button
           onClick={() => setFilter("all")}
-          className={`font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
+          className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
             filter === "all"
               ? "bg-cast-orange border-cast-orange text-white"
               : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
@@ -169,7 +169,7 @@ export default function ClassifiedsContent() {
           <button
             key={c.value}
             onClick={() => setFilter(c.value)}
-            className={`font-heading font-bold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
+            className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
               filter === c.value
                 ? "bg-cast-orange border-cast-orange text-white"
                 : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
@@ -198,11 +198,11 @@ export default function ClassifiedsContent() {
           <div className="text-5xl mb-4 opacity-50">🎣</div>
           {listings.length === 0 ? (
             <>
-              <p className="text-pale-water font-heading font-bold uppercase text-lg mb-2">No listings yet</p>
+              <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No listings yet</p>
               <p className="text-storm font-body text-sm mb-6">Be the first to list your gear in the Tackle Box.</p>
               <Link
                 href={postHref}
-                className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors text-sm"
+                className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors text-sm"
               >
                 + Post the First Listing
               </Link>

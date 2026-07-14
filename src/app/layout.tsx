@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Inter } from "next/font/google";
+import { Newsreader, Manrope, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SignupNudge from "@/components/SignupNudge";
 
-const barlowCondensed = Barlow_Condensed({
-  variable: "--font-barlow-condensed",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -86,7 +93,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${inter.variable} h-full`}>
+    <html lang="en" className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-deep-water text-bone-white antialiased">
         {/* Organization + WebSite structured data (schema.org JSON-LD) */}
         <script

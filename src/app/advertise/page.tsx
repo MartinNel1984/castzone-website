@@ -46,8 +46,8 @@ export default function AdvertisePage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       {/* Header */}
       <div className="mb-12">
-        <h1 className="text-5xl font-heading font-bold text-bone-white uppercase mb-2">Advertise on CastZone</h1>
-        <p className="text-cast-orange font-heading font-semibold uppercase tracking-widest text-sm mb-6">
+        <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">Advertise on CastZone</h1>
+        <p className="text-cast-orange font-heading font-semibold text-sm mb-6">
           Reach South Africa&apos;s Fishing Community
         </p>
         <p className="text-pale-water font-body text-lg max-w-2xl leading-relaxed">
@@ -59,21 +59,21 @@ export default function AdvertisePage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
         {stats.map((stat) => (
           <div key={stat.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-5 text-center">
-            <p className="text-cast-orange font-heading font-bold text-2xl uppercase mb-1">{stat.value}</p>
+            <p className="text-cast-orange font-heading font-semibold text-2xl mb-1">{stat.value}</p>
             <p className="text-storm font-body text-xs">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Ad formats */}
-      <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-6">Advertising Formats</h2>
+      <h2 className="text-2xl font-heading font-semibold text-bone-white mb-6">Advertising Formats</h2>
       <div className="space-y-4 mb-14">
         {adFormats.map((format) => (
           <div key={format.title} className="bg-deep-water-light border border-surface-teal rounded-lg p-6 flex gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-bone-white font-heading font-bold text-xl uppercase">{format.title}</h3>
-                <span className={`${format.badgeColour} text-white text-xs font-heading font-bold uppercase px-2 py-0.5 rounded`}>
+                <h3 className="text-bone-white font-heading font-semibold text-xl ">{format.title}</h3>
+                <span className={`${format.badgeColour} text-white text-xs font-mono font-semibold uppercase px-2 py-0.5 rounded`}>
                   {format.badge}
                 </span>
               </div>
@@ -85,7 +85,7 @@ export default function AdvertisePage() {
 
       {/* Why CastZone */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-8 mb-10">
-        <h2 className="text-2xl font-heading font-bold text-bone-white uppercase mb-6">Why CastZone</h2>
+        <h2 className="text-2xl font-heading font-semibold text-bone-white mb-6">Why CastZone</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 font-body text-sm text-pale-water">
           {[
             { title: "Contextual audience", body: "Every member is a fishing enthusiast. No demographic guesswork — your tackle brand reaches tackle buyers." },
@@ -94,7 +94,7 @@ export default function AdvertisePage() {
             { title: "Early mover advantage", body: "CastZone is new and growing. Brands that come in early build recognition as the community scales." },
           ].map((item) => (
             <div key={item.title}>
-              <p className="text-bone-white font-heading font-bold uppercase mb-1">{item.title}</p>
+              <p className="text-bone-white font-heading font-semibold mb-1">{item.title}</p>
               <p>{item.body}</p>
             </div>
           ))}
@@ -108,7 +108,7 @@ export default function AdvertisePage() {
         </p>
         <Link
           href="/contact"
-          className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-heading font-bold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
+          className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
         >
           Get in Touch
         </Link>
