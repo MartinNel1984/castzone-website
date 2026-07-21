@@ -646,6 +646,18 @@ def send_heartbeat():
         print(f"  ! heartbeat write failed: {e}")
 
 
+def format_group_teaser(deals, limit=5):
+    """Ready-to-paste text for the CastZone WhatsApp Specials group."""
+    if not deals:
+        return None
+    lines = ["🔥 New specials just landed on CastZone:"]
+    for d in deals[:limit]:
+        lines.append(f"- {d['title'][:60]} — {d['discount_pct']}% off")
+    lines.append("")
+    lines.append("See all + grab them: https://castzone.co.za/specials")
+    return "\n".join(lines)
+
+
 def notify_whatsapp(text):
     if not CALLMEBOT_API_KEY or not NOTIFY_WHATSAPP_NUMBER:
         return
@@ -807,10 +819,14 @@ def main():
 
     to_review = len(to_insert) - auto_kept
     when = datetime.now().strftime("%H:%M")
-    notify_whatsapp(
+    msg = (
         f"CastZone deals bot ran {when} — {len(to_insert)} new deals queued "
         f"({auto_kept} auto-approved, {to_review} awaiting your review at /specials/review)"
     )
+    teaser = format_group_teaser(to_insert)
+    if teaser:
+        msg += "\n\n📋 Ready-to-paste WhatsApp group text (approve pending ones first):\n" + teaser
+    notify_whatsapp(msg)
 
 
 if __name__ == "__main__":
