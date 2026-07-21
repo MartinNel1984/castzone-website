@@ -128,6 +128,23 @@ export default function SpecialsContent() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {WHATSAPP_GROUP_URL && (
+        <a
+          href={WHATSAPP_GROUP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-6 flex items-center justify-between gap-3 flex-wrap bg-[#25D366] hover:bg-[#1ebe5a] rounded-lg px-5 py-4 shadow-lg shadow-[#25D366]/20 transition-colors"
+        >
+          <span className="flex items-center gap-3 text-white font-semibold text-base sm:text-lg">
+            <span className="text-2xl animate-pulse">🎣</span>
+            Join our WhatsApp Specials group — deal alerts as they land!
+          </span>
+          <span className="bg-white text-[#1ebe5a] font-mono font-bold uppercase tracking-wider px-4 py-2 rounded whitespace-nowrap">
+            Join now →
+          </span>
+        </a>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -150,22 +167,6 @@ export default function SpecialsContent() {
           are set by the retailer — grab them while they last.
         </p>
       </div>
-
-      {WHATSAPP_GROUP_URL && (
-        <a
-          href={WHATSAPP_GROUP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-8 flex items-center justify-between gap-3 flex-wrap bg-surface-teal/20 border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 text-sm transition-colors"
-        >
-          <span className="text-bone-white">
-            🎣 Join our WhatsApp Specials group — deal alerts as they land
-          </span>
-          <span className="text-cast-orange font-mono font-semibold uppercase tracking-wider whitespace-nowrap">
-            Join now →
-          </span>
-        </a>
-      )}
 
       {/* Filter tabs */}
       {signedIn && (
