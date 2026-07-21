@@ -16,6 +16,8 @@ import {
 
 type Filter = "all" | DealCategory;
 
+const WHATSAPP_GROUP_URL = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL;
+
 function DealCard({ deal }: { deal: Deal }) {
   const pct = discountPct(deal.original_price, deal.sale_price, deal.discount_pct);
   return (
@@ -148,6 +150,22 @@ export default function SpecialsContent() {
           are set by the retailer — grab them while they last.
         </p>
       </div>
+
+      {WHATSAPP_GROUP_URL && (
+        <a
+          href={WHATSAPP_GROUP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-8 flex items-center justify-between gap-3 flex-wrap bg-surface-teal/20 border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 text-sm transition-colors"
+        >
+          <span className="text-bone-white">
+            🎣 Join our WhatsApp Specials group — deal alerts as they land
+          </span>
+          <span className="text-cast-orange font-mono font-semibold uppercase tracking-wider whitespace-nowrap">
+            Join now →
+          </span>
+        </a>
+      )}
 
       {/* Filter tabs */}
       {signedIn && (

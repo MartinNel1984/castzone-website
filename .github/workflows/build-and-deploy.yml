@@ -11,6 +11,10 @@ name: Build and Deploy
 # time, like /fishing-near, keep their content):
 #   SUPABASE_URL
 #   NEXT_PUBLIC_SUPABASE_ANON_KEY
+#
+# Optional repo VARIABLE (not a secret — it's just an invite link):
+#   WHATSAPP_GROUP_URL — the WhatsApp Specials group invite link. Until set,
+#   the "Join our WhatsApp Specials group" CTA is simply hidden.
 
 on:
   push:
@@ -49,6 +53,7 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_WHATSAPP_GROUP_URL: ${{ vars.WHATSAPP_GROUP_URL }}
         run: npm run build
 
       - name: Remove any iCloud/duplicate junk

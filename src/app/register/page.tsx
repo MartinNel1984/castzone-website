@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 
+const WHATSAPP_GROUP_URL = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL;
+
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -61,9 +63,21 @@ export default function RegisterPage() {
           <p className="text-pale-water font-body mb-6">
             Your account is ready and you&apos;re signed in. Tight lines, <strong className="text-bone-white">{username}</strong> — let&apos;s get you on the water.
           </p>
-          <Link href="/forum" className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
-            Go to the Forum →
-          </Link>
+          <div className="flex flex-col gap-3">
+            <Link href="/forum" className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
+              Go to the Forum →
+            </Link>
+            {WHATSAPP_GROUP_URL && (
+              <a
+                href={WHATSAPP_GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block border border-surface-teal hover:border-cast-orange text-bone-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
+              >
+                Join our WhatsApp Specials group 🎣
+              </a>
+            )}
+          </div>
         </div>
       </div>
     );
