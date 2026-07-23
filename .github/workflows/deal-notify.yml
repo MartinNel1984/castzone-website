@@ -1,8 +1,8 @@
 name: Deal notify (email + WhatsApp)
 
-# Digests deals approved since the last run and emails members (Resend) +
-# WhatsApps Martin. The on-site bell is handled by a DB trigger, not here.
-# Runs a few times a day so multiple approvals batch into one email.
+# Emails a rotating ~1/ROTATION_DAYS slice of members each day (never the
+# whole list at once — see notify_deals.py header) + WhatsApps Martin a run
+# summary. The on-site bell is handled by a DB trigger, not here.
 
 on:
   schedule:
@@ -33,6 +33,7 @@ jobs:
       SMTP_USER: ${{ secrets.SMTP_USER }}
       SMTP_PASS: ${{ secrets.SMTP_PASS }}
       MAIL_FROM: ${{ vars.MAIL_FROM || 'CastZone Deals <martin@castzone.co.za>' }}
+      ROTATION_DAYS: ${{ vars.ROTATION_DAYS || '10' }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
       TEST_RECIPIENT: ${{ github.event.inputs.test_email }}
