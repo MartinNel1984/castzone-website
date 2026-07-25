@@ -25,7 +25,7 @@ export function getAllVenues(): Promise<BuildVenue[]> {
     try {
       const res = await fetch(
         `${url}/rest/v1/venues?select=name,slug,province,type,species,facilities,lat,lng`,
-        { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" },
+        { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "force-cache" },
       );
       if (!res.ok) return [];
       const rows = (await res.json()) as BuildVenue[];

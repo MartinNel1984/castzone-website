@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { VENUE_SLUGS } from "./venues/[slug]/page";
 import { DAM_SLUGS } from "@/data/waterConditions";
 import { CITY_SLUGS } from "@/data/cities";
+import { getAllThreads } from "@/lib/forumBuild";
 
 export const dynamic = "force-static";
 
@@ -31,8 +32,9 @@ const STATIC_ROUTES = [
 
 const FORUM_CATEGORIES = ["bass", "saltwater", "specimen", "general"];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const threads = await getAllThreads();
 
   return [
     ...STATIC_ROUTES.map((route) => ({
@@ -46,6 +48,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.8,
+    })),
+    ...threads.map((t) => ({
+      url: `${BASE}/forum/thread/${t.id}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
     })),
     ...VENUE_SLUGS.map((slug) => ({
       url: `${BASE}/venues/${slug}`,
