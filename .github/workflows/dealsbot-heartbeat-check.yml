@@ -1,21 +1,22 @@
 name: Deals bot heartbeat check
 
-# The deals bot itself runs on Martin's M2 MacBook (self-hosted, not GitHub
-# Actions), so GHA can't reach it directly to ask "are you alive?" — the M2
-# has no public endpoint. Instead, fetch_deals.py writes a heartbeat
-# timestamp to Supabase at the end of every real run; this workflow just
-# checks how stale that timestamp is and WhatsApps Martin ONLY if the M2
-# looks like it's gone quiet (off, asleep, or the bot is broken).
+# The deals bot itself runs on Martin's self-hosted Home Server (Windows/WSL,
+# not GitHub Actions — migrated off the M2 MacBook 2026-07-15), so GHA can't
+# reach it directly to ask "are you alive?" — it has no public endpoint.
+# Instead, fetch_deals.py writes a heartbeat timestamp to Supabase at the end
+# of every real run; this workflow just checks how stale that timestamp is
+# and WhatsApps Martin ONLY if the Home Server looks like it's gone quiet
+# (WSL down, machine off, or the bot itself is broken).
 #
-# Checks run ~2h after the bot's scheduled 07:00 and 19:00 SAST runs, so a
-# healthy heartbeat is always fresh (~2h old) at check time — see
-# STALE_HOURS below for why 5h avoids false alarms across the normal
-# overnight gap.
+# Runs every 2h so a real outage (of any cause — not just the WSL-restart
+# issue found + self-healed 2026-07-26, see project-secondhand-server-build
+# memory) is caught within ~2h instead of waiting for a twice-daily check.
+# STALE_HOURS=5 still gives enough slack to avoid false alarms across the
+# normal overnight gap between the 19:00 and next-day 07:00 runs.
 
 on:
   schedule:
-    - cron: "0 7 * * *"    # 09:00 SAST — confirms the 07:00 run happened
-    - cron: "0 19 * * *"   # 21:00 SAST — confirms the 13:00/19:00 runs happened
+    - cron: "0 */2 * * *"  # every 2 hours
   workflow_dispatch: {}
 
 jobs:
@@ -54,9 +55,9 @@ jobs:
               age_hours = (datetime.now(timezone.utc) - last).total_seconds() / 3600
               print(f"Last heartbeat: {last.isoformat()} ({age_hours:.1f}h ago)")
               if age_hours > stale_hours:
-                  msg = (f"CastZone deals bot on the M2 hasn't checked in for "
+                  msg = (f"CastZone deals bot on the Home Server hasn't checked in for "
                          f"{age_hours:.1f}h (last run {last.strftime('%Y-%m-%d %H:%M UTC')}). "
-                         f"The M2 may be off/asleep or the bot may be broken — please check.")
+                         f"WSL may be down, the machine may be off, or the bot may be broken — please check.")
 
           if msg:
               print("ALERTING:", msg)
