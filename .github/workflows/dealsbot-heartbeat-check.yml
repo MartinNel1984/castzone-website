@@ -11,8 +11,13 @@ name: Deals bot heartbeat check
 # Runs every 2h so a real outage (of any cause — not just the WSL-restart
 # issue found + self-healed 2026-07-26, see project-secondhand-server-build
 # memory) is caught within ~2h instead of waiting for a twice-daily check.
-# STALE_HOURS=5 still gives enough slack to avoid false alarms across the
-# normal overnight gap between the 19:00 and next-day 07:00 runs.
+#
+# Cron on the Home Server is `0 7,13,19 * * *` in Africa/Johannesburg (SAST,
+# UTC+2) => runs at 05:00, 11:00, 17:00 UTC. The overnight gap (17:00 UTC ->
+# next day's 05:00 UTC) is ~12h, so STALE_HOURS must clear that with margin
+# or this fires a false alarm every night. (Found + fixed 2026-08-01: an
+# earlier STALE_HOURS=5 was well under the 12h gap and paged Martin nightly
+# for no reason.)
 
 on:
   schedule:
@@ -27,7 +32,7 @@ jobs:
       SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
-      STALE_HOURS: "5"
+      STALE_HOURS: "14"
     steps:
       - name: Check heartbeat freshness
         run: |
