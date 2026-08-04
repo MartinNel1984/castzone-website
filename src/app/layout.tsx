@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Manrope, JetBrains_Mono } from "next/font/google";
+import { Newsreader, Manrope, JetBrains_Mono, Caveat } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -23,6 +23,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600"],
 });
 
 export const metadata: Metadata = {
@@ -93,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full`}>
+    <html lang="en" className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} ${caveat.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-deep-water text-bone-white antialiased">
         {/* Organization + WebSite structured data (schema.org JSON-LD) */}
         <script

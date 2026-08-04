@@ -199,6 +199,8 @@ export default function HomePage() {
             maskImage: "linear-gradient(180deg, transparent, black 25%, black 75%, transparent)",
           }}
         />
+        <div className="cz-glow" aria-hidden="true" />
+        <div className="cz-linework" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-10 lg:gap-14 items-end">
             <div>
@@ -206,6 +208,7 @@ export default function HomePage() {
               <h1 className="text-[clamp(2.6rem,2rem+4.5vw,5rem)] leading-[0.98] font-heading font-semibold text-bone-white">
                 Where South Africa <em className="italic text-cast-orange">Fishes</em>
               </h1>
+              <p className="mt-2 font-script text-2xl text-cast-orange/90">Tight lines, always.</p>
               <p className="text-pale-water text-lg leading-relaxed mt-6 font-body max-w-xl">
                 Bass, saltwater, specimen and everything in between. Join the forum built for SA anglers — share catches, find venues, buy gear, and connect.
               </p>
@@ -262,8 +265,9 @@ export default function HomePage() {
       </section>
 
       {/* Live stats banner */}
-      <section className="bg-deep-water-light border-b border-surface-teal">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <section className="relative overflow-hidden bg-deep-water-light border-b border-surface-teal">
+        <div className="cz-linework" aria-hidden="true" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center sm:text-left">
             {stats ? (
               <>
@@ -288,7 +292,7 @@ export default function HomePage() {
 
       {/* Specials teaser */}
       {dealsPreview && dealsPreview.length > 0 && (
-        <Section title="Latest Specials" action={{ label: "See all deals", href: "/specials" }}>
+        <Section title="Latest Specials" action={{ label: "See all deals", href: "/specials" }} texture>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {dealsPreview.map((deal) => {
               const pct = discountPct(deal.original_price, deal.sale_price, deal.discount_pct);
@@ -367,7 +371,7 @@ export default function HomePage() {
       </section>
 
       {/* Angler Safety — Vaal River */}
-      <Section title={`${safetyIcon} Angler Safety — Vaal River`} action={{ label: "Full dam levels", href: "/conditions" }}>
+      <Section title={`${safetyIcon} Angler Safety — Vaal River`} action={{ label: "Full dam levels", href: "/conditions" }} texture>
         <div className={`border rounded-lg p-5 mb-5 ${bannerColour}`}>
           <p className={`font-mono uppercase tracking-wider text-xs mb-3 ${titleColour}`}>
             Latest Gate Notices — Updated by DWS
@@ -433,7 +437,7 @@ export default function HomePage() {
       </Section>
 
       {/* Forum categories with photos */}
-      <Section title="Forum Categories">
+      <Section title="Forum Categories" texture>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {forumCategories.map((cat) => {
             const catStats = categories[cat.slug];

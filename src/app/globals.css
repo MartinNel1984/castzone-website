@@ -21,6 +21,7 @@
   --font-heading: var(--font-newsreader);
   --font-body: var(--font-manrope);
   --font-mono: var(--font-jetbrains-mono);
+  --font-script: var(--font-caveat);
 }
 
 body {
@@ -45,6 +46,42 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @layer utilities {
+  /* ── Mural-wall glow — single cast-orange light source, one per section. */
+  .cz-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .cz-glow::before {
+    content: "";
+    position: absolute;
+    width: 640px;
+    height: 640px;
+    left: -160px;
+    bottom: -260px;
+    border-radius: 9999px;
+    filter: blur(80px);
+    background: radial-gradient(circle, rgba(242, 101, 34, 0.4), transparent 70%);
+  }
+
+  /* ── Hand-drawn fishing linework, tiled at low opacity. */
+  .cz-linework {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: url("/textures/linework.svg");
+    background-repeat: repeat;
+    background-size: 320px 320px;
+    opacity: 0.12;
+  }
+
+  .font-script {
+    font-family: var(--font-script), cursive;
+  }
+
   .cz-transition {
     transition-timing-function: var(--ease-cast);
     transition-duration: 350ms;
