@@ -1,0 +1,25 @@
+<svg width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="#A8C5C5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- hand-drawn fish, top-left -->
+    <path d="M30 60 Q50 42 78 55 Q94 63 94 72 Q94 81 78 89 Q50 102 30 84 Q22 78 22 72 Q22 66 30 60 Z" />
+    <path d="M22 72 L6 60 M22 72 L6 84" />
+    <circle cx="72" cy="66" r="2.4" fill="#A8C5C5" stroke="none" />
+
+    <!-- ripple rings, top-right -->
+    <circle cx="250" cy="50" r="14" stroke-dasharray="3 5" />
+    <circle cx="250" cy="50" r="26" stroke-dasharray="3 6" />
+    <circle cx="250" cy="50" r="38" stroke-dasharray="3 7" />
+
+    <!-- hook + cast line, center -->
+    <path d="M170 150 Q170 130 190 128 Q206 126 206 142 Q206 156 190 156 Q182 156 182 148" />
+    <path d="M170 150 Q120 120 70 150 Q40 168 60 190" stroke-dasharray="2 6" />
+
+    <!-- second small fish, bottom-left -->
+    <path d="M40 250 Q56 236 78 246 Q90 252 90 259 Q90 266 78 272 Q56 282 40 268 Q34 263 34 259 Q34 255 40 250 Z" />
+    <path d="M34 259 L20 250 M34 259 L20 268" />
+
+    <!-- rod bend, bottom-right -->
+    <path d="M300 230 Q270 240 260 270 Q254 288 232 292" />
+    <path d="M232 292 L242 286 M232 292 L238 302" />
+  </g>
+</svg>
