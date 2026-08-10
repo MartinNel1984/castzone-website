@@ -60,6 +60,14 @@ const featureCards = [
 
 type Stats = { members: number; threads: number; posts: number; categories: number; venues: number; specials: number };
 
+type HeroPhoto = {
+  id: string;
+  species: string;
+  weight_kg: number;
+  venue: string | null;
+  image_url: string;
+};
+
 type RecentCatch = {
   id: string;
   species: string;
@@ -104,6 +112,8 @@ export default function HomePage() {
   const [categories, setCategories] = useState<Record<string, { thread_count: number; post_count: number }>>({});
   const [recentThreads, setRecentThreads] = useState<RecentThread[]>([]);
   const [recentCatches, setRecentCatches] = useState<RecentCatch[]>([]);
+  const [heroPhotos, setHeroPhotos] = useState<HeroPhoto[]>([]);
+  const [heroIndex, setHeroIndex] = useState(0);
   const [dealsPreview, setDealsPreview] = useState<DealPreview[] | null>(null);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
   const { spot, locateMe, locating, geoError } = useSpot(JOHANNESBURG);
@@ -124,6 +134,7 @@ export default function HomePage() {
         { data: cats },
         { data: latest },
         { data: latestCatches },
+        { data: heroCatches },
       ] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("threads").select("*", { count: "exact", head: true }),
@@ -133,6 +144,7 @@ export default function HomePage() {
         supabase.from("categories").select("slug,thread_count,post_count"),
         supabase.from("threads").select("id,title,reply_count,created_at,profiles(username),categories(slug,name,icon)").order("created_at", { ascending: false }).limit(6),
         supabase.from("catches").select("id,species,weight_kg,category,venue,image_url,profiles(username)").eq("approved", true).order("approved_at", { ascending: false }).limit(3),
+        supabase.from("catches").select("id,species,weight_kg,venue,image_url").eq("approved", true).not("image_url", "is", null).order("approved_at", { ascending: false }).limit(5),
       ]);
       setStats({ members: members ?? 0, threads: threads ?? 0, posts: posts ?? 0, categories: cats?.length ?? 0, venues: venues ?? 0, specials: (specials as unknown as number) ?? 0 });
       if (cats) {
@@ -142,6 +154,7 @@ export default function HomePage() {
       }
       setRecentThreads((latest ?? []) as unknown as RecentThread[]);
       setRecentCatches((latestCatches as unknown as RecentCatch[]) ?? []);
+      setHeroPhotos((heroCatches as unknown as HeroPhoto[]) ?? []);
     }
 
     loadStats();
@@ -173,6 +186,17 @@ export default function HomePage() {
     }
   }, [user]);
 
+  // Auto-rotate the hero backdrop photos; pause while the tab isn't visible.
+  useEffect(() => {
+    if (heroPhotos.length < 2) return;
+    const tick = () => {
+      if (document.visibilityState !== "visible") return;
+      setHeroIndex((i) => (i + 1) % heroPhotos.length);
+    };
+    const interval = setInterval(tick, 5000);
+    return () => clearInterval(interval);
+  }, [heroPhotos.length]);
+
   // Vaal River gate status — computed once, used by both the hero readout and the Angler Safety section.
   const latestVaal = GATE_NOTICES.find((n) => n.dam === "vaal" && n.latest);
   const latestBloemhof = GATE_NOTICES.find((n) => n.dam === "bloemhof" && n.latest);
@@ -192,6 +216,26 @@ export default function HomePage() {
     <div>
       {/* Hero */}
       <section className="relative border-b border-surface-teal overflow-hidden">
+        {/* Rotating backdrop — real approved Trophy Room catches, not stock photography */}
+        {heroPhotos.length > 0 && (
+          <div className="absolute inset-0" aria-hidden="true">
+            {heroPhotos.map((photo, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={photo.id}
+                src={photo.image_url}
+                alt=""
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "auto"}
+                sizes="100vw"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  i === heroIndex ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-t from-deep-water via-deep-water/85 to-deep-water/60" />
+          </div>
+        )}
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -262,6 +306,32 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Caption + slide-progress dots for the rotating backdrop */}
+        {heroPhotos.length > 1 && (
+          // Bottom-LEFT, not bottom-right — the floating trip-shortlist button
+          // (fixed bottom-6 right-4, site-wide) collides with anything docked
+          // bottom-right once a section's end lines up with the viewport bottom.
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5">
+            <p className="font-mono text-xs text-pale-water/80 truncate mb-2">
+              {(() => {
+                const p = heroPhotos[heroIndex];
+                return `${Number(p.weight_kg).toFixed(2)}kg ${p.species}${p.venue ? ` — ${p.venue}` : ""}`;
+              })()}
+            </p>
+            <div className="flex gap-2">
+              {heroPhotos.map((photo, i) => (
+                <button
+                  key={photo.id}
+                  onClick={() => setHeroIndex(i)}
+                  aria-label={`Show photo ${i + 1} of ${heroPhotos.length}`}
+                  aria-current={i === heroIndex}
+                  className={`w-6 h-1.5 rounded-full cz-transition ${i === heroIndex ? "bg-cast-orange" : "bg-pale-water/30 hover:bg-pale-water/60"}`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Live stats banner */}

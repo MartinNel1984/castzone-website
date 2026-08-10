@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { compressImage } from "@/lib/imageCompress";
 import type { User } from "@supabase/supabase-js";
@@ -45,6 +46,7 @@ const today = new Date().toISOString().split("T")[0];
 
 export default function SubmitCatchContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
 
   const [user, setUser]               = useState<User | null>(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -53,7 +55,7 @@ export default function SubmitCatchContent() {
   const [species, setSpecies]     = useState("");
   const [weightKg, setWeightKg]   = useState("");
   const [catchDate, setCatchDate] = useState("");
-  const [venue, setVenue]         = useState("");
+  const [venue, setVenue]         = useState(() => searchParams.get("venue") ?? "");
   const [notes, setNotes]         = useState("");
 
   const [photoFile, setPhotoFile]       = useState<File | null>(null);

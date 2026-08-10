@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import SubmitCatchContent from "./SubmitCatchContent";
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitCatchPage() {
-  return <SubmitCatchContent />;
+  return (
+    <Suspense fallback={null}>
+      <SubmitCatchContent />
+    </Suspense>
+  );
 }

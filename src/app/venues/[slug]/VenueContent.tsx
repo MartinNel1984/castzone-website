@@ -11,6 +11,8 @@ import VenueSpots from "@/components/VenueSpots";
 import { VENUE_WATER_LEVELS, GATE_NOTICES } from "@/data/waterConditions";
 import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
 import type { Venue } from "@/components/VenueMap";
+import { useShortlist } from "@/hooks/useShortlist";
+import Button from "@/components/ui/Button";
 
 const VenueMapPin = dynamic(() => import("@/components/VenueMapPin"), { ssr: false });
 
@@ -54,6 +56,15 @@ type Review = {
   profiles: { username: string } | null;
 };
 
+type VenueCatch = {
+  id: string;
+  species: string;
+  weight_kg: number;
+  catch_date: string;
+  image_url: string | null;
+  profiles: { username: string } | null;
+};
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -68,6 +79,7 @@ function timeAgo(dateStr: string) {
 export default function VenueContent() {
   const params = useParams();
   const slug = params.slug as string;
+  const { toggle, has } = useShortlist();
 
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,6 +93,7 @@ export default function VenueContent() {
   const [draftRating, setDraftRating] = useState(0);
   const [draftBody, setDraftBody] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [venueCatches, setVenueCatches] = useState<VenueCatch[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -142,8 +155,8 @@ export default function VenueContent() {
           .limit(4);
         setNearby((nearbyData ?? []) as NearbyVenue[]);
 
-        // Load reviews + auth in parallel
-        const [{ data: { user: authUser } }, { data: reviewData }] = await Promise.all([
+        // Load reviews + auth + real catches logged at this venue, in parallel
+        const [{ data: { user: authUser } }, { data: reviewData }, { data: catchData }] = await Promise.all([
           supabase.auth.getUser(),
           supabase
             .from("venue_reviews")
@@ -151,7 +164,16 @@ export default function VenueContent() {
             .eq("venue_slug", slug)
             .order("created_at", { ascending: false })
             .limit(20),
+          supabase
+            .from("catches")
+            .select("id, species, weight_kg, catch_date, image_url, profiles(username)")
+            .eq("approved", true)
+            .not("image_url", "is", null)
+            .ilike("venue", `%${searchTerm}%`)
+            .order("approved_at", { ascending: false })
+            .limit(6),
         ]);
+        setVenueCatches((catchData as unknown as VenueCatch[]) ?? []);
         if (authUser) setCurrentUser(authUser);
         if (reviewData) {
           const revs = reviewData as unknown as Review[];
@@ -291,8 +313,32 @@ export default function VenueContent() {
         <span className={`text-sm font-body border rounded px-3 py-1 mt-1 flex-shrink-0 ${typeClass}`}>
           {typeLabel}
         </span>
+        <button
+          onClick={() => toggle({ id: venue.id, slug: venue.slug, name: venue.name, province: venue.province, type: venue.type })}
+          aria-pressed={has(venue.id)}
+          className={`flex-shrink-0 mt-1 flex items-center gap-1.5 text-sm font-body border rounded px-3 py-1 cz-transition ${
+            has(venue.id)
+              ? "border-cast-orange text-cast-orange"
+              : "border-surface-teal text-pale-water hover:border-cast-orange hover:text-cast-orange"
+          }`}
+        >
+          <svg className="w-4 h-4" fill={has(venue.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-4-7 4V5z" />
+          </svg>
+          {has(venue.id) ? "In trip" : "Add to trip"}
+        </button>
       </div>
-      <p className="text-storm font-body text-sm mb-8">{venue.province}</p>
+      <p className="text-storm font-body text-sm mb-6">{venue.province}</p>
+
+      {/* Dual CTA — high-commitment (ask the community) + low-commitment (get directions) */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-8">
+        <Button href={newThreadUrl} size="lg" className="flex-1 justify-center">
+          🎣 Ask the Community
+        </Button>
+        <Button href={gpsUrl} target="_blank" rel="noopener noreferrer" variant="line" size="lg" className="flex-1 justify-center">
+          📍 Get Directions
+        </Button>
+      </div>
 
       {/* Map */}
       <div className="rounded-lg overflow-hidden border border-surface-teal mb-8" style={{ height: 280 }}>
@@ -534,6 +580,56 @@ export default function VenueContent() {
           Always verify current rules with the relevant provincial conservation authority
           before visiting. CastZone data is for reference only.
         </p>
+      </div>
+
+      {/* Real Catches Here — Trophy Room photos logged at this venue */}
+      <div className="mb-6">
+        <h2 className="text-bone-white font-heading font-semibold text-lg mb-4">
+          Real Catches Here
+        </h2>
+        {venueCatches.length === 0 ? (
+          <p className="text-storm font-body text-sm">
+            Be the first to{" "}
+            <Link
+              href={`/catches/submit?venue=${encodeURIComponent(venue.name)}`}
+              className="text-cast-orange hover:text-bone-white transition-colors"
+            >
+              log a catch here
+            </Link>
+            .
+          </p>
+        ) : (
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
+            {venueCatches.map((c) => (
+              <Link
+                key={c.id}
+                href="/catches"
+                className="group flex-shrink-0 w-40 bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg overflow-hidden transition-colors"
+              >
+                {c.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={c.image_url}
+                    alt={`${c.species} by ${c.profiles?.username ?? "Angler"}`}
+                    loading="lazy"
+                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-32 bg-surface-teal/10 flex items-center justify-center text-3xl opacity-40">🐟</div>
+                )}
+                <div className="p-3">
+                  <p className="text-cast-orange font-mono font-semibold text-sm leading-none mb-1">
+                    {Number(c.weight_kg).toFixed(2)} kg
+                  </p>
+                  <p className="text-bone-white font-body text-sm truncate">{c.species}</p>
+                  <p className="text-storm text-xs mt-1 font-mono truncate">
+                    {c.profiles?.username ?? "Angler"} · {timeAgo(c.catch_date)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Forum threads about this venue */}

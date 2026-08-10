@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SignupNudge from "@/components/SignupNudge";
+import ShortlistDrawer from "@/components/ShortlistDrawer";
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",
@@ -112,6 +113,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <SignupNudge />
+        <ShortlistDrawer />
         {/* Cloudflare Web Analytics — privacy-first, no cookies */}
         <Script
           defer

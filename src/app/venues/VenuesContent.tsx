@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import type { Venue } from "@/components/VenueMap";
 import { DEPTH_MAP_SLUGS } from "@/data/depthMaps";
+import { useShortlist } from "@/hooks/useShortlist";
 
 const VenueMap = dynamic(() => import("@/components/VenueMap"), { ssr: false });
 
@@ -36,6 +37,7 @@ const TYPE_DOT: Record<string, string> = {
 };
 
 export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }) {
+  const { toggle, has } = useShortlist();
   const [venues, setVenues] = useState<Venue[]>(initialVenues);
   const [loading, setLoading] = useState(initialVenues.length === 0);
   const [province, setProvince] = useState<string | null>(null);
@@ -189,13 +191,29 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
               className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors block"
             >
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors leading-tight">
+                <h3 className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors leading-tight pr-2">
                   {venue.name}
                 </h3>
                 <div className="flex-shrink-0 ml-2 flex flex-col items-end gap-1">
-                  <span className={`text-xs font-body border rounded px-2 py-0.5 ${TYPE_COLOUR[venue.type] ?? ""}`}>
-                    {TYPE_LABEL[venue.type] ?? venue.type}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xs font-body border rounded px-2 py-0.5 ${TYPE_COLOUR[venue.type] ?? ""}`}>
+                      {TYPE_LABEL[venue.type] ?? venue.type}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggle({ id: venue.id, slug: venue.slug, name: venue.name, province: venue.province, type: venue.type });
+                      }}
+                      aria-label={has(venue.id) ? `Remove ${venue.name} from trip shortlist` : `Add ${venue.name} to trip shortlist`}
+                      aria-pressed={has(venue.id)}
+                      className={`flex-shrink-0 p-1 rounded cz-transition ${has(venue.id) ? "text-cast-orange" : "text-storm hover:text-cast-orange"}`}
+                    >
+                      <svg className="w-4 h-4" fill={has(venue.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-4-7 4V5z" />
+                      </svg>
+                    </button>
+                  </div>
                   {DEPTH_MAP_SLUGS.has(venue.slug) && (
                     <span className="text-[11px] font-body text-pale-water">🗺 Depth map</span>
                   )}
