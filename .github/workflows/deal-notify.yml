@@ -1,8 +1,10 @@
 name: Deal notify (email + WhatsApp)
 
 # Emails a rotating ~1/ROTATION_DAYS slice of members each day (never the
-# whole list at once — see notify_deals.py header) + WhatsApps Martin a run
-# summary. The on-site bell is handled by a DB trigger, not here.
+# whole list at once — see notify_deals.py header) + sends one WhatsApp
+# group-teaser topic to Martin (specials / angler safety / bite times,
+# see scripts/whatsapp_rotation.py — one topic per weekday, not all three
+# every day). The on-site bell is handled by a DB trigger, not here.
 
 on:
   schedule:
@@ -11,6 +13,10 @@ on:
     inputs:
       test_email:
         description: "Test send to THIS address only (members not emailed, marker untouched)"
+        required: false
+        default: ""
+      test_topic:
+        description: "Force the angler-safety/bite-times WhatsApp topic (safety|bite), ignoring today's weekday"
         required: false
         default: ""
 
@@ -28,14 +34,13 @@ jobs:
       SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-      SMTP_HOST: ${{ secrets.SMTP_HOST }}
-      SMTP_PORT: ${{ secrets.SMTP_PORT }}
-      SMTP_USER: ${{ secrets.SMTP_USER }}
-      SMTP_PASS: ${{ secrets.SMTP_PASS }}
-      MAIL_FROM: ${{ vars.MAIL_FROM || 'CastZone Deals <martin@castzone.co.za>' }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      MAIL_FROM: ${{ vars.MAIL_FROM || 'CastZone Deals <deals@castzone.co.za>' }}
       ROTATION_DAYS: ${{ vars.ROTATION_DAYS || '10' }}
       CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
       NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
+      WHATSAPP_GROUP_URL: ${{ secrets.WHATSAPP_GROUP_URL }}
+      UNSUBSCRIBE_SECRET: ${{ secrets.UNSUBSCRIBE_SECRET }}
       TEST_RECIPIENT: ${{ github.event.inputs.test_email }}
       STATE_FILE: .github/deal-notify-state.txt
     steps:
@@ -45,8 +50,24 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Notify on newly-approved deals
         run: python3 deals-bot/notify_deals.py
+
+      - name: Angler safety / bite times WhatsApp topic
+        run: |
+          if [ -n "${{ github.event.inputs.test_topic }}" ]; then
+            python3 scripts/whatsapp_topics.py --topic="${{ github.event.inputs.test_topic }}"
+          else
+            python3 scripts/whatsapp_topics.py
+          fi
 
       - name: Commit advanced marker
         run: |

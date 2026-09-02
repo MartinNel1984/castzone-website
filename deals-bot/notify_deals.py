@@ -5,29 +5,35 @@ CastZone Specials — approval notifier.
 Runs once a day. Emails a rotating slice of members (~1/ROTATION_DAYS of the
 list) so the whole membership is never emailed in one burst — sending ~186
 recipients at once via a single mailbox is what triggered Zoho's "unusual
-sending activity" lock on 2026-07-11, -20 and -22. Each member's turn catches
-them up on everything approved since THEIR last email (or their signup date,
-if never emailed) — staggering sends never means missing a deal, it only
-changes when someone finds out about it. Also sends a WhatsApp run summary to
-Martin (via CallMeBot). The on-site 🔔 bell is handled separately by the
+sending activity" lock, and there's no reason to keep taking that risk even
+after moving to Resend. Each member's turn catches them up on everything
+approved since THEIR last email (or their signup date, if never emailed) —
+staggering sends never means missing a deal, it only changes when someone
+finds out about it. Also sends a WhatsApp run summary to Martin (via
+CallMeBot). The on-site 🔔 bell is handled separately by the
 notify_new_deal() DB trigger.
 
-Email goes over plain SMTP so it works with any free provider (Brevo, Mailjet,
-MailerSend, Zoho, …) — just set the four SMTP_* secrets. No vendor lock-in.
+Email goes via Resend's HTTP API (batch endpoint, up to 100 recipients per
+call). Switched off Zoho SMTP 2026-07-17 after Zoho locked the mailbox for
+"unusual sending activity" and silently dropped 6 days of member digests.
 
 Env:
   SUPABASE_URL            (required)
   SUPABASE_SERVICE_KEY    (required — deals RLS now requires a logged-in user,
                            so reads use the service key, same as member emails)
-  SMTP_HOST               (e.g. smtp-relay.brevo.com — no host = skip email)
-  SMTP_PORT               (optional, default 587 = STARTTLS; 465 = SSL)
-  SMTP_USER               (SMTP login)
-  SMTP_PASS               (SMTP key / password)
-  MAIL_FROM               (optional, default 'CastZone Deals <deals@castzone.co.za>')
+  RESEND_API_KEY          (required for email — no key = skip email)
+  MAIL_FROM               (optional, default 'CastZone Deals <deals@castzone.co.za>' —
+                           must be on a domain verified in Resend)
   ROTATION_DAYS           (optional, default 10 — each member is emailed on
                            1 day out of every N, deterministic per member id)
   CALLMEBOT_API_KEY       (optional)
   NOTIFY_WHATSAPP_NUMBER  (optional)
+  WHATSAPP_GROUP_URL      (optional — adds a "Join the WhatsApp group" CTA to the
+                           email footer; same invite link used on-site, see
+                           NEXT_PUBLIC_WHATSAPP_GROUP_URL in the main site build)
+  UNSUBSCRIBE_SECRET      (required for a working per-member unsubscribe link —
+                           must match the secret in src/db/deal-unsubscribe.sql's
+                           unsubscribe_deal_email() function, run once in Supabase)
   STATE_FILE              (marker path; default .github/deal-notify-state.txt —
                            now only used for the WhatsApp "N new deals found"
                            run summary, not for gating member emails)
@@ -35,28 +41,29 @@ Env:
 """
 
 import hashlib
+import hmac
 import json
 import os
-import smtplib
 import ssl
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from email.utils import formataddr, parseaddr
 from datetime import datetime, timezone
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
+from whatsapp_rotation import today_topic  # noqa: E402
+
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
-SMTP_HOST = os.environ.get("SMTP_HOST", "")
-SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
-SMTP_USER = os.environ.get("SMTP_USER", "")
-SMTP_PASS = os.environ.get("SMTP_PASS", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 MAIL_FROM = os.environ.get("MAIL_FROM") or "CastZone Deals <deals@castzone.co.za>"
 CALLMEBOT_API_KEY = os.environ.get("CALLMEBOT_API_KEY", "")
 WHATSAPP_NUMBER = os.environ.get("NOTIFY_WHATSAPP_NUMBER", "")
+WHATSAPP_GROUP_URL = os.environ.get("WHATSAPP_GROUP_URL", "")
+UNSUBSCRIBE_SECRET = os.environ.get("UNSUBSCRIBE_SECRET", "")
 STATE_FILE = os.environ.get("STATE_FILE", ".github/deal-notify-state.txt")
 DEALS_IN_EMAIL = int(os.environ.get("DEALS_IN_EMAIL", "8"))
 ROTATION_DAYS = int(os.environ.get("ROTATION_DAYS", "10"))
@@ -157,7 +164,14 @@ def mark_emailed(uid, when_iso):
          data={"last_deal_email_sent_at": when_iso})
 
 
-def build_email_html(deals, total_new):
+def unsubscribe_link(user_id):
+    if not (UNSUBSCRIBE_SECRET and user_id):
+        return None
+    sig = hmac.new(UNSUBSCRIBE_SECRET.encode(), user_id.encode(), hashlib.sha256).hexdigest()[:32]
+    return f"{SITE}/unsubscribe?u={user_id}&t={sig}"
+
+
+def build_email_html(deals, total_new, unsub_url):
     rows = []
     for d in deals[:DEALS_IN_EMAIL]:
         was = fmt_price(d.get("original_price"))
@@ -182,6 +196,13 @@ def build_email_html(deals, total_new):
     more = ""
     if total_new > DEALS_IN_EMAIL:
         more = f'<p style="color:#8a9a9a;font-size:14px;text-align:center">…and {total_new - DEALS_IN_EMAIL} more on the site.</p>'
+    whatsapp_cta = ""
+    if WHATSAPP_GROUP_URL:
+        whatsapp_cta = f"""
+    <div style="background:#153029;border-radius:10px;padding:16px 20px;text-align:center;margin:0 0 22px">
+      <p style="color:#f9f7f4;font-size:14px;font-weight:600;margin:0 0 10px">📲 Want deals the moment they drop?</p>
+      <a href="{WHATSAPP_GROUP_URL}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:10px 18px;border-radius:8px;display:inline-block">Join the WhatsApp group →</a>
+    </div>"""
     return f"""<!doctype html><html><body style="margin:0;background:#0f2423;font-family:Arial,Helvetica,sans-serif">
   <div style="max-width:560px;margin:0 auto;padding:24px 20px">
     <div style="text-align:center;padding:8px 0 20px">
@@ -194,58 +215,71 @@ def build_email_html(deals, total_new):
     <div style="text-align:center;margin:26px 0">
       <a href="{SITE}/specials" style="background:#f26522;color:#fff;text-decoration:none;font-weight:700;padding:13px 26px;border-radius:8px;display:inline-block">See all specials →</a>
     </div>
+    {whatsapp_cta}
     <p style="color:#6a7a79;font-size:12px;text-align:center;line-height:1.6;margin-top:24px">
       You're getting this because you're a CastZone member. Prices &amp; stock are set by the retailer and may change.<br>
-      Don't want deal emails? <a href="mailto:unsubscribe@castzone.co.za?subject=unsubscribe" style="color:#8a9a9a">Unsubscribe</a>.
+      Don't want deal emails? <a href="{unsub_url or 'mailto:unsubscribe@castzone.co.za?subject=unsubscribe'}" style="color:#8a9a9a">Unsubscribe</a> — your CastZone account stays active either way.
     </p>
   </div></body></html>"""
 
 
 def send_email(items):
     """items: list of {"uid", "email", "deals", "total_new"} — uid may be None (test mode).
-    Returns the list of uids that sent successfully, so callers can advance
-    their last_deal_email_sent_at watermark (failed sends keep their old
-    watermark so they're retried whole, next time this member is due)."""
-    if not (SMTP_HOST and SMTP_USER and SMTP_PASS):
-        print("No SMTP config — skipping email.")
+    Returns the list of uids whose batch sent successfully, so callers can advance
+    their last_deal_email_sent_at watermark (failed batches keep their old watermark
+    so they're retried whole, next time this member is due)."""
+    if not RESEND_API_KEY:
+        print("No RESEND_API_KEY — skipping email.")
         return []
     if not items:
         print("No recipients — skipping email.")
         return []
+    text_footer = f"New fishing & camping specials are live: {SITE}/specials"
     from_name, from_addr = parseaddr(MAIL_FROM)
-    unsub = "<mailto:unsubscribe@castzone.co.za?subject=unsubscribe>"
-
-    ctx = ssl.create_default_context()
-    if SMTP_PORT == 465:
-        server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30, context=ctx)
-    else:
-        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30)
-        server.starttls(context=ctx)
-    server.login(SMTP_USER, SMTP_PASS)
+    from_header = formataddr((from_name or "CastZone Deals", from_addr))
 
     sent = 0
     sent_uids = []
-    try:
-        for item in items:
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = f"🔥 {item['total_new']} new fishing & camping specials on CastZone"
-            msg["From"] = formataddr((from_name or "CastZone Deals", from_addr))
-            msg["To"] = item["email"]
-            msg["List-Unsubscribe"] = unsub
-            msg.attach(MIMEText("New fishing & camping specials are live: "
-                                f"{SITE}/specials", "plain"))
-            msg.attach(MIMEText(build_email_html(item["deals"], item["total_new"]), "html"))
-            try:
-                server.sendmail(from_addr, [item["email"]], msg.as_string())
-                sent += 1
-                if item["uid"]:
-                    sent_uids.append(item["uid"])
-            except Exception as e:  # noqa: BLE001 — one bad address shouldn't stop the rest
-                print(f"  send to {item['email']} failed: {e}")
-            time.sleep(0.15)  # gentle pacing for free-tier rate limits
-    finally:
-        server.quit()
-    print(f"Emailed {sent}/{len(items)} members via {SMTP_HOST}.")
+    failed = []
+    for i in range(0, len(items), 100):
+        batch = items[i:i + 100]
+        payload = []
+        for item in batch:
+            unsub_url = unsubscribe_link(item["uid"])
+            headers = {"List-Unsubscribe-Post": "List-Unsubscribe=One-Click"} if unsub_url else {}
+            headers["List-Unsubscribe"] = f"<{unsub_url}>" if unsub_url else "<mailto:unsubscribe@castzone.co.za?subject=unsubscribe>"
+            payload.append({
+                "from": from_header,
+                "to": [item["email"]],
+                "subject": f"🔥 {item['total_new']} new fishing & camping specials on CastZone",
+                "html": build_email_html(item["deals"], item["total_new"], unsub_url),
+                "text": text_footer,
+                "headers": headers,
+            })
+        try:
+            _, body = http(
+                "https://api.resend.com/emails/batch",
+                method="POST",
+                headers={
+                    "Authorization": f"Bearer {RESEND_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                data=payload,
+            )
+            result = json.loads(body)
+            sent += len(result.get("data", []))
+            sent_uids.extend(item["uid"] for item in batch if item["uid"])
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", "replace")
+            print(f"  batch of {len(batch)} failed: {e.code} {err_body}")
+            failed.extend(batch)
+        except Exception as e:  # noqa: BLE001 — one bad batch shouldn't stop the rest
+            print(f"  batch of {len(batch)} failed: {e}")
+            failed.extend(batch)
+        time.sleep(0.6)  # stay under Resend's default 2 req/sec rate limit
+    print(f"Emailed {sent}/{len(items)} members via Resend.")
+    if failed:
+        print(f"  {len(failed)} recipients undelivered (see errors above).")
     return sent_uids
 
 
@@ -321,11 +355,19 @@ def main():
     new_deals = get_new_approved(since)
     print(f"Approved since {since}: {len(new_deals)}")
     if new_deals:
-        top = new_deals[0]
-        msg = (f"🔥 CastZone: {len(new_deals)} new special{'s' if len(new_deals) != 1 else ''} went live. "
-               f"Top: {top['title'][:60]} (-{top['discount_pct']}% at {top['retailer']}). "
-               f"Today's email rotation: {emailed}/{len(cohort)} sent. {SITE}/specials")
-        send_whatsapp(msg)
+        # Group teaser only goes out on the WhatsApp rotation's "specials" day
+        # (see scripts/whatsapp_rotation.py — angler safety / bite times take
+        # the other days). The marker still advances every day regardless, so
+        # a specials day always catches up on everything approved since the
+        # last one, nothing is skipped.
+        if today_topic() == "specials":
+            top = new_deals[0]
+            msg = (f"🔥 CastZone: {len(new_deals)} new special{'s' if len(new_deals) != 1 else ''} went live. "
+                   f"Top: {top['title'][:60]} (-{top['discount_pct']}% at {top['retailer']}). "
+                   f"Today's email rotation: {emailed}/{len(cohort)} sent. {SITE}/specials")
+            send_whatsapp(msg)
+        else:
+            print(f"  Not a specials day ({today_topic()}) — WhatsApp teaser skipped, marker still advances.")
         latest = max(d["approved_at"] for d in new_deals)
         with open(STATE_FILE, "w") as f:
             f.write(latest)
