@@ -10,10 +10,18 @@ name: Update Conditions
 #   SUPABASE_URL                   – e.g. https://zohgnpogjtjnozyweutg.supabase.co
 #   NEXT_PUBLIC_SUPABASE_ANON_KEY  – the Supabase anon/publishable key
 # Needed at BUILD time so /fishing-near pages keep their venue lists.
+#
+# SCHEDULE DISABLED 2026-09-02: dws.gov.za started blocking GitHub Actions'
+# US/EU datacenter IPs with HTTP 403 around 2026-06-17 (worked fine before
+# that). continue-on-error hid the failure for ~2.5 months — dam levels sat
+# stale from 2026-06-15 the whole time even though this job showed green
+# daily. The scrape now runs from a South African IP on Home Server
+# (~/castzone_dam_levels_run.sh, cron 06:30 SAST) which pushes straight to
+# src/data/*; build-and-deploy.yml already triggers on that push and handles
+# the rebuild, so this workflow's build/deploy steps are redundant for the
+# normal case. Kept as workflow_dispatch only, for a manual forced rebuild.
 
 on:
-  schedule:
-    - cron: '0 5 * * *'   # 07:00 SAST daily
   workflow_dispatch:
     inputs:
       force_rebuild:
