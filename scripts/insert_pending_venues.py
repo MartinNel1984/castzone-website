@@ -18,6 +18,7 @@ HEADERS = {
     "apikey": KEY,
     "Authorization": f"Bearer {KEY}",
     "Content-Type": "application/json",
+    "User-Agent": "castzone-venue-insert/1.0",
 }
 
 def slug_exists(slug):
