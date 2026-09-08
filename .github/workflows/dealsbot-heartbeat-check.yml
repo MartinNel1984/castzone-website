@@ -46,7 +46,7 @@ jobs:
 
           req = urllib.request.Request(
               f"{url}/rest/v1/deals_bot_heartbeat?select=last_run_at&id=eq.1",
-              headers={"apikey": key, "Authorization": f"Bearer {key}"},
+              headers={"apikey": key, "Authorization": f"Bearer {key}", "User-Agent": "castzone-heartbeat-check/1.0"},
           )
           with urllib.request.urlopen(req, timeout=30) as resp:
               rows = json.loads(resp.read().decode())
