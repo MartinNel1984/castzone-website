@@ -51,6 +51,7 @@ def api(method, path, body=None, prefer=None):
         "apikey": SERVICE_KEY,
         "Authorization": f"Bearer {SERVICE_KEY}",
         "Content-Type": "application/json",
+        "User-Agent": "castzone-content-drip/1.0",
     }
     if prefer:
         headers["Prefer"] = prefer
