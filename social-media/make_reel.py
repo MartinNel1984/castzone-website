@@ -68,6 +68,7 @@ def supabase_get(path):
     headers = {
         "apikey":        SERVICE_KEY,
         "Authorization": f"Bearer {SERVICE_KEY}",
+        "User-Agent":    "castzone-social-bot/1.0",
     }
     req = urllib.request.Request(url, headers=headers)
     try:
@@ -86,6 +87,7 @@ def upload_to_storage(filepath, bucket, object_path, content_type):
         "Authorization": f"Bearer {SERVICE_KEY}",
         "Content-Type":  content_type,
         "x-upsert":      "true",
+        "User-Agent":    "castzone-social-bot/1.0",
     }
     with open(filepath, "rb") as f:
         data = f.read()
