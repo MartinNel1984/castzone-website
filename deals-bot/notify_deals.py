@@ -73,7 +73,9 @@ _CTX = ssl.create_default_context()
 
 
 def http(url, method="GET", headers=None, data=None, timeout=30):
-    req = urllib.request.Request(url, method=method, headers=headers or {},
+    all_headers = {"User-Agent": "castzone-deals-bot/1.0"}
+    all_headers.update(headers or {})
+    req = urllib.request.Request(url, method=method, headers=all_headers,
                                  data=json.dumps(data).encode() if data is not None else None)
     with urllib.request.urlopen(req, timeout=timeout, context=_CTX) as resp:
         return resp.status, resp.read().decode("utf-8", "replace")
