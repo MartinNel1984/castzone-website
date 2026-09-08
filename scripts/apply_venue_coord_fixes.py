@@ -32,6 +32,7 @@ for lat, lng, slug in fixes:
             "Authorization": f"Bearer {KEY}",
             "Content-Type": "application/json",
             "Prefer": "return=representation",
+            "User-Agent": "castzone-venue-fixes/1.0",
         },
     )
     try:
