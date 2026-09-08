@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check site is up and database is intact
         env:
-          SUPABASE_URL: https://zohgnpogjtjnozyweutg.supabase.co
+          SUPABASE_URL: https://db.castzone.co.za
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           CALLMEBOT_API_KEY: ${{ secrets.CALLMEBOT_API_KEY }}
           NOTIFY_WHATSAPP_NUMBER: ${{ secrets.NOTIFY_WHATSAPP_NUMBER }}
