@@ -296,6 +296,7 @@ def rehost_image(image_url, external_id):
             "Authorization": f"Bearer {SUPABASE_KEY}",
             "Content-Type": content_type,
             "x-upsert": "true",
+            "User-Agent": UA,
         })
         with urllib.request.urlopen(req, timeout=30, context=_CTX):
             pass
@@ -546,6 +547,7 @@ def sb_headers(extra=None):
         "apikey": SUPABASE_KEY,
         "Authorization": f"Bearer {SUPABASE_KEY}",
         "Content-Type": "application/json",
+        "User-Agent": UA,
     }
     if extra:
         h.update(extra)
