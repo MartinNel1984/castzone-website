@@ -1,15 +1,25 @@
 [
   {
-    "date": "19 May 2026",
+    "date": "4 Sep 2026",
+    "dam": "bloemhof",
+    "text": "Increase discharge to 100m3/s at 14:00.",
+    "latest": true
+  },
+  {
+    "date": "3 Sep 2026",
     "dam": "vaal",
-    "text": "Close the one (1) gate at 12:00.",
+    "text": "During commissioning of sleeves and the power pack at Vaal Dam, one (1) of the sleeve valves would not open. DWS is planning to do an assessment on 3 September 2026. Please liaise with users downstream and indicate that the valves will be closed between 8am and 3pm.",
     "latest": true
   },
   {
     "date": "19 May 2026",
+    "dam": "vaal",
+    "text": "Close the one (1) gate at 12:00."
+  },
+  {
+    "date": "19 May 2026",
     "dam": "bloemhof",
-    "text": "Maintain the discharge at 250m³/s.",
-    "latest": true
+    "text": "Maintain the discharge at 250m³/s."
   },
   {
     "date": "17 May 2026",
@@ -519,7 +529,8 @@
   {
     "date": "Sunday 30 November 2025",
     "dam": "barrage",
-    "text": "The operations can start switching from free flow to controlled releases from 14:00 today."
+    "text": "The operations can start switching from free flow to controlled releases from 14:00 today.",
+    "latest": true
   },
   {
     "date": "Saturday 29 November 2025",

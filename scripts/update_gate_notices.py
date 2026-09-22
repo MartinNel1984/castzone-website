@@ -41,6 +41,17 @@ DATE_CLEAN = re.compile(r"^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+", re.IGNORECASE)
 LONG_DATE = re.compile(r"(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})")
 # "Current Release 13-06-2026."
 REL_DATE = re.compile(r"Current Release\s+(\d{1,2})-(\d{1,2})-(\d{4})", re.IGNORECASE)
+# Current (2026-09) in-season layout: one <article> per notice, an
+# iconbox_content_title h3 with the date, an iconbox_content_container div
+# with a <strong>Dam Name</strong> line followed by a <ul><li> notice list.
+# (Replaces the pre-2026 legacy <h3>date</h3><p>notice</p> layout this
+# theme used to emit — kept ARTICLE_RE separate so a future reformat is a
+# one-regex fix rather than a rewrite.)
+ARTICLE_RE = re.compile(
+    r"<h3 class='iconbox_content_title '.*?>([^<]+)</h3></header>"
+    r"<div class='iconbox_content_container '.*?>(.*?)</div></div><footer",
+    re.DOTALL,
+)
 
 
 def detect_dam(text: str):
@@ -65,28 +76,42 @@ def plain_text(page: str) -> str:
 
 
 def parse_inseason(page: str) -> list:
-    """Best-effort flood-season parse: the legacy <h3>date</h3><p>notice</p> layout."""
-    page = re.sub(r"<(?:br|hr)\s*/?>", "\n", page, flags=re.IGNORECASE)
-    notices, latest_date = [], None
-    for block in re.split(r"<h3[^>]*>", page)[1:]:
-        m = re.match(r"([^<]+)</h3>(.*)", block, re.DOTALL)
-        if not m:
-            continue
-        raw_date = DATE_CLEAN.sub("", m.group(1).strip())
+    """Flood-season parse: one notice per <article>, newest first as listed on the page."""
+    notices = []
+    for date_raw, content in ARTICLE_RE.findall(page):
+        raw_date = DATE_CLEAN.sub("", date_raw.strip())
         if not LONG_DATE.search(raw_date):
             continue
-        if latest_date is None:
-            latest_date = raw_date
-        for para in re.findall(r"<p[^>]*>(.*?)</p>", m.group(2), re.DOTALL | re.IGNORECASE):
-            txt = htmllib.unescape(re.sub(r"<[^>]+>", "", para).strip())
-            dam = detect_dam(txt)
-            if not txt or dam is None:
-                continue
-            n = {"date": raw_date, "dam": dam, "text": clean_text(txt)}
-            if raw_date == latest_date:
-                n["latest"] = True
-            notices.append(n)
+        dam = detect_dam(content)
+        if dam is None:
+            continue
+        items = re.findall(r"<li[^>]*>(.*?)</li>", content, re.DOTALL)
+        if items:
+            parts = [htmllib.unescape(re.sub(r"<[^>]+>", "", it)).strip() for it in items]
+            text = " ".join(p.rstrip(".") + "." for p in parts if p)
+        else:
+            body = re.sub(r"<strong>.*?</strong>", "", content, flags=re.DOTALL)
+            text = re.sub(r"\s+", " ", htmllib.unescape(re.sub(r"<[^>]+>", " ", body))).strip()
+        if not text:
+            continue
+        notices.append({"date": raw_date, "dam": dam, "text": clean_text(text)})
     return notices
+
+
+def merge_notices(existing: list, fresh: list) -> list:
+    """Prepend genuinely-new notices onto the existing (newest-first) history,
+    then flag the newest entry per dam as `latest` — never drop old entries."""
+    existing_keys = {(n["date"], n["dam"], n["text"]) for n in existing}
+    new_ones = [n for n in fresh if (n["date"], n["dam"], n["text"]) not in existing_keys]
+    if not new_ones:
+        return existing
+    combined = new_ones + [{k: v for k, v in n.items() if k != "latest"} for n in existing]
+    seen_dams = set()
+    for n in combined:
+        if n["dam"] not in seen_dams:
+            n["latest"] = True
+            seen_dams.add(n["dam"])
+    return combined
 
 
 def parse_status(text: str) -> dict | None:
@@ -134,10 +159,14 @@ def main() -> int:
     status = parse_status(text)
 
     if notices:
-        # Flood season: refresh the dated notice list.
-        changed = write_if_changed(NOTICES_OUT, notices)
-        write_if_changed(STATUS_OUT, {"season": "open", "latest": notices[0]["date"]})
-        print(f"[gate-notices] In-season: {len(notices)} notices "
+        # Flood season: merge newly-scraped notices onto the existing history
+        # (the page itself only ever shows the last couple of entries).
+        existing = json.loads(NOTICES_OUT.read_text()) if NOTICES_OUT.exists() else []
+        combined = merge_notices(existing, notices)
+        changed = write_if_changed(NOTICES_OUT, combined)
+        write_if_changed(STATUS_OUT, {"season": "open", "latest": combined[0]["date"]})
+        print(f"[gate-notices] In-season: {len(notices)} notices on page, "
+              f"{len(combined)} total in history "
               + ("(updated)." if changed else "(no change)."))
         return 0
 
