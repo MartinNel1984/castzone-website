@@ -164,7 +164,24 @@ RETAILERS = [
         "platform": "shopify",
         "base": "https://alloutangling.com",
     },
+    {
+        "source": "bomb-squad",
+        "name": "Bomb Squad Fishing",
+        "platform": "woocommerce",
+        "base": "https://bombsquadfishing.co.za",
+        "default_category": "fishing",  # fishing-only shop
+        # Martin 2026-10-08: their everyday prices already beat other shops,
+        # so anything they put on special goes up, however small the discount.
+        "min_discount": 1,
+        "keep_floor": 1,
+        # Small shop: a clean fetch with only a handful (or zero) sale items
+        # is real, so still re-validate and pull specials that have ended.
+        "healthy_min": 0,
+    },
 ]
+
+# Per-retailer override of KEEP_FLOOR for re-validation.
+KEEP_FLOORS = {r["source"]: r["keep_floor"] for r in RETAILERS if "keep_floor" in r}
 
 # ----------------------------------------------------------------------------
 # Fishing / camping classifier
@@ -485,6 +502,22 @@ def adapter_shopify(r):
     return deals
 
 
+def _woo_card_image(image, target=600):
+    """Pick a card-sized rendition from WooCommerce's srcset instead of the
+    original upload — some shops (Bomb Squad) upload 1-3 MB PNGs, far too
+    heavy for a deal card. Smallest width >= target, else the largest
+    available, else the original src."""
+    sizes = []
+    for part in (image.get("srcset") or "").split(","):
+        bits = part.strip().split()
+        if len(bits) == 2 and bits[1].endswith("w") and bits[1][:-1].isdigit():
+            sizes.append((int(bits[1][:-1]), bits[0]))
+    if not sizes:
+        return image.get("src")
+    big_enough = [s for s in sizes if s[0] >= target]
+    return min(big_enough)[1] if big_enough else max(sizes)[1]
+
+
 def adapter_woocommerce(r):
     """Generic WooCommerce Store API adapter. The public
     /wp-json/wc/store/v1/products endpoint supports on_sale=true server-side
@@ -510,7 +543,7 @@ def adapter_woocommerce(r):
                 continue
             pct = round((reg - sale) / reg * 100)
             images = p.get("images") or []
-            img = images[0].get("src") if images else None
+            img = _woo_card_image(images[0]) if images else None
             cats = [c.get("name") for c in (p.get("categories") or []) if c.get("name")]
             deals.append({
                 "external_id": f'{r["source"]}:{p.get("id")}',
@@ -611,7 +644,7 @@ def revalidate(current_map, sources_ok):
         if row.get("source") not in sources_ok:
             continue  # couldn't check this retailer this run — leave it be
         cur = current_map.get(row["external_id"])
-        if cur and cur["discount_pct"] >= KEEP_FLOOR:
+        if cur and cur["discount_pct"] >= KEEP_FLOORS.get(row.get("source"), KEEP_FLOOR):
             patch = {}
             if cur["sale_price"] != row.get("sale_price") or cur["discount_pct"] != row.get("discount_pct"):
                 patch.update(sale_price=cur["sale_price"], discount_pct=cur["discount_pct"],
@@ -744,15 +777,18 @@ def main():
                 "discount_pct": d["discount_pct"],
                 "original_price": d.get("original_price"),
             }
-        if len(found) > 5:  # a healthy fetch — safe to expire this source's dead deals
+        if len(found) > r.get("healthy_min", 5):  # a healthy fetch — safe to expire this source's dead deals
             sources_ok.add(r["source"])
 
+        min_pct = r.get("min_discount", MIN_DISCOUNT)
         qualifying = new = 0
         for d in found:
             cats = d.pop("_category_titles", [])
-            if d["discount_pct"] < MIN_DISCOUNT:
+            if d["discount_pct"] < min_pct:
                 continue
-            cat = classify(d["title"], cats)
+            # Fishing-only shops set default_category so carp slang the
+            # keyword list doesn't know ("Mieliebomb", "Pop-Ups") still counts.
+            cat = classify(d["title"], cats) or r.get("default_category")
             if not cat:
                 continue  # not fishing/camping — skip
             qualifying += 1
@@ -772,7 +808,7 @@ def main():
             batch_seen.add(d["external_id"])
             new += 1
         print(f"  · {r['name']}: {len(found)} on promo, "
-              f"{qualifying} are >= {MIN_DISCOUNT}% fishing/camping, {new} new")
+              f"{qualifying} are >= {min_pct}% fishing/camping, {new} new")
 
     # Keep the deepest discounts first; cap per run so review stays manageable.
     to_insert.sort(key=lambda x: -x["discount_pct"])
