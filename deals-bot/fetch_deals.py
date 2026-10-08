@@ -177,6 +177,7 @@ RETAILERS = [
         # Small shop: a clean fetch with only a handful (or zero) sale items
         # is real, so still re-validate and pull specials that have ended.
         "healthy_min": 0,
+        "specials_category": "specials",  # their specials have no was-price
     },
 ]
 
@@ -526,6 +527,22 @@ def adapter_woocommerce(r):
     strings in the store's minor currency unit (cents)."""
     base = r["base"]
     deals = []
+
+    def to_deal(p, reg, sale, pct):
+        images = p.get("images") or []
+        return {
+            "external_id": f'{r["source"]}:{p.get("id")}',
+            "title": html.unescape(p.get("name") or "").strip()[:200],
+            "retailer": r["name"],
+            "original_price": round(reg, 2) if reg else None,
+            "sale_price": round(sale, 2),
+            "discount_pct": pct,
+            "url": p.get("permalink") or base,
+            "image_url": _woo_card_image(images[0]) if images else None,
+            "source": r["source"],
+            "_category_titles": [c.get("name") for c in (p.get("categories") or []) if c.get("name")],
+        }
+
     for page in range(1, 30):  # hard safety cap
         url = f"{base}/wp-json/wc/store/v1/products?per_page=100&on_sale=true&page={page}"
         data = get_json(url, referer=f"{base}/")
@@ -541,25 +558,25 @@ def adapter_woocommerce(r):
             reg, sale = reg / minor, sale / minor
             if not (reg > sale):
                 continue
-            pct = round((reg - sale) / reg * 100)
-            images = p.get("images") or []
-            img = _woo_card_image(images[0]) if images else None
-            cats = [c.get("name") for c in (p.get("categories") or []) if c.get("name")]
-            deals.append({
-                "external_id": f'{r["source"]}:{p.get("id")}',
-                "title": html.unescape(p.get("name") or "").strip()[:200],
-                "retailer": r["name"],
-                "original_price": round(reg, 2),
-                "sale_price": round(sale, 2),
-                "discount_pct": pct,
-                "url": p.get("permalink") or base,
-                "image_url": img,
-                "source": r["source"],
-                "_category_titles": cats,
-            })
+            deals.append(to_deal(p, reg, sale, round((reg - sale) / reg * 100)))
         if len(data) < 100:
             break
         time.sleep(0.4)  # be polite
+
+    # Some shops (Bomb Squad) run specials as a shop category with the deal
+    # price set as the normal price, so there's no was-price and on_sale is
+    # false. List those too, with no discount % (the site then shows just
+    # the price, no "-X%" badge).
+    cat_slug = r.get("specials_category")
+    if cat_slug:
+        have = {d["external_id"] for d in deals}
+        url = f"{base}/wp-json/wc/store/v1/products?per_page=100&category={urllib.parse.quote(cat_slug)}"
+        for p in get_json(url, referer=f"{base}/") or []:
+            pr = p.get("prices") or {}
+            price = to_float(pr.get("price"))
+            if not price or f'{r["source"]}:{p.get("id")}' in have:
+                continue
+            deals.append(to_deal(p, None, price / 10 ** int(pr.get("currency_minor_unit", 2)), None))
     return deals
 
 
@@ -644,7 +661,9 @@ def revalidate(current_map, sources_ok):
         if row.get("source") not in sources_ok:
             continue  # couldn't check this retailer this run — leave it be
         cur = current_map.get(row["external_id"])
-        if cur and cur["discount_pct"] >= KEEP_FLOORS.get(row.get("source"), KEEP_FLOOR):
+        # discount_pct None = still in the shop's specials category -> keep.
+        if cur and (cur["discount_pct"] is None
+                    or cur["discount_pct"] >= KEEP_FLOORS.get(row.get("source"), KEEP_FLOOR)):
             patch = {}
             if cur["sale_price"] != row.get("sale_price") or cur["discount_pct"] != row.get("discount_pct"):
                 patch.update(sale_price=cur["sale_price"], discount_pct=cur["discount_pct"],
@@ -687,7 +706,8 @@ def format_group_teaser(deals, limit=5):
         return None
     lines = ["🔥 New specials just landed on CastZone:"]
     for d in deals[:limit]:
-        lines.append(f"- {d['title'][:60]} — {d['discount_pct']}% off")
+        off = f"{d['discount_pct']}% off" if d.get("discount_pct") is not None else f"special R{d['sale_price']:.0f}"
+        lines.append(f"- {d['title'][:60]} — {off}")
     lines.append("")
     lines.append("See all + grab them: https://castzone.co.za/specials")
     return "\n".join(lines)
@@ -784,7 +804,8 @@ def main():
         qualifying = new = 0
         for d in found:
             cats = d.pop("_category_titles", [])
-            if d["discount_pct"] < min_pct:
+            # None = from the shop's own specials category: always listed.
+            if d["discount_pct"] is not None and d["discount_pct"] < min_pct:
                 continue
             # Fishing-only shops set default_category so carp slang the
             # keyword list doesn't know ("Mieliebomb", "Pop-Ups") still counts.
@@ -795,7 +816,7 @@ def main():
             if d["external_id"] in seen or d["external_id"] in batch_seen:
                 continue
             d["category"] = cat
-            if (AUTO_APPROVE_PCT and d["discount_pct"] >= AUTO_APPROVE_PCT
+            if (AUTO_APPROVE_PCT and (d["discount_pct"] or 0) >= AUTO_APPROVE_PCT
                     and (d["sale_price"] or 0) >= AUTO_APPROVE_MIN_PRICE):
                 d["status"] = "approved"
                 d["approved_at"] = now_iso
@@ -811,7 +832,7 @@ def main():
               f"{qualifying} are >= {min_pct}% fishing/camping, {new} new")
 
     # Keep the deepest discounts first; cap per run so review stays manageable.
-    to_insert.sort(key=lambda x: -x["discount_pct"])
+    to_insert.sort(key=lambda x: -(x["discount_pct"] or 0))
     if len(to_insert) > MAX_NEW:
         print(f"\nFound {len(to_insert)} new; capping to the top {MAX_NEW} by discount.")
         to_insert = to_insert[:MAX_NEW]
@@ -841,9 +862,10 @@ def main():
         auto_kept = sum(1 for d in to_insert if d.get("status") == "approved")
 
     if DRY_RUN:
-        for d in sorted(to_insert, key=lambda x: -x["discount_pct"])[:20]:
+        for d in to_insert[:20]:
             was = f"R{d['original_price']:.0f}->" if d["original_price"] else ""
-            print(f"  -{d['discount_pct']}%  {d['category']:7} "
+            pct = f"-{d['discount_pct']}%" if d["discount_pct"] is not None else "SPECIAL"
+            print(f"  {pct}  {d['category']:7} "
                   f"{was}R{d['sale_price']:.0f}  {d['title'][:50]}")
         return
 

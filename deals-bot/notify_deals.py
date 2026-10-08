@@ -92,7 +92,7 @@ def get_new_approved(since_iso):
         "select": "title,retailer,category,original_price,sale_price,discount_pct,url,image_url,approved_at",
         "status": "eq.approved",
         "approved_at": f"gt.{since_iso}",
-        "order": "discount_pct.desc",
+        "order": "discount_pct.desc.nullslast",
     })
     _, body = http(f"{SUPABASE_URL}/rest/v1/deals?{q}",
                    headers={"apikey": SERVICE_KEY, "Authorization": f"Bearer {SERVICE_KEY}"})
@@ -179,6 +179,7 @@ def build_email_html(deals, total_new, unsub_url):
         was = fmt_price(d.get("original_price"))
         now = fmt_price(d.get("sale_price"))
         pct = d.get("discount_pct")
+        badge = f"-{pct}%" if pct is not None else "SPECIAL"
         img = d.get("image_url") or ""
         price_line = (f'<span style="color:#8a9a9a;text-decoration:line-through;margin-right:8px">{was}</span>'
                       if was else "") + f'<span style="color:#f26522;font-weight:700;font-size:18px">{now}</span>'
@@ -191,7 +192,7 @@ def build_email_html(deals, total_new, unsub_url):
           <div style="color:#8a9a9a;font-size:11px;text-transform:uppercase;letter-spacing:.05em">{d.get('retailer','')}</div>
           <a href="{d['url']}" style="color:#f9f7f4;font-weight:600;text-decoration:none;font-size:15px;line-height:1.3">{d.get('title','')}</a>
           <div style="margin-top:6px">{price_line}
-            <span style="background:#f26522;color:#fff;font-size:12px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">-{pct}%</span>
+            <span style="background:#f26522;color:#fff;font-size:12px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">{badge}</span>
           </div>
         </td>
       </tr>""")
@@ -365,7 +366,9 @@ def main():
         if today_topic() == "specials":
             top = new_deals[0]
             msg = (f"🔥 CastZone: {len(new_deals)} new special{'s' if len(new_deals) != 1 else ''} went live. "
-                   f"Top: {top['title'][:60]} (-{top['discount_pct']}% at {top['retailer']}). "
+                   f"Top: {top['title'][:60]} ("
+                   f"{'-' + str(top['discount_pct']) + '%' if top.get('discount_pct') is not None else 'special'}"
+                   f" at {top['retailer']}). "
                    f"Today's email rotation: {emailed}/{len(cohort)} sent. {SITE}/specials")
             send_whatsapp(msg)
         else:
