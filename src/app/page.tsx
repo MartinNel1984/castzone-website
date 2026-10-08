@@ -415,7 +415,7 @@ export default function HomePage() {
           <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 flex flex-wrap items-center justify-between gap-4">
             <p className="text-pale-water font-body">
               {loggedIn
-                ? `${stats?.specials ?? "More"} live deals waiting — fishing & camping gear at 50%+ off.`
+                ? `${stats?.specials ?? "More"} live deals waiting — fishing & camping markdowns and tackle shop specials.`
                 : "Loads more deals inside — sign up to unlock every one. It's free."}
             </p>
             <Button href={loggedIn ? "/specials" : "/register"}>

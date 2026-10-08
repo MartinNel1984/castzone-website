@@ -29,6 +29,7 @@ Env:
 import html
 import json
 import os
+import re
 import ssl
 import sys
 import time
@@ -338,57 +339,70 @@ def to_float(v):
 # ----------------------------------------------------------------------------
 
 def adapter_cowhills(r):
-    """Outdoor Warehouse style. products.json with a marked_down (on-promo)
-    filter; was_price = original, promo_price = sale price."""
+    """Outdoor Warehouse (Cowhills platform). Their 2026 site rebuild dropped
+    the old products.json endpoint (it now redirects to an HTML page); the
+    shop's product listing is served by Algolia. Every page embeds the
+    Algolia app id, index and a short-lived public search key — the same
+    one a visitor's browser uses — so read those, then query the index for
+    is_on_promotion. price = now, was_price = before."""
     base = r["base"]
-    # filters[marked_down][0]=0 == "On promotion"
-    qs = "limit=250&" + urllib.parse.urlencode({"filters[marked_down][0]": 0})
+    req = urllib.request.Request(f"{base}/products", headers={"User-Agent": UA, "Accept": "text/html"})
+    with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+        page_html = resp.read().decode("utf-8", "replace")
+    m = re.search(r":insights-config='(\{.*?\})'", page_html)
+    if not m:
+        raise ValueError("Algolia config not found on /products page (site changed again?)")
+    cfg = json.loads(html.unescape(m.group(1)))
+    app, index = cfg["appId"], cfg["indexName"]
+    key = cfg["initialSecuredSearch"]["token"]
+
     deals = []
-    total = None
-    for page in range(1, 40):  # hard safety cap
-        url = f"{base}/products.json?{qs}&page={page}"
-        data = get_json(url, referer=f"{base}/")
-        results = (data.get("results") or {}).get("results") or []
-        if total is None:
-            th = (data.get("paginationMeta") or {}).get("total_hits") or {}
-            total = th.get("value") if isinstance(th, dict) else th
-        if not results:
-            break
-        for item in results:
-            p = item.get("result") or {}
+    for page in range(0, 40):  # hard safety cap
+        body = json.dumps({"params": urllib.parse.urlencode({
+            "filters": "is_on_promotion:true", "hitsPerPage": 100, "page": page})}).encode()
+        req = urllib.request.Request(
+            f"https://{app}-dsn.algolia.net/1/indexes/{index}/query", data=body, method="POST",
+            headers={"X-Algolia-Application-Id": app, "X-Algolia-API-Key": key,
+                     "Content-Type": "application/json", "User-Agent": UA,
+                     "Origin": base, "Referer": f"{base}/"})
+        with urllib.request.urlopen(req, timeout=30, context=_CTX) as resp:
+            data = json.loads(resp.read().decode())
+        for p in data.get("hits") or []:
             was = to_float(p.get("was_price"))
-            promo = to_float(p.get("promo_price"))
-            if not (was and promo and was > promo):
+            now = to_float(p.get("price"))
+            # is_on_promotion also covers "buy 2" style promos with no price
+            # drop — only a real was > now counts.
+            if not (was and now and was > now):
                 continue
-            pct = round((was - promo) / was * 100)
-            cats = [c.get("title") if isinstance(c, dict) else c
-                    for c in (p.get("categories") or [])]
-            cats = [c for c in cats if c]
+            cats = []
+            for lvl in (p.get("hierarchical_categories") or {}).values():
+                cats += [c.split(" > ")[-1] for c in (lvl or [])]
             deals.append({
-                "external_id": f'{r["source"]}:{p.get("id")}',
-                "title": (p.get("title") or "").strip()[:200],
+                "external_id": f'{r["source"]}:{p.get("objectID")}',
+                "title": html.unescape(p.get("title") or "").strip()[:200],
                 "retailer": r["name"],
                 "original_price": round(was, 2),
-                "sale_price": round(promo, 2),
-                "discount_pct": pct,
-                "url": p.get("url") or base,
+                "sale_price": round(now, 2),
+                "discount_pct": round((was - now) / was * 100),
+                "url": f'{base}/product/{p.get("slug")}/' if p.get("slug") else base,
                 "image_url": _cowhills_image(p),
                 "source": r["source"],
                 "_category_titles": cats,
             })
-        if total and page * 24 >= total:
+        if page + 1 >= (data.get("nbPages") or 0):
             break
         time.sleep(0.4)  # be polite
     return deals
 
 
 def _cowhills_image(p):
-    for img in (p.get("images") or []):
-        if isinstance(img, dict) and img.get("cdn_path"):
-            return img["cdn_path"]
     pi = p.get("primary_image")
-    if isinstance(pi, dict) and pi.get("cdn_path"):
-        return pi["cdn_path"]
+    imgs = ([pi] if isinstance(pi, dict) else []) + list(p.get("images") or [])
+    for img in imgs:
+        if isinstance(img, dict) and img.get("cdn_path"):
+            # Cloudinary w_auto needs browser client hints; ask for a fixed
+            # card-sized width instead.
+            return img["cdn_path"].replace(",w_auto/", ",w_600/")
     return None
 
 

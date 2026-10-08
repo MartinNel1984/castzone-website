@@ -161,10 +161,11 @@ export default function SpecialsContent() {
           )}
         </div>
         <p className="mt-3 text-pale-water leading-relaxed max-w-2xl">
-          Hand-checked South African fishing &amp; camping deals — every one at least{" "}
-          <span className="text-cast-orange font-semibold">50% off</span>. Our bot scans the
-          big SA retailers daily and we approve each one before it lands here. Prices and stock
-          are set by the retailer — grab them while they last.
+          Hand-checked South African fishing &amp; camping deals — big markdowns of{" "}
+          <span className="text-cast-orange font-semibold">50% off and more</span>, plus the
+          specials our favourite tackle shops run. Our bot scans SA retailers daily and we
+          approve each one before it lands here. Prices and stock are set by the retailer — grab
+          them while they last.
         </p>
       </div>
 
@@ -208,8 +209,8 @@ export default function SpecialsContent() {
             Members-only deals
           </h2>
           <p className="mt-2 text-pale-water max-w-md mx-auto">
-            Sign up free to see today&apos;s hand-checked fishing &amp; camping specials — every
-            one at least 50% off.
+            Sign up free to see today&apos;s hand-checked fishing &amp; camping specials — big
+            markdowns of 50% off and more, plus tackle shop specials.
           </p>
           <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
             <Link
@@ -233,7 +234,7 @@ export default function SpecialsContent() {
           <div className="text-5xl mb-4">🎣</div>
           <h2 className="font-heading text-2xl text-bone-white font-semibold ">No live specials right now</h2>
           <p className="mt-2 text-pale-water max-w-md mx-auto">
-            Our bot checks the SA retailers every day — new 50%-off fishing and camping deals
+            Our bot checks the SA retailers every day — new fishing and camping deals
             land here as soon as we approve them. Sign up free to get notified the moment they do.
           </p>
           <Link
