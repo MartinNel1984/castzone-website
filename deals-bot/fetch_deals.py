@@ -692,8 +692,12 @@ def backfill_images():
     done = 0
     for row in rows:
         new_url = rehost_image(row["image_url"], row["external_id"])
-        patch_deal(row["id"], {"image_url": new_url})
-        done += 1
+        # On failure leave the row as-is so the next run retries it. Patching
+        # in None here wiped the source URL, and since this query skips nulls
+        # the deal was stranded without a picture for good.
+        if new_url:
+            patch_deal(row["id"], {"image_url": new_url})
+            done += 1
     if rows:
         print(f"Backfilled images for {done}/{len(rows)} existing deals.")
 
@@ -782,20 +786,23 @@ def main():
           f"{len(to_insert) - auto_kept} to review)")
 
     if not DRY_RUN:
-        rehosted = 0
+        # A deal without a picture isn't worth showing, so only queue deals
+        # whose image re-hosted cleanly. Skipped deals are never inserted,
+        # which means the next run sees them as new and tries again — that
+        # covers transient failures, and retailers that block image downloads
+        # (Jacita has a Cloudflare challenge on /wp-content since late Sep
+        # 2026) start flowing again on their own if the block is lifted.
+        with_image = []
         for d in to_insert:
-            src_url = d.get("image_url")
-            new_url = rehost_image(src_url, d["external_id"])
+            new_url = rehost_image(d.get("image_url"), d["external_id"])
             if new_url:
                 d["image_url"] = new_url
-                rehosted += 1
-            # else: leave d["image_url"] as the original retailer link (not
-            # None) so the next run's backfill_images() retries it — a first
-            # attempt can fail transiently (e.g. hit a Cloudflare challenge
-            # page instead of the real image); wiping to None here stranded
-            # those deals with no picture forever, since backfill explicitly
-            # skips rows where image_url is null.
-        print(f"Re-hosted {rehosted}/{len(to_insert)} product images.")
+                with_image.append(d)
+        skipped = len(to_insert) - len(with_image)
+        print(f"Re-hosted {len(with_image)}/{len(to_insert)} product images"
+              f"{f' — skipped {skipped} deal(s) with no usable picture' if skipped else ''}.")
+        to_insert = with_image
+        auto_kept = sum(1 for d in to_insert if d.get("status") == "approved")
 
     if DRY_RUN:
         for d in sorted(to_insert, key=lambda x: -x["discount_pct"])[:20]:
