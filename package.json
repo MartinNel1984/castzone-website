@@ -13,7 +13,7 @@
     "@supabase/supabase-js": "^2.107.0",
     "@types/leaflet": "^1.9.21",
     "leaflet": "^1.9.4",
-    "next": "^16.3.4",
+    "next": "16.3.8",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-leaflet": "^5.0.0"
@@ -28,5 +28,9 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "typescript": "^5"
+  },
+  "overrides": {
+    "sharp": "0.35.5",
+    "undici": "7.29.1"
   }
 }
