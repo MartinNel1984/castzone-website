@@ -328,7 +328,7 @@ def generate_bite_card(days, out_path="/tmp/castzone_bite.jpg"):
     BONE, PALE, ORANGE = _hex("#f9f7f4"), _hex("#a8c5c5"), _hex(BRAND_ORANGE)
     f_head = _var_font("Newsreader.ttf", 92, 600, opsz=72)
     f_sub = _var_font("Manrope.ttf", 30, 500)
-    draw.text((PAD, 276), "Weekend bite times", font=f_head, fill=BONE, anchor="ls")
+    draw.text((PAD, 276), "Today's bite times", font=f_head, fill=BONE, anchor="ls")
     draw.text((PAD, 332), f"{BITE_SPOT[2]}  |  moon: {days[0]['moon']}, {days[0]['illum']}% lit",
               font=f_sub, fill=PALE, anchor="ls")
 
@@ -365,7 +365,7 @@ def generate_bite_card(days, out_path="/tmp/castzone_bite.jpg"):
 
 
 def bite_caption(days):
-    lines = [f"Weekend bite times for the {BITE_SPOT[2]}:", ""]
+    lines = [f"Today's bite times for the {BITE_SPOT[2]}:", ""]
     for d in days[:2]:
         lines.append(f"{d['date']}: {d['rating']} ({d['score']}/100)")
         for p in d["periods"]:
@@ -375,7 +375,18 @@ def bite_caption(days):
     return "\n".join(lines)
 
 
-BITE_HASHTAGS = "#CastZone #BiteTimes #Solunar #BassFishing #SAanglers #VaalRiver #FishingSA"
+def rotate_tags(core, pool, n=5):
+    """Core tags always; n more from the pool, rotating by day of year."""
+    day = datetime.now(timezone(timedelta(hours=2))).timetuple().tm_yday
+    pick = [pool[(day * 3 + i) % len(pool)] for i in range(n)]
+    return " ".join(core + [t for t in dict.fromkeys(pick) if t not in core])
+
+
+def bite_hashtags():
+    return rotate_tags(
+        ["#CastZone", "#BiteTimes", "#SAanglers"],
+        ["#Solunar", "#BassFishing", "#VaalRiver", "#FishingSA", "#SouthAfricanAngling", "#LargemouthBass",
+         "#FishingForecast", "#MoonPhase", "#CatchAndRelease", "#FishingLife", "#FreshwaterFishing", "#Angling"])
 
 
 # ---------------------------------------------------------------------------
@@ -477,7 +488,13 @@ def special_caption(deal):
     )
 
 
-SPECIAL_HASHTAGS = "#CastZone #FishingDeals #CampingDeals #SAanglers #OutdoorSA"
+def special_hashtags(category):
+    camp = category == "camping"
+    return rotate_tags(
+        ["#CastZone", "#SAanglers", "#CampingDeals" if camp else "#FishingDeals"],
+        (["#CampingSA", "#OutdoorLiving", "#Camping", "#Braai", "#CampLife"] if camp
+         else ["#FishingTackle", "#TackleDeals", "#BassFishing", "#FishingGear", "#FishingSA"])
+        + ["#SouthAfrica", "#Specials", "#OutdoorSA"])
 
 
 # ---------------------------------------------------------------------------
@@ -504,28 +521,29 @@ def main():
     idx  = state.get("next_index", 0) % len(items)
     item = items[idx]
 
-    # Schedule: Mon = tip/catch from the bank, Wed = a special (if one is
-    # approved), Fri = weekend bite times. FORCE_KIND=bank|special|bite to test.
+    # Kind comes from which cron fired (SCHEDULE) or FORCE_KIND on manual runs:
+    #   03:00 UTC = today's bite times, 06:00 UTC = tip/catch, 10:00 UTC = special.
     sast = datetime.now(timezone(timedelta(hours=2)))
-    kind = os.environ.get("FORCE_KIND") or {2: "special", 4: "bite"}.get(sast.weekday(), "bank")
+    kind = os.environ.get("FORCE_KIND") or {
+        "0 3 * * *": "bite", "0 10 * * *": "special",
+    }.get(os.environ.get("SCHEDULE", ""), "bank")
     posted_deals = state.setdefault("posted_deals", [])
     deal = None
     if kind == "special":
         deal = pick_special(posted_deals)
         if not deal:
-            print("No approved, unposted special - using a bank post instead.")
-            kind = "bank"
+            print("No approved, unposted special today - skipping (nothing posted).")
+            return
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     if kind == "bite":
-        start = (sast + timedelta(days=(5 - sast.weekday()) % 7)).date().isoformat()  # coming Saturday
-        days = fetch_bite_days(start, 2)
-        full_caption = f"{bite_caption(days)}\n\n{BITE_HASHTAGS}"
+        days = fetch_bite_days(sast.date().isoformat(), 2)   # today + tomorrow
+        full_caption = f"{bite_caption(days)}\n\n{bite_hashtags()}"
         image_url = upload_to_storage(generate_bite_card(days), "post-images",
                                       f"social-cards/bite_{ts}.jpg", "image/jpeg")
         label = "bite times"
     elif kind == "special":
-        full_caption = f"{special_caption(deal)}\n\n{SPECIAL_HASHTAGS}"
+        full_caption = f"{special_caption(deal)}\n\n{special_hashtags(deal.get('category'))}"
         image_url = upload_to_storage(generate_special_card(deal), "post-images",
                                       f"social-cards/special_{ts}.jpg", "image/jpeg")
         posted_deals.append(deal["id"])
