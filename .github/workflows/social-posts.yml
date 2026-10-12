@@ -10,7 +10,12 @@ name: Weekly social posts
 on:
   schedule:
     - cron: "0 6 * * 1,3,5"   # Mon/Wed/Fri 08:00 SAST (UTC+2)
-  workflow_dispatch: {}    # run manually from Actions tab to test
+  workflow_dispatch:       # run manually from Actions tab to test
+    inputs:
+      force_kind:
+        description: "Force post type: bank, special or bite (blank = by weekday)"
+        required: false
+        default: 
 
 permissions:
   contents: write   # to commit the advanced social-state.json back
@@ -31,15 +36,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"   # runs src/lib/solunar.ts directly (native TS support)
+
       - name: Install dependencies
         run: |
-          sudo apt-get install -y --no-install-recommends fonts-dejavu-core
           pip install pillow
 
       - name: Prepare post + send WhatsApp
         env:
           SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY:    ${{ secrets.SUPABASE_SERVICE_KEY }}
+          FORCE_KIND:              ${{ github.event.inputs.force_kind }}
           FB_PAGE_ID:              ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN:    ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
           CALLMEBOT_API_KEY:       ${{ secrets.CALLMEBOT_API_KEY }}
