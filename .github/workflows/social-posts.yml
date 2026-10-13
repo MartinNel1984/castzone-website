@@ -10,9 +10,9 @@ name: Social posts
 
 on:
   schedule:
-    - cron: "0 3 * * *"       # daily 05:00 SAST: today's bite times
-    - cron: "0 6 * * 1,3,5"   # Mon/Wed/Fri 08:00 SAST: tip / catch spotlight
-    - cron: "0 10 * * *"      # daily 12:00 SAST: a special (if one is approved)
+    - cron: "17 3 * * *"       # daily 05:00 SAST: today's bite times
+    - cron: "23 6 * * 1,3,5"   # Mon/Wed/Fri 08:00 SAST: tip / catch spotlight
+    - cron: "41 10 * * *"      # daily 12:00 SAST: a special (if one is approved)
   workflow_dispatch:       # run manually from Actions tab to test
     inputs:
       force_kind:
