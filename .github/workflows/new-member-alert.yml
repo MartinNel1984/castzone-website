@@ -1,8 +1,7 @@
 name: New Member Alert
+# MOVED to Optimus LXC 105 cron (/root/cron-jobs/new-member-alert.sh) 2026-10-25; manual run only here.
 
 on:
-  schedule:
-    - cron: '7 * * * *'   # hourly, 7 min past to avoid the top-of-hour rush
   workflow_dispatch:
 
 permissions:
