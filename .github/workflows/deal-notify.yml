@@ -1,4 +1,5 @@
 name: Deal notify (email + WhatsApp)
+# MOVED to Optimus LXC 105 cron (/root/cron-jobs/deal-notify.sh) 2026-10-25; manual run only here.
 
 # Emails a rotating ~1/ROTATION_DAYS slice of members each day (never the
 # whole list at once — see notify_deals.py header) + sends one WhatsApp
@@ -7,8 +8,6 @@ name: Deal notify (email + WhatsApp)
 # every day). The on-site bell is handled by a DB trigger, not here.
 
 on:
-  schedule:
-    - cron: "0 15 * * *"   # 17:00 SAST daily — one digest of the day's approvals
   workflow_dispatch:
     inputs:
       test_email:

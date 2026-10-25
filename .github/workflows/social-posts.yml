@@ -1,4 +1,5 @@
 name: Social posts
+# MOVED to Optimus LXC 105 cron (/root/cron-jobs/social-posts.sh) 2026-10-25; manual run only here.
 
 # Daily: 05:00 SAST bite times, 12:00 SAST a special (skipped if no approved,
 # unposted deal); Mon/Wed/Fri 08:00 SAST a tip or catch spotlight.
@@ -9,10 +10,6 @@ name: Social posts
 # posting instead (with a run warning), so nothing is ever silently dropped.
 
 on:
-  schedule:
-    - cron: "17 3 * * *"       # daily 05:00 SAST: today's bite times
-    - cron: "23 6 * * 1,3,5"   # Mon/Wed/Fri 08:00 SAST: tip / catch spotlight
-    - cron: "41 10 * * *"      # daily 12:00 SAST: a special (if one is approved)
   workflow_dispatch:       # run manually from Actions tab to test
     inputs:
       force_kind:
