@@ -155,7 +155,7 @@ export default function ConditionsContent() {
           { label: "National Average",  value: `${NATIONAL_AVG}%`,         sub: `${ALL_DAMS.length} dams · 9 provinces`,     cls: "text-cast-orange" },
           { label: "Total Capacity",    value: `${Math.round(ALL_DAMS.reduce((a,d)=>a+d.fsc,0)).toLocaleString()} Mm³`, sub: "combined full storage",  cls: "text-pale-water" },
           { label: "Dams Above 80%",    value: `${ALL_DAMS.filter(d=>d.pct>=80).length}`,                                sub: `of ${ALL_DAMS.length} monitored`, cls: "text-green-400" },
-          { label: "Vaal Dam Gates",    value: "CLOSED",                    sub: "Season reporting closed",                   cls: "text-green-400" },
+          { label: "Vaal Dam Level",    value: `${ALL_DAMS.find((d) => d.name === "Vaal Dam")?.pct ?? "—"}%`, sub: "full, DWS weekly figure",   cls: "text-green-400" },
         ].map((s) => (
           <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-4">
             <div className="text-xs font-mono font-semibold uppercase tracking-wider text-storm mb-1">{s.label}</div>
@@ -165,121 +165,19 @@ export default function ConditionsContent() {
         ))}
       </div>
 
-      {/* ── Gate Alert Panel ── */}
-      <div className="border border-amber-700/50 rounded-lg overflow-hidden mb-8">
-        <div className="bg-amber-900/20 border-b border-amber-700/50 px-5 py-3 flex items-center gap-3 flex-wrap">
-          <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0 animate-pulse" />
-          <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-amber-300">
-            Vaal System — Gate &amp; Discharge Operations
-          </h2>
-          <span className="ml-auto text-xs font-body bg-green-900/40 border border-green-700 text-green-300 px-2 py-0.5 rounded">
-            Season Closed
-          </span>
-        </div>
+      <div className="mt-6"><VaalLiveReadings /></div>
 
-        <div className="bg-deep-water-light grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-          {/* Vaal Dam */}
-          <div className="border border-surface-teal rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <h3 className="font-heading font-semibold text-bone-white">Vaal Dam</h3>
-              <span className="text-xs font-body bg-green-900/40 border border-green-700 text-green-300 px-2 py-0.5 rounded uppercase tracking-wider">
-                Gates Closed
-              </span>
-            </div>
-            <div className="space-y-2 text-sm font-body">
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Status</span>
-                <span className="text-green-400 font-medium">All gates closed</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Last gate closed</span>
-                <span className="text-pale-water">19 May 2026 · 12:00</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Current release</span>
-                <span className="text-pale-water">Valve discharge only</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Flow rate</span>
-                <span className="text-pale-water">≈ 16.7 m³/s</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-storm">Dam level</span>
-                <span className={`font-bold ${levelTextClass(106.1)}`}>106.1%</span>
-              </div>
-            </div>
-            <div className="mt-3 border-l-2 border-amber-500 pl-3 text-xs font-body text-amber-300">
-              Safe conditions for bank anglers downstream. Season reporting closed — gates will remain shut until next significant rainfall event.
-            </div>
-          </div>
-
-          {/* Bloemhof Dam */}
-          <div className="border border-surface-teal rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <h3 className="font-heading font-semibold text-bone-white">Bloemhof Dam</h3>
-              <span className="text-xs font-body bg-amber-900/40 border border-amber-600 text-amber-300 px-2 py-0.5 rounded uppercase tracking-wider">
-                Controlled
-              </span>
-            </div>
-            <div className="space-y-2 text-sm font-body">
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Status</span>
-                <span className="text-amber-400 font-medium">Controlled release</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Current discharge</span>
-                <span className="text-pale-water font-medium">250 m³/s</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Last notice</span>
-                <span className="text-pale-water">19 May 2026</span>
-              </div>
-              <div className="flex justify-between border-b border-surface-teal pb-2">
-                <span className="text-storm">Previous</span>
-                <span className="text-pale-water">700 m³/s (12 May)</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-storm">Dam level</span>
-                <span className={`font-bold ${levelTextClass(104.6)}`}>104.6%</span>
-              </div>
-            </div>
-            <div className="mt-3 border-l-2 border-amber-500 pl-3 text-xs font-body text-amber-300">
-              Discharge stepping down steadily since January. Exercise caution near banks on the Vaal below Bloemhof — elevated but stable and falling.
-            </div>
-          </div>
-
-          {/* River Safety */}
-          <div className="sm:col-span-2 border border-red-900/50 rounded-lg p-4 bg-red-900/10">
-            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-red-400 mb-3 flex items-center gap-2">
-              <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-              </svg>
-              Angler Safety — Vaal River Sections
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {[
-                { section: "Vaal Dam → Barrage", status: "Safe", statusCls: "bg-green-900/40 border-green-700 text-green-300", detail: "Valve only · ~16.7 m³/s · Ideal for bank fishing" },
-                { section: "Barrage → Bloemhof", status: "Caution", statusCls: "bg-amber-900/40 border-amber-600 text-amber-300", detail: "250 m³/s controlled · Elevated but stable" },
-                { section: "Below Bloemhof → Confluence", status: "Caution", statusCls: "bg-amber-900/40 border-amber-600 text-amber-300", detail: "Downstream release · Stay clear of deep channels" },
-                { section: "Harts River", status: "Safe", statusCls: "bg-green-900/40 border-green-700 text-green-300", detail: "Normal levels · No active operations" },
-              ].map((r) => (
-                <div key={r.section} className="flex items-start gap-3 text-xs font-body py-1.5 border-b border-red-900/30 last:border-0">
-                  <span className={`flex-shrink-0 border rounded px-2 py-0.5 font-bold uppercase tracking-wider ${r.statusCls}`}>
-                    {r.status}
-                  </span>
-                  <div>
-                    <div className="text-pale-water font-medium">{r.section}</div>
-                    <div className="text-storm mt-0.5">{r.detail}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* ── Vaal River safety guide (rules of thumb, no hardcoded flows) ── */}
+      <div className="border border-red-900/50 rounded-lg p-5 bg-red-900/10 mb-6">
+        <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-red-400 mb-3">Angler safety on the Vaal River</h2>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm font-body text-pale-water">
+          <li><span className="font-semibold text-bone-white">Below 100 m³/s:</span> normal conditions, generally fine for bank fishing.</li>
+          <li><span className="font-semibold text-amber-300">100–500 m³/s:</span> stronger current. Stay back from the edge and avoid wading.</li>
+          <li><span className="font-semibold text-red-300">Above 500 m³/s:</span> stay off the banks. Water rises fast and the current is dangerous.</li>
+          <li><span className="font-semibold text-bone-white">Releases travel downstream:</span> Parys feels Vaal Dam gate changes within 24–48 hours, Bloemhof releases reach the lower river in 3–5 days.</li>
+        </ul>
       </div>
 
-      <div className="mt-4"><VaalLiveReadings /></div>
 
       <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} status={GATE_STATUS} />
 
