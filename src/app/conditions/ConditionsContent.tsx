@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import GateNoticeStaleness from "@/components/GateNoticeStaleness";
+import VaalLiveReadings from "@/components/VaalLiveReadings";
 import {
   ALL_DAMS,
   WC_DAMS, FS_DAMS, GP_DAMS, KZN_DAMS, LP_DAMS, MP_DAMS, NW_DAMS, EC_DAMS, NC_DAMS,
@@ -277,6 +278,8 @@ export default function ConditionsContent() {
           </div>
         </div>
       </div>
+
+      <div className="mt-4"><VaalLiveReadings /></div>
 
       <GateNoticeStaleness latestDate={GATE_NOTICES.find((n) => n.latest)?.date ?? ""} status={GATE_STATUS} />
 
