@@ -57,6 +57,12 @@ jobs:
           NEXT_PUBLIC_WHATSAPP_GROUP_URL: ${{ secrets.WHATSAPP_GROUP_URL }}
         run: npm run build
 
+      - name: Keep Home Server's live Vaal readings file
+        # out/vaal-live.json is written straight into out/ by the Home Server cron
+        # (scripts/update_vaal_live.py), not by the build. A rebuild wipes out/,
+        # so restore the committed copy.
+        run: git show HEAD:out/vaal-live.json > out/vaal-live.json 2>/dev/null || true
+
       - name: Remove any iCloud/duplicate junk
         run: find out -name '* 2*' -print -delete 2>/dev/null || true
 

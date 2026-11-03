@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import ShareButtons from "@/components/ShareButtons";
 import BiteTimes from "@/components/BiteTimes";
 import GateNoticeStaleness from "@/components/GateNoticeStaleness";
+import VaalLiveReadings from "@/components/VaalLiveReadings";
 import { GATE_NOTICES, GATE_STATUS } from "@/data/waterConditions";
 import { useSpot, JOHANNESBURG } from "@/lib/geo";
 import { categoryIcon, discountPct, formatPrice, isExpired, type Deal } from "@/lib/deals";
@@ -114,9 +115,13 @@ export default function HomePage() {
   const [recentCatches, setRecentCatches] = useState<RecentCatch[]>([]);
   const [heroPhotos, setHeroPhotos] = useState<HeroPhoto[]>([]);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [nowMs, setNowMs] = useState(0); // set after mount so SSR output matches
   const [dealsPreview, setDealsPreview] = useState<DealPreview[] | null>(null);
   const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
   const { spot, locateMe, locating, geoError } = useSpot(JOHANNESBURG);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setNowMs(Date.now()); }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -201,7 +206,14 @@ export default function HomePage() {
   const latestVaal = GATE_NOTICES.find((n) => n.dam === "vaal" && n.latest);
   const latestBloemhof = GATE_NOTICES.find((n) => n.dam === "bloemhof" && n.latest);
   const latestBarrage = GATE_NOTICES.find((n) => n.dam === "barrage" && n.latest);
-  const bloemhofLevel = latestBloemhof ? vaalAlertLevel(latestBloemhof.text) : "normal";
+  // A written notice only drives the alert colour while it is recent; old notices are shown dated but never alarm.
+  const noticeFresh = (d?: string) => {
+    const m = d?.match(/(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})/);
+    if (!m) return false;
+    const t = Date.parse(`${m[1]} ${m[2]} ${m[3]}`);
+    return !Number.isNaN(t) && nowMs - t < 7 * 86_400_000;
+  };
+  const bloemhofLevel = latestBloemhof && noticeFresh(latestBloemhof.date) ? vaalAlertLevel(latestBloemhof.text) : "normal";
   const bannerColour =
     bloemhofLevel === "danger" ? "border-red-600/60 bg-red-900/10" :
     bloemhofLevel === "caution" ? "border-amber-600/60 bg-amber-900/10" :
@@ -442,9 +454,10 @@ export default function HomePage() {
 
       {/* Angler Safety — Vaal River */}
       <Section title={`${safetyIcon} Angler Safety — Vaal River`} action={{ label: "Full dam levels", href: "/conditions" }} texture>
+        <VaalLiveReadings />
         <div className={`border rounded-lg p-5 mb-5 ${bannerColour}`}>
           <p className={`font-mono uppercase tracking-wider text-xs mb-3 ${titleColour}`}>
-            Latest Gate Notices — Updated by DWS
+            Latest Gate Notices — issued by DWS (check the dates)
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
