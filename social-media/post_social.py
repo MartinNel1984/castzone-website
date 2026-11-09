@@ -406,6 +406,7 @@ def pick_special(posted_ids):
     rows = supabase_get(
         "deals?status=eq.approved&image_url=not.is.null"
         f"&or=(expires_at.is.null,expires_at.gt.{urllib.parse.quote(now)})"
+        "&original_price=not.is.null&sale_price=not.is.null&discount_pct=not.is.null"
         "&order=discount_pct.desc&limit=20"
         "&select=id,title,retailer,original_price,sale_price,discount_pct,url,image_url,category"
     ) or []
