@@ -1,0 +1,58 @@
+<!doctype html><meta charset=utf-8>
+<style>
+@font-face{font-family:"Manrope";src:url(fonts/Manrope.ttf);font-weight:200 800}
+@font-face{font-family:"Newsreader";src:url(fonts/Newsreader.ttf);font-weight:200 800}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1080px;overflow:hidden}
+body{background:#0b2323;color:#f3efe6;font-family:Manrope;position:relative}
+.glow{position:absolute;left:-200px;top:260px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,#f2652233,transparent 62%)}
+.top{position:absolute;left:84px;right:84px;top:80px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:22px;letter-spacing:.22em}
+.top b{color:#f26522;font-weight:800}
+#where{color:#8fb3b0}
+.eyebrow{position:absolute;left:84px;top:196px;font-size:26px;letter-spacing:.18em;color:#8fb3b0;font-weight:600}
+.time{position:absolute;left:66px;top:236px;font-family:Newsreader;font-weight:300;font-size:272px;line-height:1;letter-spacing:-.045em;white-space:nowrap}
+.to{position:absolute;right:84px;top:300px;text-align:right;font-family:Newsreader;font-weight:300;line-height:1}
+.to small{display:block;font-family:Manrope;font-size:22px;letter-spacing:.2em;color:#f26522;font-weight:800;margin-bottom:6px}
+.to span{font-size:100px;letter-spacing:-.03em}
+.sub{position:absolute;left:84px;top:545px;font-family:Newsreader;font-style:italic;font-size:54px;color:#d8e6e3}
+svg{position:absolute;left:0;top:610px;overflow:visible}
+.foot{position:absolute;left:84px;right:84px;bottom:70px;display:flex;justify-content:space-between;align-items:flex-end;font-weight:600;font-size:24px;color:#8fb3b0}
+.foot .u{color:#f26522;font-weight:800;font-size:28px;letter-spacing:.04em}
+</style>
+<div class=glow></div>
+<div class=top><span>CAST<b>ZONE</b></span><span id=where></span></div>
+<div class=eyebrow id=eyebrow>BEST BITE WINDOW</div>
+<div class=time id=t1></div>
+<div class=to><small>UNTIL</small><span id=t2></span></div>
+<div class=sub id=sub></div>
+<svg width=1080 height=330 viewBox="0 0 1080 330"></svg>
+<div class=foot><span>Solunar guide, not a guarantee</span><span class=u>castzone.co.za/bite-times</span></div>
+<script>
+const D=window.DATA, day=D.day, NS='http://www.w3.org/2000/svg';
+const hm=s=>{const [h,m]=s.split(':').map(Number);return h+m/60};
+const P=day.periods.map(p=>({...p,a:hm(p.start),b:hm(p.end)}));
+const best=P.filter(p=>p.type==='major')[0]||P[0];
+document.getElementById('where').textContent=(D.spot+' · '+day.date).toUpperCase();
+document.getElementById('t1').textContent=best.start;
+document.getElementById('t2').textContent=best.end;
+document.getElementById('sub').textContent=`${day.rating} day, ${day.score} out of 100.`;
+const s=document.querySelector('svg');
+const X=h=>84+h/24*912, g=(h,c,w,a)=>a*Math.exp(-((h-c)**2)/(2*w*w));
+const f=h=>P.reduce((t,p)=>t+g(h,(p.a+p.b)/2,(p.b-p.a)/2.2,p.type==='major'?1:.5),0)+.07;
+let d='';for(let h=0;h<=24.01;h+=.1){d+=(h?'L':'M')+X(h).toFixed(1)+' '+(250-Math.min(f(h),1.05)*190).toFixed(1)}
+const el=(t,a,p=s)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+const defs=el('defs',{});const lg=el('linearGradient',{id:'lg',x1:0,y1:0,x2:0,y2:1},defs);
+el('stop',{offset:0,'stop-color':'#f26522','stop-opacity':.55},lg);el('stop',{offset:1,'stop-color':'#f26522','stop-opacity':0},lg);
+el('path',{d:d+`L${X(24)} 250L${X(0)} 250Z`,fill:'url(#lg)'});
+el('path',{d,fill:'none',stroke:'#f26522','stroke-width':4,'stroke-linejoin':'round'});
+el('rect',{x:X(best.a),y:30,width:X(best.b)-X(best.a),height:220,fill:'#f3efe6',opacity:.07});
+el('line',{x1:84,x2:996,y1:250,y2:250,stroke:'#8fb3b0','stroke-opacity':.4});
+for(let h=0;h<=24;h+=3){el('line',{x1:X(h),x2:X(h),y1:250,y2:262,stroke:'#8fb3b0','stroke-opacity':.6});
+ el('text',{x:X(h),y:292,fill:'#8fb3b0','font-size':20,'font-family':'Manrope','font-weight':600,'text-anchor':'middle'}).textContent=String(h).padStart(2,'0')+':00'}
+[['SUNRISE',day.sunrise],['SUNSET',day.sunset]].forEach(([l,t])=>{if(!t)return;const x=X(hm(t));
+ el('line',{x1:x,x2:x,y1:236,y2:250,stroke:'#f26522','stroke-width':3});
+ el('text',{x,y:324,fill:'#f26522','font-size':18,'font-family':'Manrope','font-weight':800,'letter-spacing':'.12em','text-anchor':'middle'}).textContent=l+' '+t});
+P.forEach(p=>{const h=(p.a+p.b)/2,y=250-Math.min(f(h),1.05)*190,mj=p.type==='major';
+ el('circle',{cx:X(h),cy:y,r:9,fill:'#0b2323',stroke:'#f3efe6','stroke-width':3});
+ el('text',{x:X(h),y:y-24,fill:mj?'#f3efe6':'#8fb3b0','font-size':19,'font-family':'Manrope','font-weight':800,'letter-spacing':'.12em','text-anchor':'middle'}).textContent=(mj?'MAJOR ':'minor ')+p.start});
+</script>

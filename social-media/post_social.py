@@ -324,6 +324,22 @@ def _rating_color(rating):
 
 
 def generate_bite_card(days, out_path="/tmp/castzone_bite.jpg"):
+    """New data-driven card (HTML via Playwright). Falls back to the Pillow card if no browser."""
+    import subprocess, tempfile
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as tf:
+            json.dump({"spot": BITE_SPOT[2], "day": days[0]}, tf)
+        r = subprocess.run(["node", os.path.join(HERE, "bite_card.mjs"), tf.name, out_path],
+                           capture_output=True, text=True, timeout=90)
+        if r.returncode == 0 and os.path.getsize(out_path) > 20000:
+            return out_path
+        warn(f"bite_card.mjs failed, using Pillow card: {r.stderr[-200:]}")
+    except Exception as e:
+        warn(f"bite_card.mjs unavailable, using Pillow card: {e}")
+    return generate_bite_card_pillow(days, out_path)
+
+
+def generate_bite_card_pillow(days, out_path="/tmp/castzone_bite.jpg"):
     img, draw = _base_card("BITE TIMES")
     BONE, PALE, ORANGE = _hex("#f9f7f4"), _hex("#a8c5c5"), _hex(BRAND_ORANGE)
     f_head = _var_font("Newsreader.ttf", 92, 600, opsz=72)
