@@ -1,9 +1,9 @@
 {
- "fetchedAt": "2026-11-21T19:10:08+00:00",
+ "fetchedAt": "2026-11-21T22:10:09+00:00",
  "source": "https://www.dws.gov.za/hydrology/Unverified",
  "vaalDamCapacity": {
   "station": "C1R001",
-  "time": "2026-11-21 19:00",
+  "time": "2026-11-21 22:00",
   "value": 105.66
  },
  "vaalDamOutflow": {
