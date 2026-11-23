@@ -90,7 +90,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         className="group block bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors"
       >
         <div className="flex items-center justify-between gap-3 mb-3">
-          <p className="text-storm text-xs font-body uppercase tracking-wider">Today&apos;s Bite Forecast</p>
+          <p className="text-storm-text text-xs font-body uppercase tracking-wider">Today&apos;s Bite Forecast</p>
           {locationLabel && (
             <span className="text-pale-water text-xs font-body flex items-center gap-1">📍 {locationLabel}</span>
           )}
@@ -102,7 +102,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         </div>
         <p className="text-pale-water text-xs font-body mt-1 mb-3">
           {today.moon.emoji} {today.moon.name}
-          {forecast?.[0] && <> · {forecast[0].emoji} {forecast[0].tMax}°<span className="text-storm">/{forecast[0].tMin}°</span></>}
+          {forecast?.[0] && <> · {forecast[0].emoji} {forecast[0].tMax}°<span className="text-storm-text">/{forecast[0].tMin}°</span></>}
           {nextMajor && <> · next prime <span className="text-bone-white">{fmtTime(nextMajor.start)}–{fmtTime(nextMajor.end)}</span></>}
         </p>
 
@@ -120,11 +120,11 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
             );
           })}
         </div>
-        <div className="flex justify-between text-storm text-[10px] font-body mt-1 px-1">
+        <div className="flex justify-between text-storm-text text-[11px] font-body mt-1 px-1">
           <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>12am</span>
         </div>
 
-        <p className="text-cast-orange text-xs font-body mt-3 group-hover:underline">See best bite times for your spot →</p>
+        <p className="text-cast-orange-text text-xs font-body mt-3 group-hover:underline">See best bite times for your spot →</p>
       </Link>
     );
   }
@@ -136,7 +136,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
         <h2 className="text-bone-white font-heading font-semibold text-lg flex items-center gap-2">
           🎣 Best Bite Times
         </h2>
-        <span className="text-storm text-xs font-body">{dateLabel}</span>
+        <span className="text-storm-text text-xs font-body">{dateLabel}</span>
       </div>
 
       {/* Rating + moon */}
@@ -146,14 +146,14 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
             <span className="font-heading font-bold text-4xl leading-none" style={{ color }}>{score}%</span>
             <span className="font-mono font-semibold uppercase text-base" style={{ color }}>{rating}</span>
           </div>
-          <p className="text-storm text-xs font-body mt-1">
+          <p className="text-storm-text text-xs font-body mt-1">
             Overall bite rating for today{cond ? "" : " · solunar only"}
           </p>
         </div>
         <div className="text-right">
           <div className="text-3xl leading-none">{today.moon.emoji}</div>
           <p className="text-pale-water text-xs font-body mt-1">{today.moon.name}</p>
-          <p className="text-storm text-xs font-body">{Math.round(today.moon.fraction * 100)}% lit</p>
+          <p className="text-storm-text text-xs font-body">{Math.round(today.moon.fraction * 100)}% lit</p>
         </div>
       </div>
 
@@ -161,7 +161,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
       {cond && (
         <div className="bg-deep-water border border-surface-teal/60 rounded-md p-3 mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs font-body">
           <span className="text-pale-water">{cond.trendIcon} {cond.summary}</span>
-          <span className="text-storm">🌡 {cond.tempC}°C</span>
+          <span className="text-storm-text">🌡 {cond.tempC}°C</span>
           <span className="font-body" style={{ color: mod > 0 ? "#4ade80" : mod < 0 ? "#f59e0b" : "#8a9a9a" }}>
             {mod > 0 ? `+${mod}` : mod} pts from weather
           </span>
@@ -184,7 +184,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
             );
           })}
         </div>
-        <div className="flex justify-between text-storm text-[10px] font-body mt-1 px-1">
+        <div className="flex justify-between text-storm-text text-[11px] font-body mt-1 px-1">
           <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>12am</span>
         </div>
       </div>
@@ -192,22 +192,22 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
       {/* Windows */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
         <div className="bg-deep-water border border-cast-orange/30 rounded-md p-3">
-          <p className="text-cast-orange text-xs font-heading font-semibold mb-2">Major (prime)</p>
+          <p className="text-cast-orange-text text-xs font-heading font-semibold mb-2">Major (prime)</p>
           {majors.length === 0 ? (
-            <p className="text-storm text-xs font-body">—</p>
+            <p className="text-storm-text text-xs font-body">—</p>
           ) : majors.map((p, i) => (
             <p key={i} className="text-bone-white text-sm font-body font-mono">
-              {fmtTime(p.start)} – {fmtTime(p.end)} <span className="text-storm font-sans">· {p.label}</span>
+              {fmtTime(p.start)} – {fmtTime(p.end)} <span className="text-storm-text font-sans">· {p.label}</span>
             </p>
           ))}
         </div>
         <div className="bg-deep-water border border-surface-teal rounded-md p-3">
           <p className="text-pale-water text-xs font-mono font-semibold uppercase tracking-wider mb-2">Minor</p>
           {minors.length === 0 ? (
-            <p className="text-storm text-xs font-body">—</p>
+            <p className="text-storm-text text-xs font-body">—</p>
           ) : minors.map((p, i) => (
             <p key={i} className="text-bone-white text-sm font-body font-mono">
-              {fmtTime(p.start)} – {fmtTime(p.end)} <span className="text-storm font-sans">· {p.label}</span>
+              {fmtTime(p.start)} – {fmtTime(p.end)} <span className="text-storm-text font-sans">· {p.label}</span>
             </p>
           ))}
         </div>
@@ -231,7 +231,7 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
                 aria-hidden={locked}
                 title={locked ? undefined : `${r.rating} · ${sc}%${fc ? ` · ${fc.label}, ${fc.tMin}–${fc.tMax}°C, rain ${fc.rainPct}%, wind up to ${fc.windMax} km/h` : ""}`}
               >
-                <p className="text-storm text-[10px] font-body uppercase">
+                <p className="text-storm-text text-[11px] font-body uppercase">
                   {i === 0 ? "Today" : d.date.toLocaleDateString("en-ZA", { weekday: "short" })}
                 </p>
                 <p className="text-base leading-tight my-0.5">{d.moon.emoji}</p>
@@ -239,10 +239,10 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
                 {fc && (
                   <div className="border-t border-surface-teal/30 mt-1.5 pt-1">
                     <p className="text-sm leading-tight">{fc.emoji}</p>
-                    <p className="text-pale-water text-[10px] font-body leading-tight mt-0.5">
-                      {fc.tMax}°<span className="text-storm">/{fc.tMin}°</span>
+                    <p className="text-pale-water text-[11px] font-body leading-tight mt-0.5">
+                      {fc.tMax}°<span className="text-storm-text">/{fc.tMin}°</span>
                     </p>
-                    <p className={`text-[10px] font-body leading-tight ${fc.rainPct >= 40 ? "text-blue-300" : "text-storm"}`}>
+                    <p className={`text-[11px] font-body leading-tight ${fc.rainPct >= 40 ? "text-blue-300" : "text-storm-text"}`}>
                       💧{fc.rainPct}%
                     </p>
                   </div>
@@ -257,22 +257,22 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
               style={{ left: `${(FREE_DAYS / 7) * 100}%` }}
             >
               <span className="text-xl leading-none mb-1.5">🔒</span>
-              <span className="bg-cast-orange group-hover:bg-bone-white text-deep-water text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-wider rounded px-2.5 py-1.5 transition-colors">
+              <span className="bg-cast-orange group-hover:bg-bone-white text-charcoal text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-wider rounded px-2.5 py-1.5 transition-colors">
                 Sign up free
               </span>
-              <span className="text-pale-water text-[10px] sm:text-[11px] font-body mt-1.5 leading-tight drop-shadow">
+              <span className="text-pale-water text-[11px] sm:text-[11px] font-body mt-1.5 leading-tight drop-shadow">
                 to unlock the full 7-day forecast
               </span>
             </Link>
           )}
         </div>
         {lockedOut ? (
-          <p className="text-storm text-[10px] font-body mt-1.5">
+          <p className="text-storm-text text-[11px] font-body mt-1.5">
             Free members see the full 7-day bite + weather outlook ·{" "}
-            <Link href="/login" className="text-cast-orange hover:underline">already a member? Log in</Link>
+            <Link href="/login" className="text-cast-orange-text hover:underline">already a member? Log in</Link>
           </p>
         ) : forecast && (
-          <p className="text-storm text-[10px] font-body mt-1.5">
+          <p className="text-storm-text text-[11px] font-body mt-1.5">
             Weather updates live every time the page loads · tap a day for detail
           </p>
         )}
@@ -281,9 +281,9 @@ export default function BiteTimes({ lat, lng, name, variant = "full", locationLa
       {/* Sun + disclaimer */}
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-body">
         <span className="text-pale-water">☀️ Sunrise {fmtTime(today.sunrise)} · Sunset {fmtTime(today.sunset)}</span>
-        {name && <span className="text-storm">{name}</span>}
+        {name && <span className="text-storm-text">{name}</span>}
       </div>
-      <p className="text-storm text-[11px] font-body mt-3 leading-relaxed border-t border-surface-teal/40 pt-3">
+      <p className="text-storm-text text-[11px] font-body mt-3 leading-relaxed border-t border-surface-teal/40 pt-3">
         Combines solunar theory (moon &amp; sun position + moon phase) with live barometric pressure &amp; wind. A popular guide among anglers — not a guarantee. Weather data: Open-Meteo.
       </p>
     </div>

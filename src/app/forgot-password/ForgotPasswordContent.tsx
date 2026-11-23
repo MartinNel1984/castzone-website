@@ -39,10 +39,10 @@ export default function ForgotPasswordContent() {
           <p className="text-pale-water font-body mb-2">
             We&apos;ve sent a password reset link to <strong className="text-bone-white">{email}</strong>.
           </p>
-          <p className="text-storm text-sm font-body mb-6">
+          <p className="text-storm-text text-sm font-body mb-6">
             Click the link in the email to choose a new password. Check your spam folder if it doesn&apos;t arrive within a few minutes.
           </p>
-          <Link href="/login" className="text-cast-orange hover:underline font-body text-sm">
+          <Link href="/login" className="text-cast-orange-text hover:underline font-body text-sm">
             ← Back to Sign In
           </Link>
         </div>
@@ -58,7 +58,7 @@ export default function ForgotPasswordContent() {
             <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">Reset Password</h1>
-          <p className="text-storm mt-2 font-body">Enter your email and we&apos;ll send a reset link</p>
+          <p className="text-storm-text mt-2 font-body">Enter your email and we&apos;ll send a reset link</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-deep-water-light border border-surface-teal rounded-lg p-8 space-y-5">
@@ -86,14 +86,14 @@ export default function ForgotPasswordContent() {
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
 
-          <p className="text-center text-storm text-sm font-body">
+          <p className="text-center text-storm-text text-sm font-body">
             Remembered it?{" "}
-            <Link href="/login" className="text-cast-orange hover:underline">
+            <Link href="/login" className="text-cast-orange-text hover:underline">
               Sign in
             </Link>
           </p>

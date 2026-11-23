@@ -48,8 +48,8 @@ function PostImages({ urls, locked }: { urls: string[]; locked: boolean }) {
         <span className="text-2xl flex-shrink-0">🔒</span>
         <p className="text-pale-water font-body text-sm">
           {urls.length === 1 ? "1 photo" : `${urls.length} photos`} in this post —{" "}
-          <Link href="/register" className="text-cast-orange hover:underline font-medium">join free</Link> or{" "}
-          <Link href="/login" className="text-cast-orange hover:underline font-medium">sign in</Link> to view.
+          <Link href="/register" className="text-cast-orange-text hover:underline font-medium">join free</Link> or{" "}
+          <Link href="/login" className="text-cast-orange-text hover:underline font-medium">sign in</Link> to view.
         </p>
       </div>
     );
@@ -260,8 +260,8 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
   if (!threadId || (!loading && !thread)) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm text-lg">Thread not found.</p>
-        <Link href="/forum" className="text-cast-orange mt-4 inline-block">← Back to Forum</Link>
+        <p className="text-storm-text text-lg">Thread not found.</p>
+        <Link href="/forum" className="text-cast-orange-text mt-4 inline-block">← Back to Forum</Link>
       </div>
     );
   }
@@ -271,7 +271,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/forum" className="hover:text-pale-water">Forum</Link>
         {category && (
           <>
@@ -293,16 +293,16 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
             onClick={handleBookmarkToggle}
             disabled={bookmarkWorking}
             title={bookmarked ? "Remove bookmark" : "Save this thread"}
-            className={`flex-shrink-0 mt-1 text-2xl leading-none transition-colors ${bookmarked ? "text-cast-orange" : "text-storm hover:text-pale-water"}`}
+            className={`flex-shrink-0 mt-1 text-2xl leading-none transition-colors ${bookmarked ? "text-cast-orange" : "text-storm-text hover:text-pale-water"}`}
           >
             {bookmarked ? "★" : "☆"}
           </button>
         )}
       </div>
       {bookmarkFlash && (
-        <p className="text-xs text-storm -mt-5 mb-6">
+        <p className="text-xs text-storm-text -mt-5 mb-6">
           Thread saved ·{" "}
-          <Link href="/saved" className="text-cast-orange hover:underline">View all saved threads</Link>
+          <Link href="/saved" className="text-cast-orange-text hover:underline">View all saved threads</Link>
         </p>
       )}
 
@@ -337,22 +337,22 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
                   <div>
                     <Link
                       href={`/profile?username=${encodeURIComponent(post.profiles?.username ?? "")}`}
-                      className="text-bone-white hover:text-cast-orange font-body font-semibold text-sm transition-colors"
+                      className="text-bone-white hover:text-cast-orange-text font-body font-semibold text-sm transition-colors"
                     >
                       {post.profiles?.username ?? "Unknown"}
                     </Link>
-                    <p className="text-storm text-xs">{post.profiles?.member_level ?? "First Cast"}</p>
+                    <p className="text-storm-text text-xs">{post.profiles?.member_level ?? "First Cast"}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-storm text-xs">#{index + 1}</p>
-                  <p className="text-storm text-xs">{timeAgo(post.created_at)}</p>
+                  <p className="text-storm-text text-xs">#{index + 1}</p>
+                  <p className="text-storm-text text-xs">{timeAgo(post.created_at)}</p>
                   {user && post.author_id === user.id &&
                     now - new Date(post.created_at).getTime() < 86400000 &&
                     editingPostId !== post.id && (
                     <button
                       onClick={() => { setEditingPostId(post.id); setEditContent(post.content); }}
-                      className="text-storm hover:text-pale-water text-xs mt-1 font-body underline underline-offset-2 transition-colors"
+                      className="text-storm-text hover:text-pale-water text-xs mt-1 font-body underline underline-offset-2 transition-colors"
                     >
                       Edit
                     </button>
@@ -372,14 +372,14 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
                   <div className="flex items-center justify-end gap-2 mt-2">
                     <button
                       onClick={() => setEditingPostId(null)}
-                      className="text-storm hover:text-pale-water text-sm font-body px-3 py-1.5 transition-colors"
+                      className="text-storm-text hover:text-pale-water text-sm font-body px-3 py-1.5 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={() => handleEditSave(post.id)}
                       disabled={editSaving || !editContent.trim()}
-                      className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
+                      className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                     >
                       {editSaving ? "Saving…" : "Save Edit"}
                     </button>
@@ -391,7 +391,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
                     {post.content}
                   </div>
                   {new Date(post.updated_at).getTime() - new Date(post.created_at).getTime() > 5000 && (
-                    <p className="text-storm text-xs mt-2 italic">Edited</p>
+                    <p className="text-storm-text text-xs mt-2 italic">Edited</p>
                   )}
                 </>
               )}
@@ -408,7 +408,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
       <div className="mt-8">
         {thread?.is_locked ? (
           <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 text-center">
-            <p className="text-storm font-body">🔒 This thread is locked. No new replies.</p>
+            <p className="text-storm-text font-body">🔒 This thread is locked. No new replies.</p>
           </div>
         ) : user ? (
           <form onSubmit={handleReply} className="bg-deep-water-light border border-surface-teal rounded-lg p-5">
@@ -477,7 +477,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
               <button
                 type="submit"
                 disabled={submitting || !reply.trim()}
-                className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
+                className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
               >
                 {submitting ? "Posting..." : "Post Reply"}
               </button>
@@ -490,7 +490,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
               <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-5 py-2 rounded transition-colors text-sm">
                 Sign In
               </Link>
-              <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2 rounded transition-colors text-sm">
+              <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2 rounded transition-colors text-sm">
                 Join Free
               </Link>
             </div>
@@ -502,7 +502,7 @@ export default function ThreadView({ threadId }: { threadId: string | null }) {
       <div className="mt-6">
         <Link
           href={category ? `/forum/${category.slug}` : "/forum"}
-          className="text-storm hover:text-pale-water text-sm font-body transition-colors"
+          className="text-storm-text hover:text-pale-water text-sm font-body transition-colors"
         >
           ← Back to {category ? category.name : "Forum"}
         </Link>

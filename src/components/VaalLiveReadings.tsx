@@ -78,13 +78,13 @@ export default function VaalLiveReadings() {
           <div key={label} className="bg-black/20 rounded p-3">
             <p className="text-xs font-mono font-semibold uppercase tracking-wider mb-1 text-blue-300">{label}</p>
             <p className="text-bone-white text-lg font-mono">{r.value.toFixed(r.value < 10 ? 1 : 0)} m³/s</p>
-            <p className="text-storm text-xs mt-1 font-mono">
+            <p className="text-storm-text text-xs mt-1 font-mono">
               {cap ? `Dam ${cap.value.toFixed(0)}% full · ` : ""}read {r.time}
             </p>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-xs font-body text-storm">
+      <p className="mt-3 text-xs font-body text-storm-text">
         Unverified near-real-time DWS data, refreshed every few hours. Gate openings can change flow quickly — always check conditions on the day.
       </p>
     </div>

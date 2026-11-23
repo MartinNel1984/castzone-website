@@ -103,7 +103,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center leading-none px-0.5">
+          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[11px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center leading-none px-0.5">
             {unread > 9 ? "9+" : unread}
           </span>
         )}
@@ -114,13 +114,13 @@ export default function NotificationBell({ userId }: { userId: string }) {
           <div className="px-4 py-3 border-b border-surface-teal/40 flex items-center justify-between">
             <span className="text-bone-white font-heading font-semibold text-sm">Notifications</span>
             {notifications.length > 0 && (
-              <span className="text-storm text-xs font-body">{notifications.length} recent</span>
+              <span className="text-storm-text text-xs font-body">{notifications.length} recent</span>
             )}
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-surface-teal/20">
             {notifications.length === 0 ? (
-              <p className="text-storm font-body text-sm text-center py-10">No notifications yet</p>
+              <p className="text-storm-text font-body text-sm text-center py-10">No notifications yet</p>
             ) : (
               notifications.map((n) => (
                 <Link
@@ -133,9 +133,9 @@ export default function NotificationBell({ userId }: { userId: string }) {
                   <div className="min-w-0 flex-1">
                     <p className="text-bone-white font-body text-sm font-medium leading-snug">{n.title}</p>
                     {n.body && (
-                      <p className="text-storm text-xs mt-0.5 leading-snug">{n.body}</p>
+                      <p className="text-storm-text text-xs mt-0.5 leading-snug">{n.body}</p>
                     )}
-                    <p className="text-storm/50 text-xs mt-1">{timeAgo(n.created_at)}</p>
+                    <p className="text-storm-text/50 text-xs mt-1">{timeAgo(n.created_at)}</p>
                   </div>
                   {!n.read && (
                     <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 mt-1.5" />
@@ -149,7 +149,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
             <Link
               href="/catches"
               onClick={() => setOpen(false)}
-              className="text-cast-orange hover:underline text-xs font-body"
+              className="text-cast-orange-text hover:underline text-xs font-body"
             >
               View Trophy Room →
             </Link>

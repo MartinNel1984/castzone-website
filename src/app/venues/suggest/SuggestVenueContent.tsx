@@ -68,7 +68,7 @@ export default function SuggestVenueContent() {
           </Link>
           <button
             onClick={() => { setDone(false); setName(""); setProvince(""); setType(""); setGps(""); setNotes(""); setSubmittedBy(""); }}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
           >
             Suggest Another
           </button>
@@ -80,7 +80,7 @@ export default function SuggestVenueContent() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/venues" className="hover:text-pale-water">The Map</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">Suggest a Venue</span>
@@ -89,7 +89,7 @@ export default function SuggestVenueContent() {
       <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">
         Suggest a Venue
       </h1>
-      <p className="text-storm font-body text-sm mb-8">
+      <p className="text-storm-text font-body text-sm mb-8">
         Know a dam, river, estuary or stretch of coast that should be on The Map? Tell us about it.
         We review all suggestions and add the best ones.
       </p>
@@ -104,7 +104,7 @@ export default function SuggestVenueContent() {
         {/* Venue name */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Venue Name <span className="text-cast-orange">*</span>
+            Venue Name <span className="text-cast-orange-text">*</span>
           </label>
           <input
             type="text"
@@ -121,7 +121,7 @@ export default function SuggestVenueContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-              Province <span className="text-cast-orange">*</span>
+              Province <span className="text-cast-orange-text">*</span>
             </label>
             <select
               value={province}
@@ -137,7 +137,7 @@ export default function SuggestVenueContent() {
           </div>
           <div>
             <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-              Venue Type <span className="text-cast-orange">*</span>
+              Venue Type <span className="text-cast-orange-text">*</span>
             </label>
             <select
               value={type}
@@ -156,7 +156,7 @@ export default function SuggestVenueContent() {
         {/* GPS */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            GPS Coordinates <span className="text-storm font-normal normal-case">(optional)</span>
+            GPS Coordinates <span className="text-storm-text font-normal normal-case">(optional)</span>
           </label>
           <input
             type="text"
@@ -165,7 +165,7 @@ export default function SuggestVenueContent() {
             placeholder="e.g. -25.8767, 28.3167 or Google Maps link"
             className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white placeholder-storm font-body focus:outline-none focus:border-cast-orange transition-colors"
           />
-          <p className="text-storm text-xs mt-1 font-body">
+          <p className="text-storm-text text-xs mt-1 font-body">
             Open Google Maps, long-press the location, and copy the coordinates shown.
           </p>
         </div>
@@ -173,7 +173,7 @@ export default function SuggestVenueContent() {
         {/* Notes */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Tell Us About It <span className="text-storm font-normal normal-case">(optional)</span>
+            Tell Us About It <span className="text-storm-text font-normal normal-case">(optional)</span>
           </label>
           <textarea
             value={notes}
@@ -187,7 +187,7 @@ export default function SuggestVenueContent() {
         {/* Your name */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Your Name / Username <span className="text-storm font-normal normal-case">(optional)</span>
+            Your Name / Username <span className="text-storm-text font-normal normal-case">(optional)</span>
           </label>
           <input
             type="text"
@@ -200,13 +200,13 @@ export default function SuggestVenueContent() {
         </div>
 
         <div className="flex items-center justify-between pt-2">
-          <Link href="/venues" className="text-storm hover:text-pale-water text-sm font-body transition-colors">
+          <Link href="/venues" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting || !name.trim() || !province || !type}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             {submitting ? "Submitting..." : "Submit Suggestion"}
           </button>

@@ -10,7 +10,7 @@ export default function ContactPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">Contact Us</h1>
-      <p className="text-storm font-body mb-10">
+      <p className="text-storm-text font-body mb-10">
         Questions, partnerships, moderation issues or just want to say hi — we&apos;re a small team and we read everything.
       </p>
 
@@ -23,10 +23,10 @@ export default function ContactPage() {
         ].map((item) => (
           <div key={item.title} className="bg-deep-water-light border border-surface-teal rounded-lg p-6">
             <h2 className="text-bone-white font-heading font-semibold mb-1">{item.title}</h2>
-            <p className="text-storm font-body text-xs mb-3">{item.desc}</p>
+            <p className="text-storm-text font-body text-xs mb-3">{item.desc}</p>
             <a
               href={`mailto:${item.email}`}
-              className="text-cast-orange hover:underline font-body text-sm"
+              className="text-cast-orange-text hover:underline font-body text-sm"
             >
               {item.email}
             </a>

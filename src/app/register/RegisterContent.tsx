@@ -64,7 +64,7 @@ export default function RegisterContent() {
             Your account is ready and you&apos;re signed in. Tight lines, <strong className="text-bone-white">{username}</strong> — let&apos;s get you on the water.
           </p>
           <div className="flex flex-col gap-3">
-            <Link href="/forum" className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
+            <Link href="/forum" className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
               Go to the Forum →
             </Link>
             {WHATSAPP_GROUP_URL && (
@@ -92,7 +92,7 @@ export default function RegisterContent() {
             <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">Join Free</h1>
-          <p className="text-storm mt-2 font-body">South Africa&apos;s fishing community</p>
+          <p className="text-storm-text mt-2 font-body">South Africa&apos;s fishing community</p>
         </div>
 
         {/* Form */}
@@ -148,14 +148,14 @@ export default function RegisterContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Creating account..." : "Create Account"}
           </button>
 
-          <p className="text-center text-storm text-sm font-body">
+          <p className="text-center text-storm-text text-sm font-body">
             Already a member?{" "}
-            <Link href="/login" className="text-cast-orange hover:underline">
+            <Link href="/login" className="text-cast-orange-text hover:underline">
               Sign in
             </Link>
           </p>

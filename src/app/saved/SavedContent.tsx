@@ -67,7 +67,7 @@ export default function SavedContent() {
           <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -80,9 +80,9 @@ export default function SavedContent() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">Saved Threads</h1>
-          <p className="text-storm font-body text-sm mt-1">Threads you&apos;ve bookmarked</p>
+          <p className="text-storm-text font-body text-sm mt-1">Threads you&apos;ve bookmarked</p>
         </div>
-        <Link href="/forum" className="text-cast-orange hover:text-bone-white text-sm font-body transition-colors">
+        <Link href="/forum" className="text-cast-orange-text hover:text-bone-white text-sm font-body transition-colors">
           Forum →
         </Link>
       </div>
@@ -96,10 +96,10 @@ export default function SavedContent() {
       ) : saved.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
           <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No saved threads yet</p>
-          <p className="text-storm font-body text-sm mb-6">
+          <p className="text-storm-text font-body text-sm mb-6">
             Tap the ☆ on any thread to save it here for later.
           </p>
-          <Link href="/forum" className="text-cast-orange hover:underline font-body text-sm">
+          <Link href="/forum" className="text-cast-orange-text hover:underline font-body text-sm">
             Browse the forum →
           </Link>
         </div>
@@ -114,10 +114,10 @@ export default function SavedContent() {
                   {t.categories?.icon ?? "🎣"}
                 </span>
                 <Link href={`/forum/thread?id=${t.id}`} className="flex-1 min-w-0">
-                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text transition-colors truncate">
                     {t.title}
                   </p>
-                  <p className="text-storm text-xs mt-0.5">
+                  <p className="text-storm-text text-xs mt-0.5">
                     {t.categories?.name ?? "General"}
                     {" · by "}
                     <span className="text-pale-water">{t.profiles?.username ?? "Angler"}</span>
@@ -128,7 +128,7 @@ export default function SavedContent() {
                 <button
                   onClick={() => handleRemove(item.thread_id)}
                   title="Remove bookmark"
-                  className="flex-shrink-0 text-storm hover:text-red-400 text-lg leading-none transition-colors"
+                  className="flex-shrink-0 text-storm-text hover:text-red-400 text-lg leading-none transition-colors"
                 >
                   ★
                 </button>

@@ -59,14 +59,14 @@ export default function SignupNudge() {
         </p>
         <Link
           href="/register"
-          className="flex-shrink-0 bg-cast-orange hover:bg-bone-white text-deep-water text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider rounded px-3 sm:px-4 py-2 transition-colors"
+          className="flex-shrink-0 bg-cast-orange hover:bg-bone-white text-charcoal text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider rounded px-3 sm:px-4 py-2 transition-colors"
         >
           Sign up free
         </Link>
         <button
           onClick={dismiss}
           aria-label="Dismiss"
-          className="flex-shrink-0 text-storm hover:text-bone-white text-xl leading-none px-1 transition-colors"
+          className="flex-shrink-0 text-storm-text hover:text-bone-white text-xl leading-none px-1 transition-colors"
         >
           ×
         </button>

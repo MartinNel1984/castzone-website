@@ -29,7 +29,7 @@ export default function Section({
           {action && (
             <Link
               href={action.href}
-              className="font-mono text-xs uppercase tracking-wider text-cast-orange hover:text-bone-white cz-transition"
+              className="font-mono text-xs uppercase tracking-wider text-cast-orange-text hover:text-bone-white cz-transition"
             >
               {action.label} &rarr;
             </Link>

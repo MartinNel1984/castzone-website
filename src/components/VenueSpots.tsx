@@ -237,14 +237,14 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           <button
             onClick={() => (user ? setFormOpen(true) : null)}
             disabled={!user}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-40 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-40 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
             title={user ? "Add a spot" : "Sign in to add a spot"}
           >
             ＋ Add a spot
           </button>
         )}
       </div>
-      <p className="text-storm text-sm font-body mb-4">
+      <p className="text-storm-text text-sm font-body mb-4">
         The exact spots anglers fish from at {venueName} — a photo of the bank, where to cast, and the species there.
       </p>
 
@@ -258,7 +258,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           {/* Photo */}
           <div>
             <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-              Photo of the spot <span className="text-cast-orange">*</span>
+              Photo of the spot <span className="text-cast-orange-text">*</span>
             </label>
             {photoPreview ? (
               <div className="relative inline-block">
@@ -271,7 +271,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
               <>
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={handlePhotoChange} className="hidden" />
                 <button type="button" onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-3 w-full border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded-lg px-5 py-6 text-storm hover:text-pale-water transition-colors">
+                  className="flex items-center gap-3 w-full border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded-lg px-5 py-6 text-storm-text hover:text-pale-water transition-colors">
                   <span className="text-2xl">📷</span>
                   <div className="text-left">
                     <p className="font-mono font-semibold uppercase text-sm tracking-wider">Take / add a photo</p>
@@ -290,7 +290,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                 <span className="text-green-400 text-lg">📍</span>
                 <div className="text-sm font-body">
                   <p className="text-bone-white">{fmtCoord(coords.lat, coords.lng)}</p>
-                  <p className="text-storm text-xs">Accurate to ~{Math.round(coords.acc)}m · <button type="button" onClick={() => setCoords(null)} className="text-cast-orange hover:underline">clear</button></p>
+                  <p className="text-storm-text text-xs">Accurate to ~{Math.round(coords.acc)}m · <button type="button" onClick={() => setCoords(null)} className="text-cast-orange-text hover:underline">clear</button></p>
                 </div>
               </div>
             ) : (
@@ -299,7 +299,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                   className="w-full border border-surface-teal hover:border-cast-orange/60 text-pale-water hover:text-bone-white rounded px-4 py-3 text-sm font-body transition-colors flex items-center justify-center gap-2">
                   {locating ? "Getting your location…" : "📍 Use my current location"}
                 </button>
-                <p className="text-storm text-xs mt-1 font-body">
+                <p className="text-storm-text text-xs mt-1 font-body">
                   Tap this while standing at the spot to drop an exact pin. Optional — you can add it without GPS.
                 </p>
                 {locError && <p className="text-amber-400 text-xs mt-1 font-body">{locError}</p>}
@@ -311,7 +311,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="spot-name" className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                Spot name <span className="text-cast-orange">*</span>
+                Spot name <span className="text-cast-orange-text">*</span>
               </label>
               <input id="spot-name" type="text" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} required
                 placeholder="e.g. The North Wall"
@@ -342,7 +342,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           {/* Species */}
           <div>
             <label htmlFor="spot-species" className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-              Species here <span className="text-storm font-normal normal-case">(comma-separated)</span>
+              Species here <span className="text-storm-text font-normal normal-case">(comma-separated)</span>
             </label>
             <input id="spot-species" type="text" value={speciesInput} onChange={(e) => setSpeciesInput(e.target.value)} maxLength={120}
               placeholder="e.g. Common Carp, Grass Carp, Tigerfish"
@@ -350,9 +350,9 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <button type="button" onClick={() => { resetForm(); setFormOpen(false); }} className="text-storm hover:text-pale-water text-sm font-body transition-colors">Cancel</button>
+            <button type="button" onClick={() => { resetForm(); setFormOpen(false); }} className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">Cancel</button>
             <button type="submit" disabled={submitting || !photoFile || !name.trim()}
-              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-2.5 rounded transition-colors text-sm">
+              className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-2.5 rounded transition-colors text-sm">
               {submitting ? "Adding…" : "Add this spot"}
             </button>
           </div>
@@ -361,15 +361,15 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
 
       {/* ── Spots list ── */}
       {loading ? (
-        <p className="text-storm font-body text-sm">Loading spots…</p>
+        <p className="text-storm-text font-body text-sm">Loading spots…</p>
       ) : spots.length === 0 ? (
         <div className="border-2 border-dashed border-surface-teal rounded-lg px-6 py-10 text-center">
           <p className="text-pale-water font-body mb-1">No spots added yet.</p>
-          <p className="text-storm text-sm font-body mb-4">Know a good spot here? Be the first to put it on the map.</p>
+          <p className="text-storm-text text-sm font-body mb-4">Know a good spot here? Be the first to put it on the map.</p>
           {user ? (
-            <button onClick={() => setFormOpen(true)} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-5 py-2.5 rounded transition-colors">＋ Add the first spot</button>
+            <button onClick={() => setFormOpen(true)} className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-5 py-2.5 rounded transition-colors">＋ Add the first spot</button>
           ) : (
-            <Link href="/login" className="text-cast-orange hover:underline font-body text-sm">Sign in to add a spot</Link>
+            <Link href="/login" className="text-cast-orange-text hover:underline font-body text-sm">Sign in to add a spot</Link>
           )}
         </div>
       ) : (
@@ -381,20 +381,20 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                 <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={s.image_url} alt={s.name} className="w-full h-44 object-cover" loading="lazy" />
-                  <span className="absolute top-2 right-2 w-7 h-7 rounded-full bg-cast-orange text-white font-heading font-bold text-sm flex items-center justify-center">{i + 1}</span>
+                  <span className="absolute top-2 right-2 w-7 h-7 rounded-full bg-cast-orange-deep text-white font-heading font-bold text-sm flex items-center justify-center">{i + 1}</span>
                   {coord && <span className="absolute left-2 bottom-2 text-[11px] bg-black/55 text-pale-water px-2 py-1 rounded">{coord}</span>}
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
                   <h3 className="text-bone-white font-heading font-bold text-base">{s.name}</h3>
-                  {s.access && <p className="text-storm text-xs font-body mb-2">{s.access}</p>}
-                  {s.tip && <p className="text-pale-water text-sm font-body leading-relaxed"><span className="text-cast-orange font-semibold">Tip:</span> {s.tip}</p>}
+                  {s.access && <p className="text-storm-text text-xs font-body mb-2">{s.access}</p>}
+                  {s.tip && <p className="text-pale-water text-sm font-body leading-relaxed"><span className="text-cast-orange-text font-semibold">Tip:</span> {s.tip}</p>}
                   {s.species.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {s.species.map((sp) => <span key={sp} className="text-[11px] bg-deep-water border border-surface-teal px-2 py-0.5 rounded text-pale-water">{sp}</span>)}
                     </div>
                   )}
                   <div className="mt-3 pt-3 border-t border-surface-teal/60">
-                    <p className="text-storm text-[11px] font-body mb-2">
+                    <p className="text-storm-text text-[11px] font-body mb-2">
                       👤 {s.profiles?.username ?? "An angler"}
                     </p>
                     {(() => {
@@ -410,7 +410,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                             title={!user ? "Sign in to confirm" : isOwn ? "You added this spot" : confirmed ? "Remove your confirm" : "I've fished here too"}
                             className={`inline-flex items-center gap-1.5 text-xs font-body rounded px-2.5 py-1.5 transition-colors disabled:opacity-50 ${
                               confirmed
-                                ? "bg-cast-orange/20 text-cast-orange border border-cast-orange/50"
+                                ? "bg-cast-orange/20 text-cast-orange-text border border-cast-orange/50"
                                 : "border border-surface-teal text-pale-water hover:text-bone-white hover:border-pale-water/50"
                             }`}
                           >
@@ -419,19 +419,19 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
 
                           {!isOwn && user && (
                             flagged ? (
-                              <span className="text-storm text-[11px] font-body">⚑ Reported</span>
+                              <span className="text-storm-text text-[11px] font-body">⚑ Reported</span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => setFlaggingId(flaggingId === s.id ? null : s.id)}
-                                className="inline-flex items-center gap-1.5 text-xs font-body rounded px-2.5 py-1.5 border border-transparent text-storm hover:text-amber-400 transition-colors"
+                                className="inline-flex items-center gap-1.5 text-xs font-body rounded px-2.5 py-1.5 border border-transparent text-storm-text hover:text-amber-400 transition-colors"
                                 title="Report this spot"
                               >
                                 ⚑ Flag
                               </button>
                             )
                           )}
-                          {isOwn && <span className="text-storm text-[11px] font-body">Your spot</span>}
+                          {isOwn && <span className="text-storm-text text-[11px] font-body">Your spot</span>}
                         </div>
                       );
                     })()}
@@ -439,7 +439,7 @@ export default function VenueSpots({ venueSlug, venueName }: { venueSlug: string
                     {/* Flag reason picker */}
                     {flaggingId === s.id && (
                       <div className="mt-2 bg-deep-water border border-surface-teal rounded p-2.5">
-                        <p className="text-storm text-[11px] font-body mb-1.5">What&apos;s wrong with this spot?</p>
+                        <p className="text-storm-text text-[11px] font-body mb-1.5">What&apos;s wrong with this spot?</p>
                         <div className="flex flex-wrap gap-1.5">
                           {["Wrong location", "Not fishing here", "Spam / abuse", "Looks unsafe"].map((r) => (
                             <button key={r} type="button" onClick={() => submitFlag(s, r)}

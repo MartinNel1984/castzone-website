@@ -116,13 +116,13 @@ export default function ListYourVenueContent() {
           <p className="text-pale-water font-body mb-2">
             Thanks for reaching out, <span className="text-bone-white">{contactName.split(" ")[0]}</span>.
           </p>
-          <p className="text-storm font-body text-sm mb-8">
+          <p className="text-storm-text font-body text-sm mb-8">
             We&apos;ve received your listing request for <span className="text-pale-water">{venueName}</span>.
             We&apos;ll review it and contact you within 2 business days to get the details right before going live.
           </p>
           <Link
             href="/venues"
-            className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             See The Map
           </Link>
@@ -137,12 +137,12 @@ export default function ListYourVenueContent() {
       <section className="relative border-b border-surface-teal/30 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-deep-water via-surface-teal/10 to-deep-water pointer-events-none" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-block bg-cast-orange/10 border border-cast-orange/30 rounded-full px-4 py-1.5 text-cast-orange text-sm font-body font-medium mb-6 uppercase tracking-wider">
+          <div className="inline-block bg-cast-orange/10 border border-cast-orange/30 rounded-full px-4 py-1.5 text-cast-orange-text text-sm font-body font-medium mb-6 uppercase tracking-wider">
             Free for venue owners
           </div>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-semibold text-bone-white leading-tight mb-4">
             List Your Venue<br />
-            <span className="text-cast-orange">on The Map</span>
+            <span className="text-cast-orange-text">on The Map</span>
           </h1>
           <p className="text-pale-water font-body text-lg sm:text-xl max-w-2xl mx-auto mb-10">
             Join 67 fishing venues already reaching thousands of SA anglers on CastZone —
@@ -158,7 +158,7 @@ export default function ListYourVenueContent() {
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <div className="text-3xl font-heading font-bold text-cast-orange">{s.value}</div>
-                <div className="text-storm text-sm font-body mt-0.5">{s.label}</div>
+                <div className="text-storm-text text-sm font-body mt-0.5">{s.label}</div>
               </div>
             ))}
           </div>
@@ -166,7 +166,7 @@ export default function ListYourVenueContent() {
           <div className="mt-10">
             <a
               href="#submit"
-              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-10 py-4 rounded text-lg transition-colors"
+              className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-10 py-4 rounded text-lg transition-colors"
             >
               List My Venue — It&apos;s Free
             </a>
@@ -179,7 +179,7 @@ export default function ListYourVenueContent() {
         <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white text-center mb-2">
           What you get
         </h2>
-        <p className="text-storm font-body text-center mb-10">Everything included. Nothing to pay.</p>
+        <p className="text-storm-text font-body text-center mb-10">Everything included. Nothing to pay.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {BENEFITS.map((b) => (
@@ -189,7 +189,7 @@ export default function ListYourVenueContent() {
             >
               <div className="text-3xl mb-3">{b.icon}</div>
               <h3 className="text-lg font-heading font-semibold text-bone-white mb-2">{b.title}</h3>
-              <p className="text-storm font-body text-sm leading-relaxed">{b.body}</p>
+              <p className="text-storm-text font-body text-sm leading-relaxed">{b.body}</p>
             </div>
           ))}
         </div>
@@ -218,8 +218,8 @@ export default function ListYourVenueContent() {
                   "Linked forum threads about your water",
                   "Nearby venues for context",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-storm font-body text-sm">
-                    <span className="text-cast-orange mt-0.5 flex-shrink-0">✓</span>
+                  <li key={item} className="flex items-start gap-2.5 text-storm-text font-body text-sm">
+                    <span className="text-cast-orange-text mt-0.5 flex-shrink-0">✓</span>
                     {item}
                   </li>
                 ))}
@@ -233,24 +233,24 @@ export default function ListYourVenueContent() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs bg-cast-orange/20 text-cast-orange font-body font-medium px-2 py-0.5 rounded uppercase tracking-wider">Dam</span>
-                      <span className="text-xs text-storm font-body">Limpopo</span>
+                      <span className="text-xs bg-cast-orange/20 text-cast-orange-text font-body font-medium px-2 py-0.5 rounded uppercase tracking-wider">Dam</span>
+                      <span className="text-xs text-storm-text font-body">Limpopo</span>
                     </div>
                     <h3 className="text-xl font-heading font-semibold text-bone-white ">Your Venue Name</h3>
-                    <p className="text-storm text-xs font-body mt-0.5">Private Dam · Permit required</p>
+                    <p className="text-storm-text text-xs font-body mt-0.5">Private Dam · Permit required</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="flex items-center gap-1 justify-end">
-                      <span className="text-cast-orange text-sm">★★★★★</span>
+                      <span className="text-cast-orange-text text-sm">★★★★★</span>
                     </div>
-                    <p className="text-storm text-xs font-body">4.8 · 12 reviews</p>
+                    <p className="text-storm-text text-xs font-body">4.8 · 12 reviews</p>
                   </div>
                 </div>
               </div>
               {/* Body */}
               <div className="p-5 space-y-4">
                 <div>
-                  <p className="text-xs text-storm font-body uppercase tracking-wider mb-1.5">Target Species</p>
+                  <p className="text-xs text-storm-text font-body uppercase tracking-wider mb-1.5">Target Species</p>
                   <div className="flex flex-wrap gap-1.5">
                     {["Largemouth Bass", "Carp", "Catfish"].map((s) => (
                       <span key={s} className="text-xs bg-bass-green/20 text-pale-water font-body px-2 py-0.5 rounded">{s}</span>
@@ -259,12 +259,12 @@ export default function ListYourVenueContent() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-deep-water-light rounded p-3">
-                    <p className="text-xs text-storm font-body uppercase tracking-wider mb-1">Bite Forecast</p>
+                    <p className="text-xs text-storm-text font-body uppercase tracking-wider mb-1">Bite Forecast</p>
                     <p className="text-bone-white font-heading font-bold text-lg">76%</p>
-                    <p className="text-storm text-xs font-body">Good day</p>
+                    <p className="text-storm-text text-xs font-body">Good day</p>
                   </div>
                   <div className="bg-deep-water-light rounded p-3">
-                    <p className="text-xs text-storm font-body uppercase tracking-wider mb-1">Water Level</p>
+                    <p className="text-xs text-storm-text font-body uppercase tracking-wider mb-1">Water Level</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex-1 bg-surface-teal/20 rounded-full h-2">
                         <div className="bg-green-500 h-2 rounded-full" style={{ width: "78%" }} />
@@ -274,7 +274,7 @@ export default function ListYourVenueContent() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-storm font-body uppercase tracking-wider mb-1.5">Facilities</p>
+                  <p className="text-xs text-storm-text font-body uppercase tracking-wider mb-1.5">Facilities</p>
                   <div className="flex flex-wrap gap-1.5">
                     {["Braai areas", "Ablutions", "Accommodation", "Day visitors"].map((f) => (
                       <span key={f} className="text-xs bg-surface-teal/20 text-pale-water font-body px-2 py-0.5 rounded">{f}</span>
@@ -282,8 +282,8 @@ export default function ListYourVenueContent() {
                   </div>
                 </div>
                 <div className="border-t border-surface-teal/30 pt-3 flex items-center justify-between">
-                  <span className="text-storm text-xs font-body">3 forum threads linked</span>
-                  <span className="text-cast-orange text-xs font-body font-medium">View on The Map →</span>
+                  <span className="text-storm-text text-xs font-body">3 forum threads linked</span>
+                  <span className="text-cast-orange-text text-xs font-body font-medium">View on The Map →</span>
                 </div>
               </div>
             </div>
@@ -296,7 +296,7 @@ export default function ListYourVenueContent() {
         <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-bone-white text-center mb-2">
           Who can list
         </h2>
-        <p className="text-storm font-body text-center mb-10 max-w-2xl mx-auto">
+        <p className="text-storm-text font-body text-center mb-10 max-w-2xl mx-auto">
           If anglers fish there, it belongs on the map. We&apos;re actively looking for:
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
@@ -310,7 +310,7 @@ export default function ListYourVenueContent() {
               <span className="text-2xl flex-shrink-0">{item.icon}</span>
               <div>
                 <p className="text-bone-white font-heading font-semibold text-base ">{item.label}</p>
-                <p className="text-storm font-body text-sm mt-0.5">{item.desc}</p>
+                <p className="text-storm-text font-body text-sm mt-0.5">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -339,7 +339,7 @@ export default function ListYourVenueContent() {
             {/* Venue name */}
             <div>
               <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                Venue / Business Name <span className="text-cast-orange">*</span>
+                Venue / Business Name <span className="text-cast-orange-text">*</span>
               </label>
               <input
                 type="text"
@@ -355,7 +355,7 @@ export default function ListYourVenueContent() {
             {/* Contact name */}
             <div>
               <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                Your Name (Owner / Manager) <span className="text-cast-orange">*</span>
+                Your Name (Owner / Manager) <span className="text-cast-orange-text">*</span>
               </label>
               <input
                 type="text"
@@ -372,7 +372,7 @@ export default function ListYourVenueContent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                  Phone <span className="text-cast-orange">*</span>
+                  Phone <span className="text-cast-orange-text">*</span>
                 </label>
                 <input
                   type="tel"
@@ -386,7 +386,7 @@ export default function ListYourVenueContent() {
               </div>
               <div>
                 <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                  Email <span className="text-cast-orange">*</span>
+                  Email <span className="text-cast-orange-text">*</span>
                 </label>
                 <input
                   type="email"
@@ -404,7 +404,7 @@ export default function ListYourVenueContent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                  Province <span className="text-cast-orange">*</span>
+                  Province <span className="text-cast-orange-text">*</span>
                 </label>
                 <select
                   value={province}
@@ -420,7 +420,7 @@ export default function ListYourVenueContent() {
               </div>
               <div>
                 <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                  Venue Type <span className="text-cast-orange">*</span>
+                  Venue Type <span className="text-cast-orange-text">*</span>
                 </label>
                 <select
                   value={venueType}
@@ -439,7 +439,7 @@ export default function ListYourVenueContent() {
             {/* Description */}
             <div>
               <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                Tell us about your venue <span className="text-storm font-normal normal-case">(optional but helpful)</span>
+                Tell us about your venue <span className="text-storm-text font-normal normal-case">(optional but helpful)</span>
               </label>
               <textarea
                 value={description}
@@ -454,7 +454,7 @@ export default function ListYourVenueContent() {
             {/* GPS */}
             <div>
               <label className="block text-pale-water text-xs font-body font-medium mb-2 uppercase tracking-wider">
-                GPS Coordinates <span className="text-storm font-normal normal-case">(optional — we can sort this out together)</span>
+                GPS Coordinates <span className="text-storm-text font-normal normal-case">(optional — we can sort this out together)</span>
               </label>
               <input
                 type="text"
@@ -463,7 +463,7 @@ export default function ListYourVenueContent() {
                 placeholder="e.g. -25.8767, 28.3167 or paste a Google Maps link"
                 className="w-full bg-deep-water border border-surface-teal rounded px-4 py-3 text-bone-white placeholder-storm font-body focus:outline-none focus:border-cast-orange transition-colors"
               />
-              <p className="text-storm text-xs mt-1.5 font-body">
+              <p className="text-storm-text text-xs mt-1.5 font-body">
                 Open Google Maps → long-press your venue → copy the coordinates at the top.
               </p>
             </div>
@@ -472,11 +472,11 @@ export default function ListYourVenueContent() {
               <button
                 type="submit"
                 disabled={submitting || !canSubmit}
-                className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
+                className="w-full bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
               >
                 {submitting ? "Submitting..." : "List My Venue — It's Free"}
               </button>
-              <p className="text-storm text-xs text-center mt-3 font-body">
+              <p className="text-storm-text text-xs text-center mt-3 font-body">
                 We&apos;ll review your submission and contact you within 2 business days.
                 No spam, no sales pitch — just getting your venue live.
               </p>
@@ -487,7 +487,7 @@ export default function ListYourVenueContent() {
 
       {/* ── Footer nudge ── */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-storm font-body text-sm">
+        <p className="text-storm-text font-body text-sm">
           Questions? Email{" "}
           <a href="mailto:info@castzone.co.za" className="text-pale-water hover:text-bone-white transition-colors">
             info@castzone.co.za

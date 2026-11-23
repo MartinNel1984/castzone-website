@@ -11,7 +11,7 @@ export default function MembersPage() {
   return (
     <Suspense fallback={
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm font-body">Loading…</p>
+        <p className="text-storm-text font-body">Loading…</p>
       </div>
     }>
       <MembersContent />

@@ -62,7 +62,7 @@ function TournamentCard({ t }: { t: Tournament }) {
                 {disc.label}
               </span>
               {t.organizer && (
-                <span className="text-storm text-xs font-body">· {t.organizer}</span>
+                <span className="text-storm-text text-xs font-body">· {t.organizer}</span>
               )}
             </div>
             <h3 className="text-bone-white font-heading font-semibold text-xl leading-tight mb-3">
@@ -74,10 +74,10 @@ function TournamentCard({ t }: { t: Tournament }) {
               {t.venue_name && <span>🎣 {t.venue_name}</span>}
             </div>
             {t.description && (
-              <p className="text-storm font-body text-sm leading-relaxed">{t.description}</p>
+              <p className="text-storm-text font-body text-sm leading-relaxed">{t.description}</p>
             )}
             {t.contact_info && (
-              <p className="text-storm font-body text-xs mt-2">Contact: {t.contact_info}</p>
+              <p className="text-storm-text font-body text-xs mt-2">Contact: {t.contact_info}</p>
             )}
           </div>
           {t.registration_url && (
@@ -85,7 +85,7 @@ function TournamentCard({ t }: { t: Tournament }) {
               href={t.registration_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded transition-colors"
+              className="flex-shrink-0 bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded transition-colors"
             >
               Register
             </a>
@@ -126,13 +126,13 @@ export default function TournamentsPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap mb-2">
         <div>
           <h1 className="text-5xl font-heading font-semibold text-bone-white ">Tournaments</h1>
-          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+          <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
             SA Angling Calendar
           </p>
         </div>
         <Link
           href="/forum/new?category=general&title=Tournament+Submission"
-          className="flex-shrink-0 self-center border border-surface-teal hover:border-cast-orange text-storm hover:text-cast-orange font-body text-sm px-4 py-2.5 rounded transition-colors"
+          className="flex-shrink-0 self-center border border-surface-teal hover:border-cast-orange text-storm-text hover:text-cast-orange-text font-body text-sm px-4 py-2.5 rounded transition-colors"
         >
           + Submit a Tournament
         </Link>
@@ -146,8 +146,8 @@ export default function TournamentsPage() {
             onClick={() => setFilter(f.value)}
             className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
               filter === f.value
-                ? "bg-cast-orange border-cast-orange text-white"
-                : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
+                ? "bg-cast-orange-deep border-cast-orange text-white"
+                : "border-surface-teal text-storm-text hover:border-pale-water/50 hover:text-pale-water"
             }`}
           >
             {f.label}
@@ -157,7 +157,7 @@ export default function TournamentsPage() {
 
       {/* Content */}
       {loading ? (
-        <p className="text-storm font-body text-center py-20">Loading calendar...</p>
+        <p className="text-storm-text font-body text-center py-20">Loading calendar...</p>
       ) : upcoming.length === 0 && past.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-10 text-center">
           <p className="text-pale-water font-body">No tournaments listed yet — check back soon.</p>
@@ -177,7 +177,7 @@ export default function TournamentsPage() {
 
           {past.length > 0 && (
             <section>
-              <h2 className="text-xl font-mono font-semibold text-storm uppercase mb-5">
+              <h2 className="text-xl font-mono font-semibold text-storm-text uppercase mb-5">
                 Past Events
               </h2>
               <div className="space-y-4 opacity-60">

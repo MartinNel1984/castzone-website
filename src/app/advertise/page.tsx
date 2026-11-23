@@ -47,7 +47,7 @@ export default function AdvertisePage() {
       {/* Header */}
       <div className="mb-12">
         <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">Advertise on CastZone</h1>
-        <p className="text-cast-orange font-heading font-semibold text-sm mb-6">
+        <p className="text-cast-orange-text font-heading font-semibold text-sm mb-6">
           Reach South Africa&apos;s Fishing Community
         </p>
         <p className="text-pale-water font-body text-lg max-w-2xl leading-relaxed">
@@ -60,7 +60,7 @@ export default function AdvertisePage() {
         {stats.map((stat) => (
           <div key={stat.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-5 text-center">
             <p className="text-cast-orange font-heading font-semibold text-2xl mb-1">{stat.value}</p>
-            <p className="text-storm font-body text-xs">{stat.label}</p>
+            <p className="text-storm-text font-body text-xs">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -108,7 +108,7 @@ export default function AdvertisePage() {
         </p>
         <Link
           href="/contact"
-          className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
+          className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-4 rounded text-lg transition-colors"
         >
           Get in Touch
         </Link>

@@ -155,7 +155,7 @@ function NewThreadForm() {
   }
 
   if (checkingAuth) {
-    return <div className="max-w-3xl mx-auto px-4 py-20 text-center"><p className="text-storm">Loading...</p></div>;
+    return <div className="max-w-3xl mx-auto px-4 py-20 text-center"><p className="text-storm-text">Loading...</p></div>;
   }
 
   if (!user) {
@@ -166,7 +166,7 @@ function NewThreadForm() {
           <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -177,7 +177,7 @@ function NewThreadForm() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/forum" className="hover:text-pale-water">Forum</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">New Thread</span>
@@ -285,19 +285,19 @@ function NewThreadForm() {
             )}
 
             {images.length > 0 && (
-              <p className="text-storm text-xs mt-2 font-body">Max {MAX_FILES} photos, {MAX_SIZE_MB}MB each. JPEG, PNG or WEBP.</p>
+              <p className="text-storm-text text-xs mt-2 font-body">Max {MAX_FILES} photos, {MAX_SIZE_MB}MB each. JPEG, PNG or WEBP.</p>
             )}
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <Link href="/forum" className="text-storm hover:text-pale-water text-sm font-body transition-colors">
+          <Link href="/forum" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting || !title.trim() || !content.trim()}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             {submitting ? "Posting..." : "Post Thread"}
           </button>
@@ -309,7 +309,7 @@ function NewThreadForm() {
 
 export default function NewThreadContent() {
   return (
-    <Suspense fallback={<div className="max-w-3xl mx-auto px-4 py-20 text-center"><p className="text-storm">Loading...</p></div>}>
+    <Suspense fallback={<div className="max-w-3xl mx-auto px-4 py-20 text-center"><p className="text-storm-text">Loading...</p></div>}>
       <NewThreadForm />
     </Suspense>
   );

@@ -58,10 +58,10 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Breadcrumb */}
-      <nav className="text-xs font-body text-storm mb-4 flex flex-wrap gap-1.5">
-        <Link href="/" className="hover:text-cast-orange transition-colors">Home</Link>
+      <nav className="text-xs font-body text-storm-text mb-4 flex flex-wrap gap-1.5">
+        <Link href="/" className="hover:text-cast-orange-text transition-colors">Home</Link>
         <span>/</span>
-        <Link href="/venues" className="hover:text-cast-orange transition-colors">The Map</Link>
+        <Link href="/venues" className="hover:text-cast-orange-text transition-colors">The Map</Link>
         <span>/</span>
         <span className="text-pale-water">Fishing near {c.name}</span>
       </nav>
@@ -84,10 +84,10 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
                 className="group flex items-center justify-between gap-4 bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 transition-colors"
               >
                 <div className="min-w-0">
-                  <p className="text-bone-white font-body text-sm group-hover:text-cast-orange transition-colors truncate">
+                  <p className="text-bone-white font-body text-sm group-hover:text-cast-orange-text transition-colors truncate">
                     {v.name}
                   </p>
-                  <p className="text-storm text-xs mt-0.5 truncate">
+                  <p className="text-storm-text text-xs mt-0.5 truncate">
                     {v.province}
                     {v.species?.length ? ` · ${v.species.slice(0, 3).join(", ")}` : ""}
                   </p>
@@ -102,15 +102,15 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
       ) : (
         <p className="text-pale-water font-body mb-10">
           We&apos;re still mapping venues near {c.name} —{" "}
-          <Link href="/venues" className="text-cast-orange hover:text-bone-white underline">browse the full map</Link>{" "}
+          <Link href="/venues" className="text-cast-orange-text hover:text-bone-white underline">browse the full map</Link>{" "}
           or{" "}
-          <Link href="/venues/suggest" className="text-cast-orange hover:text-bone-white underline">suggest a venue</Link>.
+          <Link href="/venues/suggest" className="text-cast-orange-text hover:text-bone-white underline">suggest a venue</Link>.
         </p>
       )}
 
       {/* CTAs */}
       <div className="flex flex-wrap gap-3 mb-12">
-        <Link href="/venues" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+        <Link href="/venues" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
           Explore the full map →
         </Link>
         <Link href="/conditions" className="border border-surface-teal hover:border-cast-orange text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded text-sm transition-colors">
@@ -129,7 +129,7 @@ export default async function FishingNearCityPage({ params }: { params: Promise<
             <Link
               key={o.slug}
               href={`/fishing-near/${o.slug}`}
-              className="bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 text-bone-white hover:text-cast-orange font-body text-sm transition-colors"
+              className="bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 text-bone-white hover:text-cast-orange-text font-body text-sm transition-colors"
             >
               {o.name}
             </Link>

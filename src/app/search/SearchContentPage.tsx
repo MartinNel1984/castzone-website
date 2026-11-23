@@ -100,7 +100,7 @@ function SearchContent() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/forum" className="hover:text-pale-water">Forum</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">Search</span>
@@ -121,7 +121,7 @@ function SearchContent() {
         <button
           type="submit"
           disabled={!inputValue.trim() || loading}
-          className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors flex-shrink-0"
+          className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors flex-shrink-0"
         >
           {loading ? "Searching..." : "Search"}
         </button>
@@ -138,7 +138,7 @@ function SearchContent() {
 
       {!loading && searched && (
         <>
-          <p className="text-storm text-sm font-body mb-4">
+          <p className="text-storm-text text-sm font-body mb-4">
             {results.length === 0
               ? `No results for "${currentQuery}"`
               : `${results.length} result${results.length === 1 ? "" : "s"} for "${currentQuery}"`}
@@ -156,10 +156,10 @@ function SearchContent() {
                     {thread.categories?.icon ?? "🎣"}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                    <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text transition-colors truncate">
                       {thread.title}
                     </p>
-                    <p className="text-storm text-xs mt-0.5">
+                    <p className="text-storm-text text-xs mt-0.5">
                       {thread.categories?.name ?? "General"}
                       {" · by "}
                       <span className="text-pale-water">{thread.profiles?.username ?? "Unknown"}</span>
@@ -177,8 +177,8 @@ function SearchContent() {
           {results.length === 0 && (
             <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
               <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No results found</p>
-              <p className="text-storm font-body text-sm mb-6">Try a different search — species, dam name, technique or brand.</p>
-              <Link href="/forum" className="text-cast-orange hover:underline font-body text-sm">
+              <p className="text-storm-text font-body text-sm mb-6">Try a different search — species, dam name, technique or brand.</p>
+              <Link href="/forum" className="text-cast-orange-text hover:underline font-body text-sm">
                 Browse the forum instead →
               </Link>
             </div>
@@ -188,7 +188,7 @@ function SearchContent() {
 
       {!loading && !searched && !currentQuery && (
         <div className="text-center py-12">
-          <p className="text-storm font-body text-sm">Search for a species, dam, technique or topic.</p>
+          <p className="text-storm-text font-body text-sm">Search for a species, dam, technique or topic.</p>
         </div>
       )}
     </div>
@@ -199,7 +199,7 @@ export default function SearchPageContent() {
   return (
     <Suspense fallback={
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm">Loading...</p>
+        <p className="text-storm-text">Loading...</p>
       </div>
     }>
       <SearchContent />

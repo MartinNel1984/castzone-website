@@ -111,7 +111,7 @@ export default function ReviewContent() {
   }
 
   if (status === "loading") {
-    return <main className="max-w-3xl mx-auto px-6 py-20 text-center text-storm">Loading…</main>;
+    return <main className="max-w-3xl mx-auto px-6 py-20 text-center text-storm-text">Loading…</main>;
   }
 
   if (status === "unauth" || status === "notadmin") {
@@ -126,7 +126,7 @@ export default function ReviewContent() {
         </p>
         <div className="mt-6 flex gap-3 justify-center">
           {status === "unauth" && (
-            <Link href="/login" className="bg-cast-orange text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90">
+            <Link href="/login" className="bg-cast-orange-deep text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90">
               Sign in
             </Link>
           )}
@@ -149,7 +149,7 @@ export default function ReviewContent() {
             {deals.length} deal{deals.length === 1 ? "" : "s"} waiting. Approve to publish + notify members.
           </p>
         </div>
-        <Link href="/specials" className="text-pale-water hover:text-cast-orange text-sm underline">
+        <Link href="/specials" className="text-pale-water hover:text-cast-orange-text text-sm underline">
           View live page →
         </Link>
       </div>
@@ -167,12 +167,12 @@ export default function ReviewContent() {
             />
             Select all
           </label>
-          <span className="text-storm text-sm">{selected.size} selected</span>
+          <span className="text-storm-text text-sm">{selected.size} selected</span>
           <div className="flex gap-2 ml-auto">
             <button
               onClick={() => decideMany("approved")}
               disabled={selected.size === 0 || bulkBusy}
-              className="bg-cast-orange text-white font-semibold px-4 py-2 rounded-lg hover:opacity-90 disabled:opacity-40 transition text-sm"
+              className="bg-cast-orange-deep text-white font-semibold px-4 py-2 rounded-lg hover:opacity-90 disabled:opacity-40 transition text-sm"
             >
               {bulkBusy ? "…" : `Approve selected${selected.size ? ` (${selected.size})` : ""}`}
             </button>
@@ -222,19 +222,19 @@ export default function ReviewContent() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-storm text-xs uppercase tracking-wider">
+                  <p className="text-storm-text text-xs uppercase tracking-wider">
                     {categoryIcon(deal.category)} {categoryLabel(deal.category)} · {deal.retailer}
                   </p>
                   <h3 className="text-bone-white font-medium leading-snug mt-0.5">{deal.title}</h3>
                   <div className="mt-2 flex items-center gap-3 flex-wrap">
                     {deal.original_price != null && (
-                      <span className="text-storm line-through text-sm">{formatPrice(deal.original_price)}</span>
+                      <span className="text-storm-text line-through text-sm">{formatPrice(deal.original_price)}</span>
                     )}
                     {deal.sale_price != null && (
-                      <span className="text-cast-orange font-heading font-bold text-xl">{formatPrice(deal.sale_price)}</span>
+                      <span className="text-cast-orange-text font-heading font-bold text-xl">{formatPrice(deal.sale_price)}</span>
                     )}
                     {pct != null && (
-                      <span className="bg-cast-orange/20 text-cast-orange text-xs font-bold px-2 py-0.5 rounded-full">
+                      <span className="bg-cast-orange/20 text-cast-orange-text text-xs font-bold px-2 py-0.5 rounded-full">
                         -{pct}%
                       </span>
                     )}
@@ -243,7 +243,7 @@ export default function ReviewContent() {
                     href={deal.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block mt-2 text-pale-water hover:text-cast-orange text-xs underline break-all"
+                    className="inline-block mt-2 text-pale-water hover:text-cast-orange-text text-xs underline break-all"
                   >
                     Open on retailer site ↗
                   </a>
@@ -253,7 +253,7 @@ export default function ReviewContent() {
                   <button
                     onClick={() => decide(deal, "approved")}
                     disabled={busy === deal.id}
-                    className="flex-1 sm:flex-none bg-cast-orange text-white font-semibold px-5 py-2 rounded-lg hover:opacity-90 disabled:opacity-50 transition"
+                    className="flex-1 sm:flex-none bg-cast-orange-deep text-white font-semibold px-5 py-2 rounded-lg hover:opacity-90 disabled:opacity-50 transition"
                   >
                     {busy === deal.id ? "…" : "Approve"}
                   </button>
@@ -277,7 +277,7 @@ export default function ReviewContent() {
           <h2 className="font-heading text-2xl text-bone-white font-semibold mb-1">
             Live on the site
           </h2>
-          <p className="text-storm text-sm mb-5">
+          <p className="text-storm-text text-sm mb-5">
             {live.length} deal{live.length === 1 ? "" : "s"} showing on /specials now. Remove any you don&apos;t want.
           </p>
           <div className="space-y-2">
@@ -298,9 +298,9 @@ export default function ReviewContent() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-bone-white text-sm font-medium truncate">{deal.title}</p>
-                    <p className="text-storm text-xs">
+                    <p className="text-storm-text text-xs">
                       {deal.retailer} · {formatPrice(deal.sale_price ?? 0)}
-                      {pct != null && <span className="text-cast-orange"> · -{pct}%</span>}
+                      {pct != null && <span className="text-cast-orange-text"> · -{pct}%</span>}
                     </p>
                   </div>
                   <button

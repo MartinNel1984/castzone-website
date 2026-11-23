@@ -131,7 +131,7 @@ export default function VenueMap({ venues }: { venues: Venue[] }) {
                 <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                   <Link
                     href={`/venues/${venue.slug}`}
-                    style={{ fontSize: 12, color: "#f26522", fontWeight: 600 }}
+                    style={{ fontSize: 12, color: "#c9501c", fontWeight: 600 }}
                   >
                     View venue →
                   </Link>

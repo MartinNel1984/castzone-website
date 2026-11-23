@@ -62,7 +62,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center flex-shrink-0 font-heading font-semibold text-2xl sm:text-3xl text-bone-white leading-none">
-            Cast<em className="italic text-cast-orange">Zone</em>
+            Cast<em className="italic text-cast-orange-text">Zone</em>
           </Link>
 
           {/* Desktop nav */}
@@ -100,7 +100,7 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-storm hover:text-pale-water text-sm font-medium transition-colors"
+                  className="text-storm-text hover:text-pale-water text-sm font-medium transition-colors"
                 >
                   Sign Out
                 </button>
@@ -165,7 +165,7 @@ export default function Navbar() {
                     {avatarBadge}
                     <span>Hi, <strong className="text-bone-white">{username}</strong></span>
                   </Link>
-                  <button onClick={handleSignOut} className="text-storm text-sm text-left py-2">Sign Out</button>
+                  <button onClick={handleSignOut} className="text-storm-text text-sm text-left py-2">Sign Out</button>
                 </>
               ) : (
                 <>

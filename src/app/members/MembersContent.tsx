@@ -44,7 +44,7 @@ export default function MembersContent() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-5xl font-heading font-semibold text-bone-white ">Members</h1>
-        <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+        <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
           The CastZone Community
         </p>
       </div>
@@ -65,8 +65,8 @@ export default function MembersContent() {
               onClick={() => setSortBy(s)}
               className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded border transition-colors ${
                 sortBy === s
-                  ? "bg-cast-orange border-cast-orange text-white"
-                  : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
+                  ? "bg-cast-orange-deep border-cast-orange text-white"
+                  : "border-surface-teal text-storm-text hover:border-pale-water/50 hover:text-pale-water"
               }`}
             >
               {s === "post_count" ? "Most Active" : "Newest"}
@@ -84,7 +84,7 @@ export default function MembersContent() {
       ) : visible.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No members found</p>
-          <p className="text-storm font-body text-sm">Try a different search.</p>
+          <p className="text-storm-text font-body text-sm">Try a different search.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -103,10 +103,10 @@ export default function MembersContent() {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-bone-white font-body font-semibold text-sm truncate group-hover:text-cast-orange transition-colors">
+                <p className="text-bone-white font-body font-semibold text-sm truncate group-hover:text-cast-orange-text transition-colors">
                   {m.username}
                 </p>
-                <p className="text-storm text-xs truncate">{m.member_level}</p>
+                <p className="text-storm-text text-xs truncate">{m.member_level}</p>
                 <p className="text-pale-water text-xs">{m.post_count} posts</p>
               </div>
             </Link>
@@ -114,7 +114,7 @@ export default function MembersContent() {
         </div>
       )}
 
-      <p className="text-storm text-xs text-center mt-8 font-body">
+      <p className="text-storm-text text-xs text-center mt-8 font-body">
         {visible.length} member{visible.length !== 1 ? "s" : ""}{query ? " matching your search" : ""}
       </p>
     </div>

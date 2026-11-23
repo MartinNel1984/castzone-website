@@ -162,7 +162,7 @@ export default function SubmitCatchContent() {
   if (checkingAuth) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm font-body">Loading...</p>
+        <p className="text-storm-text font-body">Loading...</p>
       </div>
     );
   }
@@ -177,7 +177,7 @@ export default function SubmitCatchContent() {
           <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">
             Sign In
           </Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">
             Join Free
           </Link>
         </div>
@@ -195,7 +195,7 @@ export default function SubmitCatchContent() {
         <p className="text-pale-water font-body mb-2">
           Your catch is live on the leaderboard!
         </p>
-        <p className="text-storm text-sm font-body mb-8">
+        <p className="text-storm-text text-sm font-body mb-8">
           Head to the Trophy Room to see where you rank.
         </p>
         <div className="flex justify-center gap-3">
@@ -215,7 +215,7 @@ export default function SubmitCatchContent() {
               setNotes("");
               removePhoto();
             }}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
           >
             Submit Another
           </button>
@@ -229,7 +229,7 @@ export default function SubmitCatchContent() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/catches" className="hover:text-pale-water">Trophy Room</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">Submit a Catch</span>
@@ -238,7 +238,7 @@ export default function SubmitCatchContent() {
       <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">
         Submit a Catch
       </h1>
-      <p className="text-storm font-body text-sm mb-8">
+      <p className="text-storm-text font-body text-sm mb-8">
         Think you&apos;ve got what it takes to top the leaderboard? Submit your catch with a photo and
         we&apos;ll review it. A photo is required — no proof, no crown.
       </p>
@@ -253,7 +253,7 @@ export default function SubmitCatchContent() {
         {/* Category */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Category <span className="text-cast-orange">*</span>
+            Category <span className="text-cast-orange-text">*</span>
           </label>
           <div className="grid grid-cols-3 gap-3">
             {CATEGORIES.map((c) => (
@@ -264,7 +264,7 @@ export default function SubmitCatchContent() {
                 className={`flex flex-col items-center gap-2 py-4 rounded border-2 transition-colors font-mono font-semibold uppercase text-sm tracking-wider ${
                   category === c.value
                     ? "border-cast-orange bg-cast-orange/10 text-bone-white"
-                    : "border-surface-teal bg-deep-water text-storm hover:border-pale-water/50 hover:text-pale-water"
+                    : "border-surface-teal bg-deep-water text-storm-text hover:border-pale-water/50 hover:text-pale-water"
                 }`}
               >
                 <span className="text-2xl">{c.icon}</span>
@@ -277,7 +277,7 @@ export default function SubmitCatchContent() {
         {/* Species */}
         <div>
           <label htmlFor="species" className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Species <span className="text-cast-orange">*</span>
+            Species <span className="text-cast-orange-text">*</span>
           </label>
           <input
             id="species"
@@ -293,7 +293,7 @@ export default function SubmitCatchContent() {
           <datalist id="species-list">
             {SPECIES[category].map((s) => <option key={s} value={s} />)}
           </datalist>
-          <p className="text-storm text-xs mt-1 font-body">
+          <p className="text-storm-text text-xs mt-1 font-body">
             Start typing — common {catObj.label} species will appear as suggestions.
           </p>
         </div>
@@ -302,7 +302,7 @@ export default function SubmitCatchContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="weight" className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-              Weight (kg) <span className="text-cast-orange">*</span>
+              Weight (kg) <span className="text-cast-orange-text">*</span>
             </label>
             <input
               id="weight"
@@ -319,7 +319,7 @@ export default function SubmitCatchContent() {
           </div>
           <div>
             <label htmlFor="catch-date" className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-              Date Caught <span className="text-cast-orange">*</span>
+              Date Caught <span className="text-cast-orange-text">*</span>
             </label>
             <input
               id="catch-date"
@@ -336,7 +336,7 @@ export default function SubmitCatchContent() {
         {/* Venue */}
         <div>
           <label htmlFor="venue" className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Venue / Location <span className="text-storm font-normal normal-case">(optional)</span>
+            Venue / Location <span className="text-storm-text font-normal normal-case">(optional)</span>
           </label>
           <input
             id="venue"
@@ -352,7 +352,7 @@ export default function SubmitCatchContent() {
         {/* Notes */}
         <div>
           <label htmlFor="notes" className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Notes <span className="text-storm font-normal normal-case">(optional)</span>
+            Notes <span className="text-storm-text font-normal normal-case">(optional)</span>
           </label>
           <textarea
             id="notes"
@@ -367,7 +367,7 @@ export default function SubmitCatchContent() {
         {/* Photo upload */}
         <div>
           <label className="block text-pale-water text-sm font-body font-medium mb-2 uppercase tracking-wider">
-            Trophy Photo <span className="text-cast-orange">*</span>
+            Trophy Photo <span className="text-cast-orange-text">*</span>
           </label>
 
           {photoPreview ? (
@@ -399,7 +399,7 @@ export default function SubmitCatchContent() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-3 w-full border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded-lg px-6 py-8 text-storm hover:text-pale-water transition-colors"
+                className="flex items-center gap-3 w-full border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded-lg px-6 py-8 text-storm-text hover:text-pale-water transition-colors"
               >
                 <span className="text-3xl">📷</span>
                 <div className="text-left">
@@ -412,13 +412,13 @@ export default function SubmitCatchContent() {
         </div>
 
         <div className="flex items-center justify-between pt-2">
-          <Link href="/catches" className="text-storm hover:text-pale-water text-sm font-body transition-colors">
+          <Link href="/catches" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">
             Cancel
           </Link>
           <button
             type="submit"
             disabled={!species.trim() || !weightKg || !catchDate || !photoFile}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
           >
             Review Catch →
           </button>
@@ -431,7 +431,7 @@ export default function SubmitCatchContent() {
           <div className="bg-deep-water-light border border-surface-teal rounded-xl max-w-md w-full overflow-hidden">
             <div className="bg-cast-orange/10 border-b border-cast-orange/30 px-6 py-4">
               <h2 className="text-bone-white font-heading font-semibold text-lg">Confirm Your Catch</h2>
-              <p className="text-storm text-sm font-body mt-0.5">Check everything looks right before submitting.</p>
+              <p className="text-storm-text text-sm font-body mt-0.5">Check everything looks right before submitting.</p>
             </div>
             {photoPreview && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -444,16 +444,16 @@ export default function SubmitCatchContent() {
                 </div>
               )}
               <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-body">
-                <span className="text-storm uppercase tracking-wider text-xs">Category</span>
+                <span className="text-storm-text uppercase tracking-wider text-xs">Category</span>
                 <span className="text-bone-white">{CATEGORIES.find(c => c.value === category)?.icon} {CATEGORIES.find(c => c.value === category)?.label}</span>
-                <span className="text-storm uppercase tracking-wider text-xs">Species</span>
+                <span className="text-storm-text uppercase tracking-wider text-xs">Species</span>
                 <span className="text-bone-white">{species}</span>
-                <span className="text-storm uppercase tracking-wider text-xs">Weight</span>
-                <span className="text-cast-orange font-bold">{parseFloat(weightKg).toFixed(2)} kg</span>
-                <span className="text-storm uppercase tracking-wider text-xs">Date</span>
+                <span className="text-storm-text uppercase tracking-wider text-xs">Weight</span>
+                <span className="text-cast-orange-text font-bold">{parseFloat(weightKg).toFixed(2)} kg</span>
+                <span className="text-storm-text uppercase tracking-wider text-xs">Date</span>
                 <span className="text-bone-white">{new Date(catchDate + "T00:00:00").toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })}</span>
-                {venue && <><span className="text-storm uppercase tracking-wider text-xs">Venue</span><span className="text-bone-white">{venue}</span></>}
-                {notes && <><span className="text-storm uppercase tracking-wider text-xs">Notes</span><span className="text-pale-water">{notes}</span></>}
+                {venue && <><span className="text-storm-text uppercase tracking-wider text-xs">Venue</span><span className="text-bone-white">{venue}</span></>}
+                {notes && <><span className="text-storm-text uppercase tracking-wider text-xs">Notes</span><span className="text-pale-water">{notes}</span></>}
               </div>
             </div>
             <div className="px-6 pb-6 flex gap-3">
@@ -467,7 +467,7 @@ export default function SubmitCatchContent() {
               <button
                 onClick={handleConfirmSubmit}
                 disabled={submitting}
-                className="flex-1 bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-3 rounded transition-colors text-sm"
+                className="flex-1 bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-3 rounded transition-colors text-sm"
               >
                 {submitting ? "Submitting..." : "Confirm & Submit"}
               </button>

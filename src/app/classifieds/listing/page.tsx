@@ -107,15 +107,15 @@ function ListingDetail() {
   }
 
   if (loading) {
-    return <div className="max-w-4xl mx-auto px-4 py-20 text-center"><p className="text-storm font-body">Loading…</p></div>;
+    return <div className="max-w-4xl mx-auto px-4 py-20 text-center"><p className="text-storm-text font-body">Loading…</p></div>;
   }
 
   if (!id || !listing) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Listing not found</p>
-        <p className="text-storm font-body text-sm mb-6">It may have been removed or sold.</p>
-        <Link href="/classifieds" className="text-cast-orange hover:underline font-body text-sm">← Back to the Tackle Box</Link>
+        <p className="text-storm-text font-body text-sm mb-6">It may have been removed or sold.</p>
+        <Link href="/classifieds" className="text-cast-orange-text hover:underline font-body text-sm">← Back to the Tackle Box</Link>
       </div>
     );
   }
@@ -130,7 +130,7 @@ function ListingDetail() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/classifieds" className="hover:text-pale-water">Tackle Box</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">{categoryLabel(listing.category)}</span>
@@ -191,21 +191,21 @@ function ListingDetail() {
           <p className="text-cast-orange font-heading font-bold text-4xl mb-4">{formatPrice(listing.price)}</p>
 
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm font-body text-pale-water mb-6">
-            <span><span className="text-storm">Condition:</span> {conditionLabel(listing.condition)}</span>
-            <span><span className="text-storm">Location:</span> {listing.province}</span>
+            <span><span className="text-storm-text">Condition:</span> {conditionLabel(listing.condition)}</span>
+            <span><span className="text-storm-text">Location:</span> {listing.province}</span>
           </div>
 
           {/* Contact */}
           {isSold ? (
             <div className="bg-deep-water-light border border-surface-teal rounded-lg p-4 text-center mb-4">
-              <p className="text-storm font-body text-sm">This item has been marked as sold.</p>
+              <p className="text-storm-text font-body text-sm">This item has been marked as sold.</p>
             </div>
           ) : (
             <div className="space-y-3 mb-6">
               {wa && (
                 <a href={`https://wa.me/${wa}?text=${encodeURIComponent(`Hi, is your "${listing.title}" still available on CastZone?`)}`}
                   target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3.5 rounded transition-colors">
+                  className="flex items-center justify-center gap-2 w-full bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3.5 rounded transition-colors">
                   💬 WhatsApp Seller
                 </a>
               )}
@@ -217,10 +217,10 @@ function ListingDetail() {
           )}
 
           {/* Seller + posted */}
-          <div className="text-sm font-body text-storm border-t border-surface-teal/40 pt-4">
+          <div className="text-sm font-body text-storm-text border-t border-surface-teal/40 pt-4">
             Listed by{" "}
             {listing.profiles?.username ? (
-              <Link href={`/profile?username=${encodeURIComponent(listing.profiles.username)}`} className="text-pale-water hover:text-cast-orange transition-colors">
+              <Link href={`/profile?username=${encodeURIComponent(listing.profiles.username)}`} className="text-pale-water hover:text-cast-orange-text transition-colors">
                 {listing.profiles.username}
               </Link>
             ) : "a member"}
@@ -264,8 +264,8 @@ function ListingDetail() {
                   )}
                 </div>
                 <div className="p-2.5">
-                  <p className="text-cast-orange font-heading font-bold text-sm leading-none mb-1">{formatPrice(l.price)}</p>
-                  <p className="text-bone-white font-body text-xs line-clamp-2 group-hover:text-cast-orange transition-colors">{l.title}</p>
+                  <p className="text-cast-orange-text font-heading font-bold text-sm leading-none mb-1">{formatPrice(l.price)}</p>
+                  <p className="text-bone-white font-body text-xs line-clamp-2 group-hover:text-cast-orange-text transition-colors">{l.title}</p>
                 </div>
               </Link>
             ))}
@@ -281,7 +281,7 @@ function ListingDetail() {
 
       {/* Safety note */}
       <div className="mt-6 bg-cast-orange/10 border border-cast-orange/40 rounded-lg p-4 flex gap-3">
-        <span className="text-cast-orange text-lg flex-shrink-0">⚠</span>
+        <span className="text-cast-orange-text text-lg flex-shrink-0">⚠</span>
         <p className="text-pale-water font-body text-xs leading-relaxed">
           Deal safely — meet in a public place, inspect gear before paying, and never send a deposit before
           you&apos;ve confirmed the item is genuine. CastZone doesn&apos;t handle payments or mediate transactions.
@@ -289,7 +289,7 @@ function ListingDetail() {
       </div>
 
       <div className="mt-6">
-        <Link href="/classifieds" className="text-storm hover:text-pale-water text-sm font-body transition-colors">← Back to the Tackle Box</Link>
+        <Link href="/classifieds" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">← Back to the Tackle Box</Link>
       </div>
     </div>
   );
@@ -297,7 +297,7 @@ function ListingDetail() {
 
 export default function ListingPage() {
   return (
-    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 py-20 text-center"><p className="text-storm font-body">Loading…</p></div>}>
+    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 py-20 text-center"><p className="text-storm-text font-body">Loading…</p></div>}>
       <ListingDetail />
     </Suspense>
   );

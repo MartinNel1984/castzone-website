@@ -70,8 +70,8 @@ export default function CategoryView({ category }: { category: string }) {
   if (!loading && !cat) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm text-lg">Category not found.</p>
-        <Link href="/forum" className="text-cast-orange mt-4 inline-block">← Back to Forum</Link>
+        <p className="text-storm-text text-lg">Category not found.</p>
+        <Link href="/forum" className="text-cast-orange-text mt-4 inline-block">← Back to Forum</Link>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function CategoryView({ category }: { category: string }) {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/forum" className="hover:text-pale-water transition-colors">Forum</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">{cat?.name ?? category}</span>
@@ -91,11 +91,11 @@ export default function CategoryView({ category }: { category: string }) {
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">
             {cat?.icon} {cat?.name}
           </h1>
-          <p className="text-storm font-body mt-1 text-sm">{cat?.description}</p>
+          <p className="text-storm-text font-body mt-1 text-sm">{cat?.description}</p>
         </div>
         <Link
           href={`/forum/new?category=${category}`}
-          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm flex-shrink-0 ml-4"
+          className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm flex-shrink-0 ml-4"
         >
           + New Thread
         </Link>
@@ -111,10 +111,10 @@ export default function CategoryView({ category }: { category: string }) {
       ) : threads.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-12 text-center">
           <p className="text-pale-water text-lg font-mono font-semibold uppercase mb-2">No threads yet</p>
-          <p className="text-storm font-body text-sm mb-6">Be the first to start a cast.</p>
+          <p className="text-storm-text font-body text-sm mb-6">Be the first to start a cast.</p>
           <Link
             href={`/forum/new?category=${category}`}
-            className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors"
           >
             Start the first thread
           </Link>
@@ -129,23 +129,23 @@ export default function CategoryView({ category }: { category: string }) {
             >
               <div className="flex-shrink-0 w-8 text-center">
                 {thread.is_pinned && <span title="Pinned" className="text-tournament-gold text-lg">📌</span>}
-                {!thread.is_pinned && thread.is_locked && <span title="Locked" className="text-storm text-lg">🔒</span>}
+                {!thread.is_pinned && thread.is_locked && <span title="Locked" className="text-storm-text text-lg">🔒</span>}
                 {!thread.is_pinned && !thread.is_locked && (
-                  <span className="text-storm text-sm font-body">{index + 1}</span>
+                  <span className="text-storm-text text-sm font-body">{index + 1}</span>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text transition-colors truncate">
                   {thread.title}
                 </p>
-                <p className="text-storm text-xs mt-0.5">
+                <p className="text-storm-text text-xs mt-0.5">
                   by <span className="text-pale-water">{thread.profiles?.username ?? "Unknown"}</span>
                   {" · "}{timeAgo(thread.created_at)}
                 </p>
               </div>
               <div className="hidden sm:flex flex-col items-end gap-0.5 flex-shrink-0 text-right">
                 <span className="text-pale-water text-xs">{thread.reply_count} replies</span>
-                <span className="text-storm text-xs">last {timeAgo(thread.last_post_at)}</span>
+                <span className="text-storm-text text-xs">last {timeAgo(thread.last_post_at)}</span>
               </div>
             </Link>
           ))}

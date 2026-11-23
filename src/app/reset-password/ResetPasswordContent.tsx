@@ -57,7 +57,7 @@ export default function ResetPasswordContent() {
           <p className="text-pale-water font-body mb-6">
             Your password has been changed. Redirecting you to sign in...
           </p>
-          <Link href="/login" className="text-cast-orange hover:underline font-body text-sm">
+          <Link href="/login" className="text-cast-orange-text hover:underline font-body text-sm">
             Sign In Now →
           </Link>
         </div>
@@ -74,7 +74,7 @@ export default function ResetPasswordContent() {
           <p className="text-pale-water font-body mb-6">
             Waiting for the reset link to be verified. If this takes more than a few seconds, your link may have expired.
           </p>
-          <Link href="/forgot-password" className="text-cast-orange hover:underline font-body text-sm">
+          <Link href="/forgot-password" className="text-cast-orange-text hover:underline font-body text-sm">
             Request a new reset link →
           </Link>
         </div>
@@ -90,7 +90,7 @@ export default function ResetPasswordContent() {
             <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">New Password</h1>
-          <p className="text-storm mt-2 font-body">Choose a strong password for your account</p>
+          <p className="text-storm-text mt-2 font-body">Choose a strong password for your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-deep-water-light border border-surface-teal rounded-lg p-8 space-y-5">
@@ -132,7 +132,7 @@ export default function ResetPasswordContent() {
           <button
             type="submit"
             disabled={loading || !password || !confirm}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>

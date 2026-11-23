@@ -245,7 +245,7 @@ export default function HomePage() {
                 }`}
               />
             ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-deep-water via-deep-water/85 to-deep-water/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-deep-water via-deep-water/90 to-deep-water/78" />
           </div>
         )}
         <div
@@ -260,11 +260,11 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-10 lg:gap-14 items-end">
             <div>
-              <p className="cz-eyebrow text-cast-orange mb-3">South Africa&apos;s Fishing Community</p>
+              <p className="cz-eyebrow text-cast-orange-text mb-3">South Africa&apos;s Fishing Community</p>
               <h1 className="text-[clamp(2.6rem,2rem+4.5vw,5rem)] leading-[0.98] font-heading font-semibold text-bone-white">
-                Where South Africa <em className="italic text-cast-orange">Fishes</em>
+                Where South Africa <em className="italic text-cast-orange-text">Fishes</em>
               </h1>
-              <p className="mt-2 font-script text-2xl text-cast-orange/90">Tight lines, always.</p>
+              <p className="mt-2 font-script text-2xl text-cast-orange-text">Tight lines, always.</p>
               <p className="text-pale-water text-lg leading-relaxed mt-6 font-body max-w-xl">
                 Bass, saltwater, specimen and everything in between. Join the forum built for SA anglers — share catches, find venues, buy gear, and connect.
               </p>
@@ -281,7 +281,7 @@ export default function HomePage() {
                     <Button href="/register" size="lg">Join Free</Button>
                     <Button href="/forum" variant="line" size="lg">Browse Forum</Button>
                   </div>
-                  <p className="text-pale-water/70 text-sm font-body mt-4">
+                  <p className="text-pale-water text-sm font-body mt-4">
                     Free forever · Dam &amp; gate-level alerts · Find venues near you
                   </p>
                 </>
@@ -291,28 +291,28 @@ export default function HomePage() {
             {/* Live readout — real Vaal River gate data, not a stock photo */}
             <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
-                <p className="cz-eyebrow text-cast-orange">Vaal River — Live Reading</p>
-                <span className="font-mono text-xs text-storm">{latestBloemhof?.date ?? "—"}</span>
+                <p className="cz-eyebrow text-cast-orange-text">Vaal River — Live Reading</p>
+                <span className="font-mono text-xs text-storm-text">{latestBloemhof?.date ?? "—"}</span>
               </div>
               <div className="divide-y divide-surface-teal/40">
                 <div className="flex items-center justify-between py-2 font-mono text-sm">
-                  <span className="text-storm">Bloemhof release</span>
+                  <span className="text-storm-text">Bloemhof release</span>
                   <span className={titleColour}>{latestBloemhof?.text ?? "No recent notice"}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 font-mono text-sm">
-                  <span className="text-storm">Vaal Dam gate</span>
+                  <span className="text-storm-text">Vaal Dam gate</span>
                   <span className="text-bone-white">{latestVaal?.text ?? "No recent notice"}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 font-mono text-sm">
-                  <span className="text-storm">Barrage flow</span>
+                  <span className="text-storm-text">Barrage flow</span>
                   <span className="text-bone-white">{latestBarrage?.text ?? "No recent notice"}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 font-mono text-sm">
-                  <span className="text-storm">Your spot</span>
+                  <span className="text-storm-text">Your spot</span>
                   <span className="text-bone-white">{spot.label}</span>
                 </div>
               </div>
-              <Link href="/conditions" className="font-mono text-xs uppercase tracking-wider text-cast-orange hover:text-bone-white cz-transition mt-4 inline-block">
+              <Link href="/conditions" className="font-mono text-xs uppercase tracking-wider text-cast-orange-text hover:text-bone-white cz-transition mt-4 inline-block">
                 Full dam levels &amp; conditions →
               </Link>
             </div>
@@ -325,7 +325,7 @@ export default function HomePage() {
           // (fixed bottom-6 right-4, site-wide) collides with anything docked
           // bottom-right once a section's end lines up with the viewport bottom.
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5">
-            <p className="font-mono text-xs text-pale-water/80 truncate mb-2">
+            <p className="font-mono text-xs text-pale-water truncate mb-2">
               {(() => {
                 const p = heroPhotos[heroIndex];
                 return `${Number(p.weight_kg).toFixed(2)}kg ${p.species}${p.venue ? ` — ${p.venue}` : ""}`;
@@ -353,12 +353,12 @@ export default function HomePage() {
           <div className="flex flex-wrap justify-center sm:justify-start gap-8 sm:gap-12 text-center sm:text-left">
             {stats ? (
               <>
-                <Link href="/members" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.members.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Members</p></Link>
-                <Link href="/specials" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.specials.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Specials</p></Link>
-                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.threads.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Threads</p></div>
-                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.posts.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Posts</p></div>
-                {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.venues.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Venues</p></Link>}
-                <div><p className="text-cast-orange font-mono font-semibold text-xl">{stats.categories.toLocaleString()}</p><p className="cz-eyebrow text-storm mt-0.5">Categories</p></div>
+                <Link href="/members" className="group"><p className="text-cast-orange-text group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.members.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Members</p></Link>
+                <Link href="/specials" className="group"><p className="text-cast-orange-text group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.specials.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Specials</p></Link>
+                <div><p className="text-cast-orange-text font-mono font-semibold text-xl">{stats.threads.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Threads</p></div>
+                <div><p className="text-cast-orange-text font-mono font-semibold text-xl">{stats.posts.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Posts</p></div>
+                {stats.venues > 0 && <Link href="/venues" className="group"><p className="text-cast-orange-text group-hover:text-bone-white font-mono font-semibold text-xl cz-transition">{stats.venues.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Venues</p></Link>}
+                <div><p className="text-cast-orange-text font-mono font-semibold text-xl">{stats.categories.toLocaleString()}</p><p className="cz-eyebrow text-storm-text mt-0.5">Categories</p></div>
               </>
             ) : (
               [1, 2, 3, 4, 5].map((i) => (
@@ -396,7 +396,7 @@ export default function HomePage() {
                       </div>
                     )}
                     {pct != null && (
-                      <span className="absolute top-2 right-2 bg-cast-orange text-white text-sm font-mono font-semibold px-2.5 py-1 rounded-full shadow">
+                      <span className="absolute top-2 right-2 bg-cast-orange-deep text-white text-sm font-mono font-semibold px-2.5 py-1 rounded-full shadow">
                         -{pct}%
                       </span>
                     )}
@@ -407,16 +407,16 @@ export default function HomePage() {
                     )}
                   </div>
                   <div className="p-3 flex-1 flex flex-col">
-                    <p className="text-storm text-xs font-mono uppercase tracking-wider mb-1">{deal.retailer}</p>
-                    <h3 className={`text-bone-white text-sm font-body font-medium leading-snug line-clamp-2 ${locked ? "" : "group-hover:text-cast-orange"} cz-transition`}>
+                    <p className="text-storm-text text-xs font-mono uppercase tracking-wider mb-1">{deal.retailer}</p>
+                    <h3 className={`text-bone-white text-sm font-body font-medium leading-snug line-clamp-2 ${locked ? "" : "group-hover:text-cast-orange-text"} cz-transition`}>
                       {locked ? "Sign up to reveal this deal" : deal.title}
                     </h3>
                     {deal.sale_price != null && (
                       <div className="mt-auto pt-2 font-mono">
                         {deal.original_price != null && (
-                          <span className="text-storm text-xs line-through mr-2">{formatPrice(deal.original_price)}</span>
+                          <span className="text-storm-text text-xs line-through mr-2">{formatPrice(deal.original_price)}</span>
                         )}
-                        <span className="text-cast-orange font-semibold text-base leading-none">{formatPrice(deal.sale_price)}</span>
+                        <span className="text-cast-orange-text font-semibold text-base leading-none">{formatPrice(deal.sale_price)}</span>
                       </div>
                     )}
                   </div>
@@ -470,10 +470,10 @@ export default function HomePage() {
                 {notice ? (
                   <>
                     <p className="text-bone-white text-sm font-body leading-snug">{notice.text}</p>
-                    <p className="text-storm text-xs mt-1 font-mono">{notice.date}</p>
+                    <p className="text-storm-text text-xs mt-1 font-mono">{notice.date}</p>
                   </>
                 ) : (
-                  <p className="text-storm text-sm font-body">No recent notice</p>
+                  <p className="text-storm-text text-sm font-body">No recent notice</p>
                 )}
               </div>
             ))}
@@ -511,9 +511,9 @@ export default function HomePage() {
             },
           ].map(({ section, stretch, slug, tip }) => (
             <Card key={section} href={`/venues/${slug}`} className="p-4">
-              <p className="text-cast-orange font-mono font-semibold uppercase text-sm group-hover:text-bone-white cz-transition mb-1">{section}</p>
+              <p className="text-cast-orange-text font-mono font-semibold uppercase text-sm group-hover:text-bone-white cz-transition mb-1">{section}</p>
               <p className="text-pale-water text-xs font-body mb-2">{stretch}</p>
-              <p className="text-storm text-xs font-body leading-relaxed">{tip}</p>
+              <p className="text-storm-text text-xs font-body leading-relaxed">{tip}</p>
             </Card>
           ))}
         </div>
@@ -534,7 +534,7 @@ export default function HomePage() {
                     {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange cz-transition">
+                    <h3 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange-text cz-transition">
                       {cat.name}
                     </h3>
                     <p className="text-pale-water/80 text-sm mt-1 leading-relaxed font-body">{cat.description}</p>
@@ -543,7 +543,7 @@ export default function HomePage() {
                       <span className="text-pale-water text-xs">{catStats?.post_count ?? 0} posts</span>
                     </div>
                   </div>
-                  <svg className="w-5 h-5 text-storm group-hover:text-cast-orange cz-transition flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-storm-text group-hover:text-cast-orange-text cz-transition flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -559,8 +559,8 @@ export default function HomePage() {
           {featureCards.map((card) => (
             <Card key={card.title} href={card.href} className="bg-deep-water p-6">
               <div className="text-3xl mb-3">{card.icon}</div>
-              <h3 className="text-bone-white font-heading font-semibold text-lg mb-2 group-hover:text-cast-orange cz-transition">{card.title}</h3>
-              <p className="text-storm text-sm leading-relaxed font-body">{card.description}</p>
+              <h3 className="text-bone-white font-heading font-semibold text-lg mb-2 group-hover:text-cast-orange-text cz-transition">{card.title}</h3>
+              <p className="text-storm-text text-sm leading-relaxed font-body">{card.description}</p>
             </Card>
           ))}
         </div>
@@ -576,16 +576,16 @@ export default function HomePage() {
                   {thread.categories?.icon ?? "🎣"}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange cz-transition truncate text-sm">
+                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text cz-transition truncate text-sm">
                     {thread.title}
                   </p>
-                  <p className="text-storm text-xs mt-0.5 font-mono">
+                  <p className="text-storm-text text-xs mt-0.5 font-mono">
                     <span className="text-pale-water">{thread.profiles?.username ?? "Angler"}</span>
                     {" · "}{thread.categories?.name ?? "General"}
                     {" · "}{threadTimeAgo(thread.created_at)}
                   </p>
                 </div>
-                <span className="flex-shrink-0 text-storm text-xs whitespace-nowrap font-mono">{thread.reply_count} replies</span>
+                <span className="flex-shrink-0 text-storm-text text-xs whitespace-nowrap font-mono">{thread.reply_count} replies</span>
               </Card>
             ))}
           </div>
@@ -612,11 +612,11 @@ export default function HomePage() {
                   <div className="w-full h-44 bg-surface-teal/10 flex items-center justify-center text-5xl opacity-40">🐟</div>
                 )}
                 <div className="p-4">
-                  <p className="text-cast-orange font-mono font-semibold text-xl leading-none mb-1">
+                  <p className="text-cast-orange-text font-mono font-semibold text-xl leading-none mb-1">
                     {Number(c.weight_kg).toFixed(2)} kg
                   </p>
                   <p className="text-bone-white font-body font-medium">{c.species}</p>
-                  <p className="text-storm text-xs mt-1 font-mono">
+                  <p className="text-storm-text text-xs mt-1 font-mono">
                     by <span className="text-pale-water">{c.profiles?.username ?? "Angler"}</span>
                     {c.venue ? ` · ${c.venue}` : ""}
                   </p>
@@ -630,7 +630,7 @@ export default function HomePage() {
       {/* Share */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center border-b border-surface-teal">
         <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-bone-white mb-2">Know an Angler? Reel Them In</h2>
-        <p className="text-storm font-body mb-7 max-w-xl mx-auto">
+        <p className="text-storm-text font-body mb-7 max-w-xl mx-auto">
           Help build South Africa&apos;s fishing community — share CastZone with your fishing mates.
         </p>
         <ShareButtons />

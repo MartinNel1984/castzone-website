@@ -54,7 +54,7 @@ export default function BiteTimesContent() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
       <h1 className="text-5xl font-heading font-semibold text-bone-white ">Best Bite Times</h1>
-      <p className="text-cast-orange font-heading font-semibold text-sm mt-1 mb-6">
+      <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1 mb-6">
         When the fish are most likely to feed
       </p>
 
@@ -90,13 +90,13 @@ export default function BiteTimesContent() {
           </button>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2 mt-3">
-          <p className="text-storm text-xs font-body">
+          <p className="text-storm-text text-xs font-body">
             Showing forecast for <span className="text-bone-white">{spot.label}</span>
           </p>
           {selectedSlug && (
             <Link
               href={`/venues/${selectedSlug}`}
-              className="text-cast-orange hover:text-bone-white text-xs font-body transition-colors"
+              className="text-cast-orange-text hover:text-bone-white text-xs font-body transition-colors"
             >
               View venue page →
             </Link>
@@ -114,8 +114,8 @@ export default function BiteTimesContent() {
         <div className="space-y-3 text-sm font-body text-pale-water leading-relaxed">
           <p>
             <span className="text-bone-white font-medium">Solunar periods.</span> Fish tend to feed more
-            actively when the moon is directly overhead or underfoot (<span className="text-cast-orange">major periods</span>)
-            and around moonrise and moonset (<span className="text-cast-orange">minor periods</span>). Days around the
+            actively when the moon is directly overhead or underfoot (<span className="text-cast-orange-text">major periods</span>)
+            and around moonrise and moonset (<span className="text-cast-orange-text">minor periods</span>). Days around the
             new and full moon usually rate higher than the quarter moons.
           </p>
           <p>
@@ -124,7 +124,7 @@ export default function BiteTimesContent() {
             the live pressure trend and wind into the rating, and the 7-day outlook shows each day&apos;s expected
             weather, temperature and rain chance — refreshed live every time you load the page.
           </p>
-          <p className="text-storm">
+          <p className="text-storm-text">
             Solunar theory is a guide trusted by generations of anglers, not a science — local knowledge, bait and
             patience still out-fish any forecast. Weather data: Open-Meteo.
           </p>
@@ -134,12 +134,12 @@ export default function BiteTimesContent() {
       {/* Cross-links */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
         <Link href="/venues" className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors">
-          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors">🗺️ The Map</p>
-          <p className="text-storm text-sm font-body mt-1">Every venue has its own bite forecast, water conditions and depth map.</p>
+          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange-text transition-colors">🗺️ The Map</p>
+          <p className="text-storm-text text-sm font-body mt-1">Every venue has its own bite forecast, water conditions and depth map.</p>
         </Link>
         <Link href="/conditions" className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors">
-          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors">🌊 Water Conditions</p>
-          <p className="text-storm text-sm font-body mt-1">Dam levels and Vaal gate notices before you tow the boat.</p>
+          <p className="text-bone-white font-heading font-semibold group-hover:text-cast-orange-text transition-colors">🌊 Water Conditions</p>
+          <p className="text-storm-text text-sm font-body mt-1">Dam levels and Vaal gate notices before you tow the boat.</p>
         </Link>
       </div>
     </div>

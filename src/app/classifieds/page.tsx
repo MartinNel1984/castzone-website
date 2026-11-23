@@ -22,7 +22,7 @@ export default function ClassifiedsPage() {
         <h1 className="font-heading text-4xl md:text-5xl font-semibold text-bone-white">
           Tackle Box
         </h1>
-        <p className="mt-3 text-cast-orange font-semibold uppercase tracking-widest text-sm">
+        <p className="mt-3 text-cast-orange-text font-semibold uppercase tracking-widest text-sm">
           Coming Soon
         </p>
         <p className="mt-6 text-pale-water leading-relaxed">
@@ -37,7 +37,7 @@ export default function ClassifiedsPage() {
         <div className="mt-8 flex flex-wrap gap-3 justify-center">
           <Link
             href="/register"
-            className="bg-cast-orange text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
+            className="bg-cast-orange-deep text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
           >
             Join free →
           </Link>

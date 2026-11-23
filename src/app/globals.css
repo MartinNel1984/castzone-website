@@ -4,12 +4,15 @@
   --color-deep-water: #1a3a3a;
   --color-deep-water-light: #1f4545;
   --color-cast-orange: #f26522;
-  --color-cast-orange-hover: #d9561a;
+  --color-cast-orange-hover: #a8431a;
+  --color-cast-orange-deep: #c9501c; /* white-text-safe fill (4.5:1) */
+  --color-cast-orange-text: #ff9560; /* orange text on dark teal (>=4.5:1) */
   --color-surface-teal: #2a6e6e;
   --color-mist: #e8f0ef;
   --color-bone-white: #f9f7f4;
   --color-charcoal: #1e1e1e;
   --color-storm: #555f5f;
+  --color-storm-text: #9fb2b2; /* storm-grey text on dark (>=4.5:1) */
   --color-pale-water: #a8c5c5;
   --color-bass-green: #2d6a4f;
   --color-saltwater-blue: #1d3557;

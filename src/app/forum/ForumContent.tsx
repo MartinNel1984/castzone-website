@@ -44,11 +44,11 @@ export default function ForumPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">Forum</h1>
-          <p className="text-storm font-body mt-1">South Africa&apos;s fishing discussion</p>
+          <p className="text-storm-text font-body mt-1">South Africa&apos;s fishing discussion</p>
         </div>
         <Link
           href="/forum/new"
-          className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
+          className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
         >
           + New Thread
         </Link>
@@ -73,16 +73,16 @@ export default function ForumPage() {
                 {cat.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange transition-colors">
+                <h2 className="text-bone-white font-heading font-semibold text-xl group-hover:text-cast-orange-text transition-colors">
                   {cat.name}
                 </h2>
-                <p className="text-storm text-sm font-body mt-0.5">{cat.description}</p>
+                <p className="text-storm-text text-sm font-body mt-0.5">{cat.description}</p>
               </div>
               <div className="hidden sm:flex flex-col items-end gap-1 flex-shrink-0 text-right">
                 <span className="text-pale-water text-sm font-body">{cat.thread_count} threads</span>
-                <span className="text-storm text-xs font-body">{cat.post_count} posts</span>
+                <span className="text-storm-text text-xs font-body">{cat.post_count} posts</span>
               </div>
-              <svg className="w-5 h-5 text-storm group-hover:text-cast-orange transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-storm-text group-hover:text-cast-orange-text transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>

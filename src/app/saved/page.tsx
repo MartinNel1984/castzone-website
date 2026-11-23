@@ -11,7 +11,7 @@ export default function SavedPage() {
   return (
     <Suspense fallback={
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm font-body">Loading…</p>
+        <p className="text-storm-text font-body">Loading…</p>
       </div>
     }>
       <SavedContent />

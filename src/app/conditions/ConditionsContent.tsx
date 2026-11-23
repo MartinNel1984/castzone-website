@@ -51,7 +51,7 @@ function levelBarColor(pct: number) {
 
 function deltaLabel(now: number, prev: number) {
   const d = +(now - prev).toFixed(1);
-  if (Math.abs(d) < 0.05) return <span className="text-storm text-xs">—</span>;
+  if (Math.abs(d) < 0.05) return <span className="text-storm-text text-xs">—</span>;
   return d > 0
     ? <span className="text-green-400 text-xs font-body">▲ {Math.abs(d)}%</span>
     : <span className="text-red-400 text-xs font-body">▼ {Math.abs(d)}%</span>;
@@ -86,7 +86,7 @@ function SortTh({ col, label, sortKey, sortAsc, onSort }: {
   return (
     <th
       onClick={() => onSort(col)}
-      className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
+      className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm-text cursor-pointer hover:text-pale-water select-none whitespace-nowrap"
     >
       {label}{" "}
       {active ? (sortAsc ? "↑" : "↓") : <span className="opacity-30">↕</span>}
@@ -138,11 +138,11 @@ export default function ConditionsContent() {
           <h1 className="text-5xl font-heading font-semibold text-bone-white ">
             Water Conditions
           </h1>
-          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+          <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
             Live dam levels &amp; Vaal system gate alerts
           </p>
         </div>
-        <div className="text-xs font-body text-storm bg-deep-water-light border border-surface-teal rounded px-3 py-2 self-start mt-1">
+        <div className="text-xs font-body text-storm-text bg-deep-water-light border border-surface-teal rounded px-3 py-2 self-start mt-1">
           DWS data updated <span className="text-pale-water font-medium">{DATA_UPDATED}</span>
           <span className="mx-2">·</span>
           Updated <span className="text-pale-water font-medium">every Monday</span>
@@ -152,15 +152,15 @@ export default function ConditionsContent() {
       {/* ── National stats strip ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "National Average",  value: `${NATIONAL_AVG}%`,         sub: `${ALL_DAMS.length} dams · 9 provinces`,     cls: "text-cast-orange" },
+          { label: "National Average",  value: `${NATIONAL_AVG}%`,         sub: `${ALL_DAMS.length} dams · 9 provinces`,     cls: "text-cast-orange-text" },
           { label: "Total Capacity",    value: `${Math.round(ALL_DAMS.reduce((a,d)=>a+d.fsc,0)).toLocaleString()} Mm³`, sub: "combined full storage",  cls: "text-pale-water" },
           { label: "Dams Above 80%",    value: `${ALL_DAMS.filter(d=>d.pct>=80).length}`,                                sub: `of ${ALL_DAMS.length} monitored`, cls: "text-green-400" },
           { label: "Vaal Dam Level",    value: `${ALL_DAMS.find((d) => d.name === "Vaal Dam")?.pct ?? "—"}%`, sub: "full, DWS weekly figure",   cls: "text-green-400" },
         ].map((s) => (
           <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-4">
-            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-storm mb-1">{s.label}</div>
+            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-storm-text mb-1">{s.label}</div>
             <div className={`text-2xl font-heading font-bold ${s.cls}`}>{s.value}</div>
-            <div className="text-xs font-body text-storm mt-1">{s.sub}</div>
+            <div className="text-xs font-body text-storm-text mt-1">{s.sub}</div>
           </div>
         ))}
       </div>
@@ -194,7 +194,7 @@ export default function ConditionsContent() {
                 onClick={() => { setProvince(p.key); setSearch(""); }}
                 className={`px-3 py-1.5 rounded text-xs font-mono font-semibold uppercase tracking-wider transition-colors whitespace-nowrap flex-shrink-0 ${
                   province === p.key
-                    ? "bg-cast-orange text-white"
+                    ? "bg-cast-orange-deep text-white"
                     : "text-pale-water hover:text-bone-white"
                 }`}
               >
@@ -211,10 +211,10 @@ export default function ConditionsContent() {
             { label: "Total FSC",       value: `${summary.totalFSC.toFixed(0)} Mm³`,      cls: "text-pale-water" },
             { label: "Dams shown",      value: `${displayedDams.length}`,                 cls: "text-pale-water" },
             { label: "Above 80%",       value: `${summary.above80}`,                      cls: "text-green-400" },
-            { label: "Below 50%",       value: `${summary.below50}`,                      cls: summary.below50 > 0 ? "text-red-400" : "text-storm" },
+            { label: "Below 50%",       value: `${summary.below50}`,                      cls: summary.below50 > 0 ? "text-red-400" : "text-storm-text" },
           ].map((s) => (
             <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded p-2.5 text-center">
-              <div className="text-xs font-body text-storm">{s.label}</div>
+              <div className="text-xs font-body text-storm-text">{s.label}</div>
               <div className={`text-lg font-heading font-bold ${s.cls}`}>{s.value}</div>
             </div>
           ))}
@@ -249,7 +249,7 @@ export default function ConditionsContent() {
                 onClick={() => toggleSort(k)}
                 className={`px-3 py-2 rounded text-xs font-mono font-semibold uppercase tracking-wider border transition-colors ${
                   sortKey === k
-                    ? "bg-cast-orange border-cast-orange text-white"
+                    ? "bg-cast-orange-deep border-cast-orange text-white"
                     : "border-surface-teal text-pale-water hover:border-cast-orange"
                 }`}
               >
@@ -267,12 +267,12 @@ export default function ConditionsContent() {
               <thead>
                 <tr className="bg-deep-water border-b border-surface-teal">
                   <SortTh col="name" label="Dam"        sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
-                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">River</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm-text">River</th>
                   <SortTh col="fsc"  label="FSC (Mm³)" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                   <SortTh col="pct"  label="This Week"  sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
-                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">Last Wk</th>
-                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">Last Yr</th>
-                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm">vs Last Yr</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm-text">Last Wk</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm-text">Last Yr</th>
+                  <th className="px-4 py-3 text-left text-xs font-mono font-semibold uppercase tracking-wider text-storm-text">vs Last Yr</th>
                 </tr>
               </thead>
               <tbody>
@@ -284,12 +284,12 @@ export default function ConditionsContent() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/conditions/${damSlug(dam.name)}`}
-                        className="font-heading font-bold text-bone-white hover:text-cast-orange transition-colors text-sm"
+                        className="font-heading font-bold text-bone-white hover:text-cast-orange-text transition-colors text-sm"
                       >
                         {dam.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-xs font-body text-storm">{dam.river}</td>
+                    <td className="px-4 py-3 text-xs font-body text-storm-text">{dam.river}</td>
                     <td className="px-4 py-3 text-sm font-body text-pale-water">{dam.fsc.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -311,14 +311,14 @@ export default function ConditionsContent() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm font-body text-storm">{dam.lastWeek}%</td>
-                    <td className="px-4 py-3 text-sm font-body text-storm">{dam.lastYear}%</td>
+                    <td className="px-4 py-3 text-sm font-body text-storm-text">{dam.lastWeek}%</td>
+                    <td className="px-4 py-3 text-sm font-body text-storm-text">{dam.lastYear}%</td>
                     <td className="px-4 py-3">{deltaLabel(dam.pct, dam.lastYear)}</td>
                   </tr>
                 ))}
                 {displayedDams.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-10 text-center text-storm font-body text-sm">
+                    <td colSpan={7} className="px-4 py-10 text-center text-storm-text font-body text-sm">
                       No dams match &ldquo;{search}&rdquo;
                     </td>
                   </tr>
@@ -327,7 +327,7 @@ export default function ConditionsContent() {
             </table>
           </div>
         </div>
-        <p className="text-xs font-body text-storm mt-2">
+        <p className="text-xs font-body text-storm-text mt-2">
           Dam name links to venue page · FSC = Full Storage Capacity · Source: DWS Weekly State of Dams
         </p>
       </div>
@@ -340,7 +340,7 @@ export default function ConditionsContent() {
             href="https://mobi.reservoir.org.za/dws-comms/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-body text-cast-orange hover:text-bone-white transition-colors"
+            className="text-xs font-body text-cast-orange-text hover:text-bone-white transition-colors"
           >
             View on VB Hydrology →
           </a>
@@ -355,7 +355,7 @@ export default function ConditionsContent() {
               }`}
             >
               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <span className="text-xs font-body text-storm">{notice.date}</span>
+                <span className="text-xs font-body text-storm-text">{notice.date}</span>
                 <span className={`text-xs font-mono font-semibold uppercase tracking-wider border rounded px-2 py-0.5 ${
                   notice.dam === "vaal"
                     ? "bg-green-900/30 border-green-700 text-green-300"
@@ -377,7 +377,7 @@ export default function ConditionsContent() {
         {GATE_NOTICES.length > 6 && (
           <button
             onClick={() => setShowAllNotices((v) => !v)}
-            className="mt-3 text-sm font-body text-cast-orange hover:text-bone-white transition-colors"
+            className="mt-3 text-sm font-body text-cast-orange-text hover:text-bone-white transition-colors"
           >
             {showAllNotices
               ? "Show less ↑"
@@ -388,13 +388,13 @@ export default function ConditionsContent() {
 
       {/* ── Browse all dams ── */}
       <div className="border-t border-surface-teal pt-6 mb-6">
-        <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-storm mb-4">
+        <h2 className="text-sm font-mono font-semibold uppercase tracking-wider text-storm-text mb-4">
           Browse all {ALL_DAMS.length} dams by province
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
           {ALL_PROVINCE_DAMS.map((p) => (
             <div key={p.label}>
-              <h3 className="text-xs font-heading font-semibold text-cast-orange mb-2">
+              <h3 className="text-xs font-heading font-semibold text-cast-orange-text mb-2">
                 {p.label} ({p.dams.length})
               </h3>
               <ul className="flex flex-wrap gap-x-3 gap-y-1">
@@ -415,8 +415,8 @@ export default function ConditionsContent() {
       </div>
 
       {/* ── Footer note ── */}
-      <div className="border-t border-surface-teal pt-5 text-xs font-body text-storm space-y-1">
-        <p>Data sourced from <a href="https://www.dws.gov.za/hydrology/" target="_blank" rel="noopener noreferrer" className="text-cast-orange hover:text-bone-white">DWS Hydrological Services</a> and <a href="https://mobi.reservoir.org.za/dws-comms/" target="_blank" rel="noopener noreferrer" className="text-cast-orange hover:text-bone-white">VB Hydrology (DWS Comms)</a>. Updated weekly every Monday. CastZone does not warrant the accuracy of DWS data — always exercise caution near water.</p>
+      <div className="border-t border-surface-teal pt-5 text-xs font-body text-storm-text space-y-1">
+        <p>Data sourced from <a href="https://www.dws.gov.za/hydrology/" target="_blank" rel="noopener noreferrer" className="text-cast-orange-text hover:text-bone-white">DWS Hydrological Services</a> and <a href="https://mobi.reservoir.org.za/dws-comms/" target="_blank" rel="noopener noreferrer" className="text-cast-orange-text hover:text-bone-white">VB Hydrology (DWS Comms)</a>. Updated weekly every Monday. CastZone does not warrant the accuracy of DWS data — always exercise caution near water.</p>
       </div>
 
     </div>

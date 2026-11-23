@@ -12,9 +12,9 @@ const sizes: Record<Size, string> = {
 };
 
 const variants: Record<Variant, string> = {
-  solid: "bg-cast-orange hover:bg-cast-orange-hover text-white",
+  solid: "bg-cast-orange-deep hover:bg-cast-orange-hover text-white",
   line: "border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white",
-  ghost: "text-cast-orange hover:text-bone-white",
+  ghost: "text-cast-orange-text hover:text-bone-white",
 };
 
 type CommonProps = {

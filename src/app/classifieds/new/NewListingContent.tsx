@@ -125,7 +125,7 @@ export default function NewListingContent() {
   }
 
   if (checkingAuth) {
-    return <div className="max-w-2xl mx-auto px-4 py-20 text-center"><p className="text-storm font-body">Loading…</p></div>;
+    return <div className="max-w-2xl mx-auto px-4 py-20 text-center"><p className="text-storm-text font-body">Loading…</p></div>;
   }
 
   if (!user) {
@@ -134,7 +134,7 @@ export default function NewListingContent() {
         <p className="text-pale-water font-body text-lg mb-6">You need to be signed in to post a listing.</p>
         <div className="flex justify-center gap-3">
           <Link href="/login" className="border border-surface-teal text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">Sign In</Link>
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">Join Free</Link>
+          <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase px-6 py-3 rounded transition-colors">Join Free</Link>
         </div>
       </div>
     );
@@ -146,14 +146,14 @@ export default function NewListingContent() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/classifieds" className="hover:text-pale-water">Tackle Box</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">Post a Listing</span>
       </nav>
 
       <h1 className="text-4xl font-heading font-semibold text-bone-white mb-2">Post a Listing</h1>
-      <p className="text-storm font-body text-sm mb-8">
+      <p className="text-storm-text font-body text-sm mb-8">
         Listings are free and go live immediately. Be honest about condition and add clear photos.
       </p>
 
@@ -164,7 +164,7 @@ export default function NewListingContent() {
 
         {/* Title */}
         <div>
-          <label htmlFor="title" className={labelClass}>Title <span className="text-cast-orange">*</span></label>
+          <label htmlFor="title" className={labelClass}>Title <span className="text-cast-orange-text">*</span></label>
           <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required minLength={3} maxLength={120}
             placeholder="e.g. Shimano Stradic 4000 + spare spool" className={inputClass} />
         </div>
@@ -172,13 +172,13 @@ export default function NewListingContent() {
         {/* Category + Condition */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="category" className={labelClass}>Category <span className="text-cast-orange">*</span></label>
+            <label htmlFor="category" className={labelClass}>Category <span className="text-cast-orange-text">*</span></label>
             <select id="category" value={category} onChange={(e) => setCategory(e.target.value as ListingCategory)} className={inputClass}>
               {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="condition" className={labelClass}>Condition <span className="text-cast-orange">*</span></label>
+            <label htmlFor="condition" className={labelClass}>Condition <span className="text-cast-orange-text">*</span></label>
             <select id="condition" value={condition} onChange={(e) => setCondition(e.target.value as ListingCondition)} className={inputClass}>
               {CONDITIONS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
@@ -188,12 +188,12 @@ export default function NewListingContent() {
         {/* Price + Province */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className={labelClass}>Price (R) <span className="text-cast-orange">*</span></label>
+            <label htmlFor="price" className={labelClass}>Price (R) <span className="text-cast-orange-text">*</span></label>
             <input id="price" type="number" min="0" step="1" value={price} onChange={(e) => setPrice(e.target.value)} required
               placeholder="e.g. 1500" className={inputClass} />
           </div>
           <div>
-            <label htmlFor="province" className={labelClass}>Province <span className="text-cast-orange">*</span></label>
+            <label htmlFor="province" className={labelClass}>Province <span className="text-cast-orange-text">*</span></label>
             <select id="province" value={province} onChange={(e) => setProvince(e.target.value)} required className={inputClass}>
               <option value="" disabled>Choose a province…</option>
               {PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -203,22 +203,22 @@ export default function NewListingContent() {
 
         {/* Contact phone */}
         <div>
-          <label htmlFor="phone" className={labelClass}>WhatsApp / Phone number <span className="text-cast-orange">*</span></label>
+          <label htmlFor="phone" className={labelClass}>WhatsApp / Phone number <span className="text-cast-orange-text">*</span></label>
           <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required
             placeholder="e.g. 081 234 5678" className={inputClass} />
-          <p className="text-storm text-xs mt-1 font-body">Buyers will contact you on this number. Only shown on this listing.</p>
+          <p className="text-storm-text text-xs mt-1 font-body">Buyers will contact you on this number. Only shown on this listing.</p>
         </div>
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className={labelClass}>Description <span className="text-cast-orange">*</span></label>
+          <label htmlFor="description" className={labelClass}>Description <span className="text-cast-orange-text">*</span></label>
           <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required rows={5} maxLength={4000}
             placeholder="Condition, age, what's included, reason for selling, collection/courier options…" className={`${inputClass} resize-y`} />
         </div>
 
         {/* Photos */}
         <div>
-          <label className={labelClass}>Photos <span className="text-cast-orange">*</span> <span className="text-storm font-normal normal-case">(up to {MAX_FILES})</span></label>
+          <label className={labelClass}>Photos <span className="text-cast-orange-text">*</span> <span className="text-storm-text font-normal normal-case">(up to {MAX_FILES})</span></label>
           <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handleFileChange} className="hidden" />
           <div className="flex flex-wrap gap-3">
             {images.map((img, i) => (
@@ -226,7 +226,7 @@ export default function NewListingContent() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.preview} alt={`Photo ${i + 1}`} className="w-24 h-24 object-cover rounded border border-surface-teal" />
                 {i === 0 && (
-                  <span className="absolute bottom-1 left-1 bg-cast-orange text-white text-[10px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded">Cover</span>
+                  <span className="absolute bottom-1 left-1 bg-cast-orange-deep text-white text-[11px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded">Cover</span>
                 )}
                 <button type="button" onClick={() => removeImage(i)} aria-label="Remove photo"
                   className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs flex items-center justify-center leading-none transition-colors">×</button>
@@ -234,19 +234,19 @@ export default function NewListingContent() {
             ))}
             {images.length < MAX_FILES && (
               <button type="button" onClick={() => fileInputRef.current?.click()}
-                className="w-24 h-24 border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded flex flex-col items-center justify-center text-storm hover:text-pale-water transition-colors">
+                className="w-24 h-24 border-2 border-dashed border-surface-teal hover:border-cast-orange/60 rounded flex flex-col items-center justify-center text-storm-text hover:text-pale-water transition-colors">
                 <span className="text-2xl">📷</span>
-                <span className="text-[10px] font-body mt-1">Add</span>
+                <span className="text-[11px] font-body mt-1">Add</span>
               </button>
             )}
           </div>
-          <p className="text-storm text-xs mt-2 font-body">First photo is the cover. JPEG, PNG or WEBP · max {MAX_SIZE_MB}MB each.</p>
+          <p className="text-storm-text text-xs mt-2 font-body">First photo is the cover. JPEG, PNG or WEBP · max {MAX_SIZE_MB}MB each.</p>
         </div>
 
         <div className="flex items-center justify-between pt-2">
-          <Link href="/classifieds" className="text-storm hover:text-pale-water text-sm font-body transition-colors">Cancel</Link>
+          <Link href="/classifieds" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">Cancel</Link>
           <button type="submit" disabled={submitting || !title.trim() || !description.trim() || !price || !province || !phone.trim() || images.length === 0}
-            className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors">
+            className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors">
             {submitting ? "Posting…" : "Post Listing"}
           </button>
         </div>

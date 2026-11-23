@@ -73,10 +73,10 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Breadcrumb */}
-      <nav className="text-xs font-body text-storm mb-4 flex flex-wrap gap-1.5">
-        <Link href="/conditions" className="hover:text-cast-orange transition-colors">Water Conditions</Link>
+      <nav className="text-xs font-body text-storm-text mb-4 flex flex-wrap gap-1.5">
+        <Link href="/conditions" className="hover:text-cast-orange-text transition-colors">Water Conditions</Link>
         <span>/</span>
-        <Link href={`/conditions?province=${encodeURIComponent(d.province)}`} className="hover:text-cast-orange transition-colors">{d.province}</Link>
+        <Link href={`/conditions?province=${encodeURIComponent(d.province)}`} className="hover:text-cast-orange-text transition-colors">{d.province}</Link>
         <span>/</span>
         <span className="text-pale-water">{d.name}</span>
       </nav>
@@ -84,7 +84,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       <h1 className="text-4xl sm:text-5xl font-heading font-semibold text-bone-white leading-none mb-2">
         {d.name} Water Level
       </h1>
-      <p className="text-storm font-body mb-8">
+      <p className="text-storm-text font-body mb-8">
         {d.river} · {d.province} · updated {DATA_UPDATED} from DWS Hydrological Services
       </p>
 
@@ -115,8 +115,8 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
           { label: "Capacity", value: `${d.fsc.toLocaleString()} Mm³` },
         ].map((s) => (
           <div key={s.label} className="bg-deep-water-light border border-surface-teal rounded-lg p-4 text-center">
-            <p className="text-cast-orange font-heading font-bold text-xl">{s.value}</p>
-            <p className="text-storm text-xs uppercase tracking-wider mt-0.5">{s.label}</p>
+            <p className="text-cast-orange-text font-heading font-bold text-xl">{s.value}</p>
+            <p className="text-storm-text text-xs uppercase tracking-wider mt-0.5">{s.label}</p>
           </div>
         ))}
       </div>
@@ -126,7 +126,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
         <div className="border border-amber-600/50 bg-amber-900/10 rounded-lg p-4 mb-8">
           <p className="text-amber-300 font-body text-sm">
             ⚠️ {d.name} is part of the Vaal system. Always check the latest{" "}
-            <Link href="/conditions" className="text-cast-orange hover:text-bone-white underline">gate-release notices</Link>{" "}
+            <Link href="/conditions" className="text-cast-orange-text hover:text-bone-white underline">gate-release notices</Link>{" "}
             before fishing the banks — releases raise river levels downstream within 24–72 hours.
           </p>
         </div>
@@ -135,7 +135,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
       {/* CTAs / cross-links */}
       <div className="flex flex-wrap gap-3 mb-10">
         {d.venueSlug && (
-          <Link href={`/venues/${d.venueSlug}`} className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
+          <Link href={`/venues/${d.venueSlug}`} className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded text-sm transition-colors">
             Fish {d.name} — venue guide →
           </Link>
         )}
@@ -158,7 +158,7 @@ export default async function DamConditionPage({ params }: { params: Promise<{ d
                 href={`/conditions/${damSlug(n.name)}`}
                 className="group flex items-center justify-between bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg px-4 py-3 transition-colors"
               >
-                <span className="text-bone-white font-body text-sm group-hover:text-cast-orange transition-colors">{n.name}</span>
+                <span className="text-bone-white font-body text-sm group-hover:text-cast-orange-text transition-colors">{n.name}</span>
                 <span className="text-pale-water text-sm font-heading font-bold">{n.pct.toFixed(1)}%</span>
               </Link>
             ))}

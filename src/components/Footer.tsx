@@ -8,9 +8,9 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="font-heading font-semibold text-xl text-bone-white mb-3">
-              Cast<em className="italic text-cast-orange">Zone</em>
+              Cast<em className="italic text-cast-orange-text">Zone</em>
             </div>
-            <p className="text-storm text-sm leading-relaxed">
+            <p className="text-storm-text text-sm leading-relaxed">
               Where South Africa Fishes.
             </p>
             <a
@@ -18,7 +18,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow CastZone on Instagram"
-              className="inline-flex items-center gap-2 mt-4 text-storm hover:text-cast-orange text-sm cz-transition"
+              className="inline-flex items-center gap-2 mt-4 text-storm-text hover:text-cast-orange-text text-sm cz-transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow CastZone on Facebook"
-              className="flex items-center gap-2 mt-2 text-storm hover:text-cast-orange text-sm cz-transition"
+              className="flex items-center gap-2 mt-2 text-storm-text hover:text-cast-orange-text text-sm cz-transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ export default function Footer() {
                 { label: "General", href: "/forum/general" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
+                  <Link href={item.href} className="text-storm-text hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -82,7 +82,7 @@ export default function Footer() {
                 { label: "Trophy Room", href: "/catches" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
+                  <Link href={item.href} className="text-storm-text hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -101,7 +101,7 @@ export default function Footer() {
                 { label: "Advertise", href: "/advertise" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-storm hover:text-pale-water text-sm cz-transition">
+                  <Link href={item.href} className="text-storm-text hover:text-pale-water text-sm cz-transition">
                     {item.label}
                   </Link>
                 </li>
@@ -111,10 +111,10 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-surface-teal mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-storm text-xs font-mono">
+          <p className="text-storm-text text-xs font-mono">
             © {new Date().getFullYear()} CastZone. All rights reserved.
           </p>
-          <p className="text-storm text-xs font-mono">
+          <p className="text-storm-text text-xs font-mono">
             Built for South African anglers.
           </p>
         </div>

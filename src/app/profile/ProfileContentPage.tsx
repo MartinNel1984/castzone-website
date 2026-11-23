@@ -25,9 +25,9 @@ type Thread = {
 };
 
 const LEVEL_COLOURS: Record<string, string> = {
-  "Licenced":   "text-cast-orange border-cast-orange",
+  "Licenced":   "text-cast-orange-text border-cast-orange",
   "Regular":    "text-green-400 border-green-600",
-  "First Cast": "text-storm border-surface-teal",
+  "First Cast": "text-storm-text border-surface-teal",
 };
 
 function joinedDate(dateStr: string) {
@@ -222,7 +222,7 @@ function ProfileContent() {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm">Loading...</p>
+        <p className="text-storm-text">Loading...</p>
       </div>
     );
   }
@@ -231,8 +231,8 @@ function ProfileContent() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Member not found</p>
-        <p className="text-storm font-body text-sm mb-6">That username doesn&apos;t exist on CastZone.</p>
-        <Link href="/forum" className="text-cast-orange hover:underline font-body text-sm">← Back to Forum</Link>
+        <p className="text-storm-text font-body text-sm mb-6">That username doesn&apos;t exist on CastZone.</p>
+        <Link href="/forum" className="text-cast-orange-text hover:underline font-body text-sm">← Back to Forum</Link>
       </div>
     );
   }
@@ -243,7 +243,7 @@ function ProfileContent() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-8">
+      <nav className="text-sm font-body text-storm-text mb-8">
         <Link href="/forum" className="hover:text-pale-water">Forum</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">{profile.username}</span>
@@ -274,7 +274,7 @@ function ProfileContent() {
                 <button
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 bg-cast-orange hover:bg-cast-orange-hover text-white w-7 h-7 rounded-full flex items-center justify-center text-sm border-2 border-deep-water-light transition-colors"
+                  className="absolute -bottom-1 -right-1 bg-cast-orange-deep hover:bg-cast-orange-hover text-white w-7 h-7 rounded-full flex items-center justify-center text-sm border-2 border-deep-water-light transition-colors"
                   aria-label="Change profile picture"
                   title="Change profile picture"
                 >
@@ -293,7 +293,7 @@ function ProfileContent() {
               {isOwn && !editing && (
                 <button
                   onClick={() => { setEditing(true); setUsernameInput(profile.username); setUsernameStatus("idle"); }}
-                  className="flex-shrink-0 text-storm hover:text-pale-water text-xs font-body border border-surface-teal hover:border-pale-water/50 rounded px-3 py-1.5 transition-colors"
+                  className="flex-shrink-0 text-storm-text hover:text-pale-water text-xs font-body border border-surface-teal hover:border-pale-water/50 rounded px-3 py-1.5 transition-colors"
                 >
                   Edit Profile
                 </button>
@@ -303,10 +303,10 @@ function ProfileContent() {
               <span className={`text-xs font-mono font-semibold uppercase tracking-wider border rounded px-2 py-0.5 ${levelClass}`}>
                 {profile.member_level}
               </span>
-              <span className="text-storm text-sm font-body">
+              <span className="text-storm-text text-sm font-body">
                 {profile.post_count} {profile.post_count === 1 ? "post" : "posts"}
               </span>
-              <span className="text-storm text-sm font-body">
+              <span className="text-storm-text text-sm font-body">
                 Joined {joinedDate(profile.created_at)}
               </span>
             </div>
@@ -316,11 +316,11 @@ function ProfileContent() {
         {/* Bio */}
         {editing ? (
           <div className="mt-5">
-            <p className="text-storm text-xs font-body mb-4">Tap the 📷 on your photo to upload a profile picture (JPEG, PNG or WEBP, max 5MB).</p>
+            <p className="text-storm-text text-xs font-body mb-4">Tap the 📷 on your photo to upload a profile picture (JPEG, PNG or WEBP, max 5MB).</p>
 
             {/* Username */}
             <div className="mb-4">
-              <label className="block text-xs font-body text-storm uppercase tracking-wider mb-1.5">Username</label>
+              <label className="block text-xs font-body text-storm-text uppercase tracking-wider mb-1.5">Username</label>
               <div className="flex items-center gap-3">
                 <input
                   type="text"
@@ -331,9 +331,9 @@ function ProfileContent() {
                 />
                 <span className="text-xs font-body flex-shrink-0 w-24">
                   {usernameInput === profile.username ? (
-                    <span className="text-storm">Current name</span>
+                    <span className="text-storm-text">Current name</span>
                   ) : usernameStatus === "checking" ? (
-                    <span className="text-storm">Checking…</span>
+                    <span className="text-storm-text">Checking…</span>
                   ) : usernameStatus === "available" ? (
                     <span className="text-green-400">✓ Available</span>
                   ) : usernameStatus === "taken" ? (
@@ -343,11 +343,11 @@ function ProfileContent() {
                   ) : null}
                 </span>
               </div>
-              <p className="text-storm text-xs font-body mt-1.5">3–30 characters · letters, numbers and underscores only · no spaces</p>
+              <p className="text-storm-text text-xs font-body mt-1.5">3–30 characters · letters, numbers and underscores only · no spaces</p>
             </div>
 
             {/* Bio */}
-            <label className="block text-xs font-body text-storm uppercase tracking-wider mb-1.5">Bio</label>
+            <label className="block text-xs font-body text-storm-text uppercase tracking-wider mb-1.5">Bio</label>
             <textarea
               value={bioInput}
               onChange={(e) => setBioInput(e.target.value)}
@@ -359,20 +359,20 @@ function ProfileContent() {
             <div className="flex items-center justify-between mt-2">
               <div>
                 {saveError && <p className="text-red-400 text-xs font-body">{saveError}</p>}
-                <p className="text-storm text-xs font-body">{bioInput.length}/200</p>
+                <p className="text-storm-text text-xs font-body">{bioInput.length}/200</p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={cancelEdit}
                   disabled={saving}
-                  className="text-storm hover:text-pale-water text-sm font-body transition-colors px-3 py-1.5"
+                  className="text-storm-text hover:text-pale-water text-sm font-body transition-colors px-3 py-1.5"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={saving || (usernameInput !== profile.username && usernameStatus !== "available")}
-                  className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
+                  className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-1.5 rounded transition-colors"
                 >
                   {saving ? "Saving..." : "Save"}
                 </button>
@@ -384,9 +384,9 @@ function ProfileContent() {
             {profile.bio}
           </p>
         ) : isOwn ? (
-          <p className="mt-4 text-storm font-body text-sm italic border-t border-surface-teal/40 pt-4">
+          <p className="mt-4 text-storm-text font-body text-sm italic border-t border-surface-teal/40 pt-4">
             No bio yet.{" "}
-            <button onClick={() => { setEditing(true); setUsernameInput(profile.username); setUsernameStatus("idle"); }} className="text-cast-orange hover:underline not-italic">
+            <button onClick={() => { setEditing(true); setUsernameInput(profile.username); setUsernameStatus("idle"); }} className="text-cast-orange-text hover:underline not-italic">
               Add one →
             </button>
           </p>
@@ -400,7 +400,7 @@ function ProfileContent() {
 
       {threads.length === 0 ? (
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-10 text-center">
-          <p className="text-storm font-body text-sm">No threads started yet.</p>
+          <p className="text-storm-text font-body text-sm">No threads started yet.</p>
         </div>
       ) : (
         <div className="divide-y divide-surface-teal/50 bg-deep-water-light border border-surface-teal rounded-lg overflow-hidden">
@@ -414,10 +414,10 @@ function ProfileContent() {
                 {thread.categories?.icon ?? "🎣"}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text transition-colors truncate">
                   {thread.title}
                 </p>
-                <p className="text-storm text-xs mt-0.5">
+                <p className="text-storm-text text-xs mt-0.5">
                   {thread.categories?.name ?? "General"} · {timeAgo(thread.created_at)}
                 </p>
               </div>
@@ -436,7 +436,7 @@ export default function ProfilePageContent() {
   return (
     <Suspense fallback={
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm">Loading profile...</p>
+        <p className="text-storm-text">Loading profile...</p>
       </div>
     }>
       <ProfileContent />

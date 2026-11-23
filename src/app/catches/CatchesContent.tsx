@@ -119,9 +119,9 @@ function CatchComments({ catchId, user }: { catchId: string; user: User | null }
       </p>
 
       {loading ? (
-        <p className="text-storm font-body text-sm">Loading comments…</p>
+        <p className="text-storm-text font-body text-sm">Loading comments…</p>
       ) : comments.length === 0 ? (
-        <p className="text-storm font-body text-sm">No comments yet — be the first to give some feedback. 🎣</p>
+        <p className="text-storm-text font-body text-sm">No comments yet — be the first to give some feedback. 🎣</p>
       ) : (
         <ul className="space-y-4">
           {comments.map((cm) => {
@@ -138,10 +138,10 @@ function CatchComments({ catchId, user }: { catchId: string; user: User | null }
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <Link href={`/profile?username=${encodeURIComponent(name)}`} className="text-bone-white font-heading font-bold text-sm hover:text-cast-orange transition-colors truncate">
+                    <Link href={`/profile?username=${encodeURIComponent(name)}`} className="text-bone-white font-heading font-bold text-sm hover:text-cast-orange-text transition-colors truncate">
                       {name}
                     </Link>
-                    <span className="text-storm text-xs font-body flex-shrink-0">{timeAgo(cm.created_at)}</span>
+                    <span className="text-storm-text text-xs font-body flex-shrink-0">{timeAgo(cm.created_at)}</span>
                   </div>
                   <p className="text-pale-water font-body text-sm whitespace-pre-wrap break-words">{cm.body}</p>
                 </div>
@@ -159,22 +159,22 @@ function CatchComments({ catchId, user }: { catchId: string; user: User | null }
             placeholder="Add a comment…"
             rows={2}
             maxLength={1000}
-            className="w-full bg-deep-water border border-surface-teal rounded px-3 py-2 text-bone-white font-body text-sm placeholder:text-storm focus:border-cast-orange focus:outline-none resize-y"
+            className="w-full bg-deep-water border border-surface-teal rounded px-3 py-2 text-bone-white font-body text-sm placeholder:text-storm-text focus:border-cast-orange focus:outline-none resize-y"
           />
           {error && <p className="text-red-400 font-body text-xs mt-1">{error}</p>}
           <div className="flex justify-end mt-2">
             <button
               type="submit"
               disabled={!body.trim() || posting}
-              className="bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider text-sm px-5 py-2 rounded transition-colors"
+              className="bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono font-semibold uppercase tracking-wider text-sm px-5 py-2 rounded transition-colors"
             >
               {posting ? "Posting…" : "Post"}
             </button>
           </div>
         </form>
       ) : (
-        <p className="text-storm font-body text-sm mt-4">
-          <Link href="/login" className="text-cast-orange hover:underline">Sign in</Link> to leave a comment.
+        <p className="text-storm-text font-body text-sm mt-4">
+          <Link href="/login" className="text-cast-orange-text hover:underline">Sign in</Link> to leave a comment.
         </p>
       )}
     </div>
@@ -185,7 +185,7 @@ function DaysHeldBadge({ approvedAt }: { approvedAt: string }) {
   const days = daysHeld(approvedAt);
   const label = days === 0 ? "Claimed today" : days === 1 ? "#1 for 1 day" : `#1 for ${days} days`;
   return (
-    <span className="inline-flex items-center gap-2 bg-cast-orange/10 border border-cast-orange/40 text-cast-orange text-sm font-mono font-semibold uppercase tracking-wider rounded px-4 py-2">
+    <span className="inline-flex items-center gap-2 bg-cast-orange/10 border border-cast-orange/40 text-cast-orange-text text-sm font-mono font-semibold uppercase tracking-wider rounded px-4 py-2">
       <span>👑</span>
       {label}
     </span>
@@ -204,7 +204,7 @@ function EmptyState({ cat, user }: { cat: typeof CATEGORIES[number]; user: User 
       </p>
       <Link
         href={user ? "/catches/submit" : "/login"}
-        className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
+        className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-8 py-3 rounded transition-colors"
       >
         Submit Your Catch
       </Link>
@@ -231,8 +231,8 @@ function CatchModal({ c, cat, user, onClose }: { c: Catch; cat: typeof CATEGORIE
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-surface-teal/40 flex-shrink-0">
-          <span className="text-cast-orange font-heading font-semibold text-sm">{cat.icon} {cat.label}</span>
-          <button onClick={onClose} className="text-storm hover:text-bone-white text-3xl leading-none transition-colors" aria-label="Close">×</button>
+          <span className="text-cast-orange-text font-heading font-semibold text-sm">{cat.icon} {cat.label}</span>
+          <button onClick={onClose} className="text-storm-text hover:text-bone-white text-3xl leading-none transition-colors" aria-label="Close">×</button>
         </div>
 
         {/* Image */}
@@ -258,8 +258,8 @@ function CatchModal({ c, cat, user, onClose }: { c: Catch; cat: typeof CATEGORIE
             {formatWeight(c.weight_kg)}
           </p>
           <p className="text-pale-water font-body mb-1">{c.species}</p>
-          <p className="text-storm font-body text-sm">Caught {formatDate(c.catch_date)}</p>
-          {c.venue && <p className="text-storm font-body text-sm mt-0.5">📍 {c.venue}</p>}
+          <p className="text-storm-text font-body text-sm">Caught {formatDate(c.catch_date)}</p>
+          {c.venue && <p className="text-storm-text font-body text-sm mt-0.5">📍 {c.venue}</p>}
 
           <CatchComments catchId={c.id} user={user} />
         </div>
@@ -340,18 +340,18 @@ export default function TrophyRoomPage() {
           <h1 className="text-5xl font-heading font-semibold text-bone-white leading-tight">
             Trophy Room
           </h1>
-          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+          <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
             South Africa&apos;s Biggest Catches
           </p>
         </div>
         <Link
           href={user ? "/catches/submit" : "/login"}
-          className="hidden sm:inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm flex-shrink-0"
+          className="hidden sm:inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm flex-shrink-0"
         >
           Submit a Catch
         </Link>
       </div>
-      <p className="text-storm font-body text-sm mb-8">
+      <p className="text-storm-text font-body text-sm mb-8">
         Submit your catch with a photo and go straight onto the leaderboard.
       </p>
 
@@ -369,7 +369,7 @@ export default function TrophyRoomPage() {
               className={`font-mono font-semibold uppercase tracking-wider text-sm px-4 sm:px-5 py-3 border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                 activeCategory === c.value
                   ? "border-cast-orange text-bone-white"
-                  : "border-transparent text-storm hover:text-pale-water"
+                  : "border-transparent text-storm-text hover:text-pale-water"
               }`}
             >
               <span className="mr-1.5">{c.icon}</span>
@@ -390,7 +390,7 @@ export default function TrophyRoomPage() {
       </div>
 
       {loading ? (
-        <div className="py-24 text-center text-storm font-body">Loading leaderboard...</div>
+        <div className="py-24 text-center text-storm-text font-body">Loading leaderboard...</div>
       ) : !champion ? (
         <EmptyState cat={cat} user={user} />
       ) : (
@@ -399,7 +399,7 @@ export default function TrophyRoomPage() {
           <div className="bg-deep-water-light border-2 border-cast-orange rounded-xl overflow-hidden mb-8">
             <div className="bg-cast-orange/10 px-6 py-3 flex items-center gap-2 border-b border-cast-orange/30">
               <span className="text-2xl">🏆</span>
-              <span className="text-cast-orange font-heading font-semibold text-sm">
+              <span className="text-cast-orange-text font-heading font-semibold text-sm">
                 Current Champion — {cat.label}
               </span>
             </div>
@@ -427,14 +427,14 @@ export default function TrophyRoomPage() {
                 <p className="text-cast-orange font-heading font-bold text-5xl leading-none">
                   {formatWeight(champion.weight_kg)}
                 </p>
-                <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-body text-storm">
+                <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-body text-storm-text">
                   <span>Caught {formatDate(champion.catch_date)}</span>
                   {champion.venue && <span>📍 {champion.venue}</span>}
                 </div>
                 <DaysHeldBadge approvedAt={champion.approved_at} />
                 <button
                   onClick={() => setSelectedCatch(champion)}
-                  className="text-storm hover:text-cast-orange font-body text-sm text-left transition-colors w-fit"
+                  className="text-storm-text hover:text-cast-orange-text font-body text-sm text-left transition-colors w-fit"
                 >
                   💬 {(champion.comment_count ?? 0) > 0 ? commentLabel(champion.comment_count!) : "Add a comment"}
                 </button>
@@ -449,7 +449,7 @@ export default function TrophyRoomPage() {
                 <span className="text-pale-water font-mono font-semibold uppercase text-sm tracking-wider">
                   All-Time Leaderboard
                 </span>
-                <span className="text-storm text-sm font-body">— top {catches.length}</span>
+                <span className="text-storm-text text-sm font-body">— top {catches.length}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {rest.map((c, i) => {
@@ -476,7 +476,7 @@ export default function TrophyRoomPage() {
                           {rank <= 3 ? (
                             <span className={`text-xl flex-shrink-0 ${MEDAL_COLOURS[rank - 1]}`}>{MEDALS[rank - 1]}</span>
                           ) : (
-                            <span className="text-storm font-heading font-bold text-sm flex-shrink-0">#{rank}</span>
+                            <span className="text-storm-text font-heading font-bold text-sm flex-shrink-0">#{rank}</span>
                           )}
                           <p className="text-bone-white font-heading font-bold text-lg truncate">
                             {c.profiles?.username ?? "Angler"}
@@ -486,7 +486,7 @@ export default function TrophyRoomPage() {
                           {formatWeight(c.weight_kg)}
                         </p>
                         <p className="text-pale-water font-body text-sm truncate">{c.species}</p>
-                        <p className="text-storm text-xs font-body truncate">
+                        <p className="text-storm-text text-xs font-body truncate">
                           {formatDate(c.catch_date)}{c.venue ? ` · ${c.venue}` : ""}
                           {(c.comment_count ?? 0) > 0 ? ` · 💬 ${c.comment_count}` : ""}
                         </p>
@@ -509,7 +509,7 @@ export default function TrophyRoomPage() {
       <div className="sm:hidden mt-2">
         <Link
           href={user ? "/catches/submit" : "/login"}
-          className="block w-full text-center bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors"
+          className="block w-full text-center bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors"
         >
           Submit a Catch
         </Link>

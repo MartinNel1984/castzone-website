@@ -77,7 +77,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-5xl font-heading font-semibold text-bone-white ">The Map</h1>
-          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+          <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
             {venues.length > 0 ? `${venues.length} SA Venues & Dams` : "SA Venues & Dam Database"}
           </p>
         </div>
@@ -92,27 +92,27 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
       {/* Search */}
       <div className="mb-4">
         <div className="relative max-w-lg">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-storm pointer-events-none">🔍</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-storm-text pointer-events-none">🔍</span>
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search dams, rivers, towns or species…"
             aria-label="Search venues"
-            className="w-full bg-deep-water-light border border-surface-teal focus:border-cast-orange focus:outline-none text-bone-white placeholder:text-storm rounded-lg pl-10 pr-10 py-2.5 font-body text-sm transition-colors"
+            className="w-full bg-deep-water-light border border-surface-teal focus:border-cast-orange focus:outline-none text-bone-white placeholder:text-storm-text rounded-lg pl-10 pr-10 py-2.5 font-body text-sm transition-colors"
           />
           {query && (
             <button
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-storm hover:text-cast-orange text-sm"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-storm-text hover:text-cast-orange-text text-sm"
             >
               ✕
             </button>
           )}
         </div>
         {q && (
-          <p className="text-storm text-xs font-body mt-2">
+          <p className="text-storm-text text-xs font-body mt-2">
             {filtered.length} {filtered.length === 1 ? "result" : "results"} for &ldquo;{query}&rdquo;
           </p>
         )}
@@ -126,14 +126,14 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
             {label}
           </span>
         ))}
-        <span className="text-storm self-center text-xs">— click a pin for details</span>
+        <span className="text-storm-text self-center text-xs">— click a pin for details</span>
       </div>
 
       {/* Map */}
       <div className="rounded-lg overflow-hidden border border-surface-teal mb-6" style={{ height: 480 }}>
         {loading ? (
           <div className="w-full h-full bg-deep-water-light flex items-center justify-center">
-            <p className="text-storm font-body">Loading map...</p>
+            <p className="text-storm-text font-body">Loading map...</p>
           </div>
         ) : (
           <VenueMap venues={mapVenues} key={`${province ?? "all"}-${debouncedQuery}`} />
@@ -146,7 +146,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
           onClick={() => setProvince(null)}
           className={`px-4 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
             province === null
-              ? "bg-cast-orange border-cast-orange text-white"
+              ? "bg-cast-orange-deep border-cast-orange text-white"
               : "border-surface-teal text-pale-water hover:border-cast-orange hover:text-bone-white"
           }`}
         >
@@ -161,7 +161,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
               onClick={() => setProvince(p)}
               className={`px-4 py-1.5 rounded-full text-sm font-body font-medium transition-colors border ${
                 province === p
-                  ? "bg-cast-orange border-cast-orange text-white"
+                  ? "bg-cast-orange-deep border-cast-orange text-white"
                   : "border-surface-teal text-pale-water hover:border-cast-orange hover:text-bone-white"
               }`}
             >
@@ -180,7 +180,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-storm font-body">No venues listed for this province yet.</p>
+          <p className="text-storm-text font-body">No venues listed for this province yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -191,7 +191,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
               className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-5 transition-colors block"
             >
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-bone-white font-heading font-semibold group-hover:text-cast-orange transition-colors leading-tight pr-2">
+                <h3 className="text-bone-white font-heading font-semibold group-hover:text-cast-orange-text transition-colors leading-tight pr-2">
                   {venue.name}
                 </h3>
                 <div className="flex-shrink-0 ml-2 flex flex-col items-end gap-1">
@@ -207,7 +207,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
                       }}
                       aria-label={has(venue.id) ? `Remove ${venue.name} from trip shortlist` : `Add ${venue.name} to trip shortlist`}
                       aria-pressed={has(venue.id)}
-                      className={`flex-shrink-0 p-1 rounded cz-transition ${has(venue.id) ? "text-cast-orange" : "text-storm hover:text-cast-orange"}`}
+                      className={`flex-shrink-0 p-1 rounded cz-transition ${has(venue.id) ? "text-cast-orange-text" : "text-storm-text hover:text-cast-orange-text"}`}
                     >
                       <svg className="w-4 h-4" fill={has(venue.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-4-7 4V5z" />
@@ -219,7 +219,7 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
                   )}
                 </div>
               </div>
-              <p className="text-storm text-xs font-body mb-3">{venue.province}</p>
+              <p className="text-storm-text text-xs font-body mb-3">{venue.province}</p>
               <div className="flex flex-wrap gap-1">
                 {venue.species.slice(0, 4).map((s) => (
                   <span key={s} className="bg-surface-teal/20 text-pale-water text-xs font-body px-2 py-0.5 rounded-full">
@@ -227,11 +227,11 @@ export default function VenuesPage({ initialVenues }: { initialVenues: Venue[] }
                   </span>
                 ))}
                 {venue.species.length > 4 && (
-                  <span className="text-storm text-xs font-body py-0.5">+{venue.species.length - 4}</span>
+                  <span className="text-storm-text text-xs font-body py-0.5">+{venue.species.length - 4}</span>
                 )}
               </div>
               {venue.permit_required && (
-                <p className="text-cast-orange text-xs font-body mt-3">⚠ Permit required</p>
+                <p className="text-cast-orange-text text-xs font-body mt-3">⚠ Permit required</p>
               )}
             </Link>
           ))}

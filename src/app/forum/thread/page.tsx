@@ -13,7 +13,7 @@ export default function ThreadPage() {
   return (
     <Suspense fallback={
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm">Loading thread...</p>
+        <p className="text-storm-text">Loading thread...</p>
       </div>
     }>
       <ThreadFromQuery />

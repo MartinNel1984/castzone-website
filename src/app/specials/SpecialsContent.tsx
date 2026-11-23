@@ -42,7 +42,7 @@ function DealCard({ deal }: { deal: Deal }) {
           </div>
         )}
         {pct != null && (
-          <span className="absolute top-2 right-2 bg-cast-orange text-white text-sm font-heading font-bold px-2.5 py-1 rounded-full shadow">
+          <span className="absolute top-2 right-2 bg-cast-orange-deep text-white text-sm font-heading font-bold px-2.5 py-1 rounded-full shadow">
             -{pct}%
           </span>
         )}
@@ -51,24 +51,24 @@ function DealCard({ deal }: { deal: Deal }) {
         </span>
       </div>
       <div className="p-4 flex-1 flex flex-col">
-        <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">{deal.retailer}</p>
-        <h3 className="text-bone-white font-body font-medium leading-snug line-clamp-2 group-hover:text-cast-orange transition-colors">
+        <p className="text-storm-text text-xs font-body uppercase tracking-wider mb-1">{deal.retailer}</p>
+        <h3 className="text-bone-white font-body font-medium leading-snug line-clamp-2 group-hover:text-cast-orange-text transition-colors">
           {deal.title}
         </h3>
         <div className="mt-auto pt-3 flex items-end justify-between">
           <div>
             {deal.original_price != null && (
-              <span className="text-storm text-sm line-through mr-2">
+              <span className="text-storm-text text-sm line-through mr-2">
                 {formatPrice(deal.original_price)}
               </span>
             )}
             {deal.sale_price != null && (
-              <span className="text-cast-orange font-heading font-bold text-xl leading-none">
+              <span className="text-cast-orange-text font-heading font-bold text-xl leading-none">
                 {formatPrice(deal.sale_price)}
               </span>
             )}
           </div>
-          <span className="text-pale-water text-xs font-medium group-hover:text-cast-orange transition-colors whitespace-nowrap">
+          <span className="text-pale-water text-xs font-medium group-hover:text-cast-orange-text transition-colors whitespace-nowrap">
             Get the deal →
           </span>
         </div>
@@ -135,11 +135,11 @@ export default function SpecialsContent() {
           rel="noopener noreferrer"
           className="mb-6 flex items-center justify-between gap-3 flex-wrap bg-[#25D366] hover:bg-[#1ebe5a] rounded-lg px-5 py-4 shadow-lg shadow-[#25D366]/20 transition-colors"
         >
-          <span className="flex items-center gap-3 text-white font-semibold text-base sm:text-lg">
+          <span className="flex items-center gap-3 text-deep-water font-semibold text-base sm:text-lg">
             <span className="text-2xl animate-pulse">🎣</span>
             Join our WhatsApp Specials group — deal alerts as they land!
           </span>
-          <span className="bg-white text-[#1ebe5a] font-mono font-bold uppercase tracking-wider px-4 py-2 rounded whitespace-nowrap">
+          <span className="bg-white text-[#15803d] font-mono font-bold uppercase tracking-wider px-4 py-2 rounded whitespace-nowrap">
             Join now →
           </span>
         </a>
@@ -162,7 +162,7 @@ export default function SpecialsContent() {
         </div>
         <p className="mt-3 text-pale-water leading-relaxed max-w-2xl">
           Hand-checked South African fishing &amp; camping deals — big markdowns of{" "}
-          <span className="text-cast-orange font-semibold">50% off and more</span>, plus the
+          <span className="text-cast-orange-text font-semibold">50% off and more</span>, plus the
           specials our favourite tackle shops run. Our bot scans SA retailers daily and we
           approve each one before it lands here. Prices and stock are set by the retailer — grab
           them while they last.
@@ -188,7 +188,7 @@ export default function SpecialsContent() {
             onClick={() => setFilter(tab.value)}
             className={`px-4 py-2 rounded-full text-sm font-body font-medium transition-colors border ${
               filter === tab.value
-                ? "bg-cast-orange border-cast-orange text-white"
+                ? "bg-cast-orange-deep border-cast-orange text-white"
                 : "border-surface-teal text-pale-water hover:border-cast-orange"
             }`}
           >
@@ -201,7 +201,7 @@ export default function SpecialsContent() {
 
       {/* Grid */}
       {signedIn === null ? (
-        <p className="text-storm py-16 text-center">Loading deals…</p>
+        <p className="text-storm-text py-16 text-center">Loading deals…</p>
       ) : !signedIn ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
           <div className="text-5xl mb-4">🔒</div>
@@ -215,7 +215,7 @@ export default function SpecialsContent() {
           <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
             <Link
               href="/register"
-              className="inline-block bg-cast-orange text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
+              className="inline-block bg-cast-orange-deep text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
             >
               Join free →
             </Link>
@@ -228,7 +228,7 @@ export default function SpecialsContent() {
           </div>
         </div>
       ) : deals === null ? (
-        <p className="text-storm py-16 text-center">Loading deals…</p>
+        <p className="text-storm-text py-16 text-center">Loading deals…</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 border border-surface-teal rounded-lg">
           <div className="text-5xl mb-4">🎣</div>
@@ -239,7 +239,7 @@ export default function SpecialsContent() {
           </p>
           <Link
             href="/register"
-            className="inline-block mt-6 bg-cast-orange text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
+            className="inline-block mt-6 bg-cast-orange-deep text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
           >
             Get deal alerts — join free →
           </Link>
@@ -253,7 +253,7 @@ export default function SpecialsContent() {
       )}
 
       {/* Disclosure */}
-      <p className="mt-10 text-storm text-xs leading-relaxed max-w-3xl">
+      <p className="mt-10 text-storm-text text-xs leading-relaxed max-w-3xl">
         CastZone lists deals from third-party South African retailers. We don&apos;t sell these
         items or hold stock — clicking &quot;Get the deal&quot; takes you to the retailer&apos;s
         own site, where their prices, availability and terms apply. Discounts are checked when

@@ -199,7 +199,7 @@ export default function VenueContent() {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-storm font-body">Loading...</p>
+        <p className="text-storm-text font-body">Loading...</p>
       </div>
     );
   }
@@ -208,7 +208,7 @@ export default function VenueContent() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="text-pale-water text-xl font-mono font-semibold uppercase mb-3">Venue not found</p>
-        <Link href="/venues" className="text-cast-orange hover:underline font-body text-sm">← Back to The Map</Link>
+        <Link href="/venues" className="text-cast-orange-text hover:underline font-body text-sm">← Back to The Map</Link>
       </div>
     );
   }
@@ -259,7 +259,7 @@ export default function VenueContent() {
   }
 
   function Stars({ n }: { n: number }) {
-    return <span className="text-cast-orange">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
+    return <span className="text-cast-orange-text">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
   }
 
   const typeClass = TYPE_COLOUR[venue.type] ?? "";
@@ -299,7 +299,7 @@ export default function VenueContent() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* TouristAttraction JSON-LD is now server-rendered in page.tsx (better SEO). */}
       {/* Breadcrumb */}
-      <nav className="text-sm font-body text-storm mb-6">
+      <nav className="text-sm font-body text-storm-text mb-6">
         <Link href="/venues" className="hover:text-pale-water">The Map</Link>
         <span className="mx-2">›</span>
         <span className="text-pale-water">{venue.name}</span>
@@ -318,8 +318,8 @@ export default function VenueContent() {
           aria-pressed={has(venue.id)}
           className={`flex-shrink-0 mt-1 flex items-center gap-1.5 text-sm font-body border rounded px-3 py-1 cz-transition ${
             has(venue.id)
-              ? "border-cast-orange text-cast-orange"
-              : "border-surface-teal text-pale-water hover:border-cast-orange hover:text-cast-orange"
+              ? "border-cast-orange text-cast-orange-text"
+              : "border-surface-teal text-pale-water hover:border-cast-orange hover:text-cast-orange-text"
           }`}
         >
           <svg className="w-4 h-4" fill={has(venue.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -328,7 +328,7 @@ export default function VenueContent() {
           {has(venue.id) ? "In trip" : "Add to trip"}
         </button>
       </div>
-      <p className="text-storm font-body text-sm mb-6">{venue.province}</p>
+      <p className="text-storm-text font-body text-sm mb-6">{venue.province}</p>
 
       {/* Dual CTA — high-commitment (ask the community) + low-commitment (get directions) */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8">
@@ -348,7 +348,7 @@ export default function VenueContent() {
       {/* Location / GPS */}
       <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6 flex items-center justify-between gap-4">
         <div>
-          <p className="text-storm text-xs font-body uppercase tracking-wider mb-1">
+          <p className="text-storm-text text-xs font-body uppercase tracking-wider mb-1">
             {venue.address ? "Location" : "GPS Coordinates"}
           </p>
           {venue.address ? (
@@ -361,7 +361,7 @@ export default function VenueContent() {
           href={gpsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 bg-cast-orange hover:bg-cast-orange-hover text-white text-sm font-mono font-semibold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+          className="flex-shrink-0 bg-cast-orange-deep hover:bg-cast-orange-hover text-white text-sm font-mono font-semibold uppercase tracking-wider px-4 py-2 rounded transition-colors"
         >
           Open in Maps
         </a>
@@ -372,7 +372,7 @@ export default function VenueContent() {
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-pale-water text-xs font-body uppercase tracking-wider">Water Conditions</h2>
-            <Link href="/conditions" className="text-xs font-body text-cast-orange hover:text-bone-white transition-colors">
+            <Link href="/conditions" className="text-xs font-body text-cast-orange-text hover:text-bone-white transition-colors">
               All dam levels →
             </Link>
           </div>
@@ -397,7 +397,7 @@ export default function VenueContent() {
                   }}
                 />
               </div>
-              <div className="flex gap-4 text-xs font-body text-storm">
+              <div className="flex gap-4 text-xs font-body text-storm-text">
                 <span>
                   vs last year:{" "}
                   <span className={waterData.pct >= waterData.lastYear ? "text-green-400" : "text-orange-400"}>
@@ -407,7 +407,7 @@ export default function VenueContent() {
                   {" "}({waterData.lastYear}% this time last year)
                 </span>
               </div>
-              <p className="text-xs font-body text-storm mt-1">Source: DWS · Updated weekly</p>
+              <p className="text-xs font-body text-storm-text mt-1">Source: DWS · Updated weekly</p>
             </div>
           )}
 
@@ -422,7 +422,7 @@ export default function VenueContent() {
                 Vaal System Gate Status
               </p>
               {latestNotices.map((n, i) => (
-                <div key={i} className="text-xs font-body text-storm mb-1 last:mb-0">
+                <div key={i} className="text-xs font-body text-storm-text mb-1 last:mb-0">
                   <span className={`font-bold mr-1 ${
                     n.dam === "vaal" ? "text-green-400" : "text-amber-400"
                   }`}>
@@ -453,7 +453,7 @@ export default function VenueContent() {
               loading="lazy"
             />
           </a>
-          <p className="text-xs font-body text-storm mt-2">
+          <p className="text-xs font-body text-storm-text mt-2">
             Estimated depths at full supply level, modelled from the open GLOBathy bathymetry
             dataset. A guide for anglers — not a navigation chart. Actual depths vary with the
             dam level. Tap the map to open it full size.
@@ -487,12 +487,12 @@ export default function VenueContent() {
         <div className="bg-deep-water-light border border-surface-teal rounded-lg p-5">
           <h2 className="text-pale-water text-xs font-body uppercase tracking-wider mb-3">Facilities</h2>
           {venue.facilities.length === 0 ? (
-            <p className="text-storm text-sm font-body">Information not available.</p>
+            <p className="text-storm-text text-sm font-body">Information not available.</p>
           ) : (
             <ul className="space-y-1">
               {venue.facilities.map((f) => (
                 <li key={f} className="text-bone-white text-sm font-body flex items-center gap-2">
-                  <span className="text-cast-orange">✓</span> {f}
+                  <span className="text-cast-orange-text">✓</span> {f}
                 </li>
               ))}
             </ul>
@@ -517,7 +517,7 @@ export default function VenueContent() {
                 <span className="text-surface-teal flex-shrink-0">📞</span>
                 <a
                   href={`tel:${venue.contact_phone.split("/")[0].replace(/[^+\d]/g, "")}`}
-                  className="text-bone-white hover:text-cast-orange transition-colors"
+                  className="text-bone-white hover:text-cast-orange-text transition-colors"
                 >
                   {venue.contact_phone}
                 </a>
@@ -528,7 +528,7 @@ export default function VenueContent() {
                 <span className="text-surface-teal flex-shrink-0">✉</span>
                 <a
                   href={`mailto:${venue.contact_email}`}
-                  className="text-bone-white hover:text-cast-orange transition-colors break-all"
+                  className="text-bone-white hover:text-cast-orange-text transition-colors break-all"
                 >
                   {venue.contact_email}
                 </a>
@@ -541,7 +541,7 @@ export default function VenueContent() {
                   href={venue.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-bone-white hover:text-cast-orange transition-colors break-all"
+                  className="text-bone-white hover:text-cast-orange-text transition-colors break-all"
                 >
                   {venue.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                 </a>
@@ -564,9 +564,9 @@ export default function VenueContent() {
       {/* Permit warning */}
       {venue.permit_required && venue.permit_info && (
         <div className="bg-cast-orange/10 border border-cast-orange/40 rounded-lg p-5 mb-6 flex gap-3">
-          <span className="text-cast-orange text-lg flex-shrink-0">⚠</span>
+          <span className="text-cast-orange-text text-lg flex-shrink-0">⚠</span>
           <div>
-            <p className="text-cast-orange font-heading font-semibold text-sm mb-1">Permit Required</p>
+            <p className="text-cast-orange-text font-heading font-semibold text-sm mb-1">Permit Required</p>
             <p className="text-pale-water font-body text-sm">{venue.permit_info}</p>
           </div>
         </div>
@@ -574,8 +574,8 @@ export default function VenueContent() {
 
       {/* General access disclaimer — shown on all venues */}
       <div className="bg-surface-teal/5 border border-surface-teal/30 rounded-lg p-4 mb-6 flex gap-3">
-        <span className="text-storm text-base flex-shrink-0">ℹ</span>
-        <p className="text-storm font-body text-xs leading-relaxed">
+        <span className="text-storm-text text-base flex-shrink-0">ℹ</span>
+        <p className="text-storm-text font-body text-xs leading-relaxed">
           Fishing regulations, permit requirements, and access conditions change regularly.
           Always verify current rules with the relevant provincial conservation authority
           before visiting. CastZone data is for reference only.
@@ -588,11 +588,11 @@ export default function VenueContent() {
           Real Catches Here
         </h2>
         {venueCatches.length === 0 ? (
-          <p className="text-storm font-body text-sm">
+          <p className="text-storm-text font-body text-sm">
             Be the first to{" "}
             <Link
               href={`/catches/submit?venue=${encodeURIComponent(venue.name)}`}
-              className="text-cast-orange hover:text-bone-white transition-colors"
+              className="text-cast-orange-text hover:text-bone-white transition-colors"
             >
               log a catch here
             </Link>
@@ -618,11 +618,11 @@ export default function VenueContent() {
                   <div className="w-full h-32 bg-surface-teal/10 flex items-center justify-center text-3xl opacity-40">🐟</div>
                 )}
                 <div className="p-3">
-                  <p className="text-cast-orange font-mono font-semibold text-sm leading-none mb-1">
+                  <p className="text-cast-orange-text font-mono font-semibold text-sm leading-none mb-1">
                     {Number(c.weight_kg).toFixed(2)} kg
                   </p>
                   <p className="text-bone-white font-body text-sm truncate">{c.species}</p>
-                  <p className="text-storm text-xs mt-1 font-mono truncate">
+                  <p className="text-storm-text text-xs mt-1 font-mono truncate">
                     {c.profiles?.username ?? "Angler"} · {timeAgo(c.catch_date)}
                   </p>
                 </div>
@@ -640,7 +640,7 @@ export default function VenueContent() {
           </h2>
           <Link
             href={newThreadUrl}
-            className="text-cast-orange hover:text-bone-white text-sm font-body font-medium transition-colors"
+            className="text-cast-orange-text hover:text-bone-white text-sm font-body font-medium transition-colors"
           >
             + Start one
           </Link>
@@ -648,12 +648,12 @@ export default function VenueContent() {
 
         {threads.length === 0 ? (
           <div className="bg-deep-water-light border border-surface-teal rounded-lg p-8 text-center">
-            <p className="text-storm font-body text-sm mb-4">
+            <p className="text-storm-text font-body text-sm mb-4">
               No threads about {venue.name} yet — be the first.
             </p>
             <Link
               href={newThreadUrl}
-              className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
+              className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors text-sm"
             >
               Start a Thread
             </Link>
@@ -670,10 +670,10 @@ export default function VenueContent() {
                   {thread.categories?.icon ?? "🎣"}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange transition-colors truncate">
+                  <p className="text-bone-white font-body font-medium group-hover:text-cast-orange-text transition-colors truncate">
                     {thread.title}
                   </p>
-                  <p className="text-storm text-xs mt-0.5">
+                  <p className="text-storm-text text-xs mt-0.5">
                     by <span className="text-pale-water">{thread.profiles?.username ?? "Unknown"}</span>
                     {" · "}{timeAgo(thread.created_at)}
                   </p>
@@ -684,7 +684,7 @@ export default function VenueContent() {
             <div className="p-4 text-center">
               <Link
                 href={newThreadUrl}
-                className="text-cast-orange hover:underline text-sm font-body"
+                className="text-cast-orange-text hover:underline text-sm font-body"
               >
                 + Start a new thread about {venue.name}
               </Link>
@@ -698,8 +698,8 @@ export default function VenueContent() {
         <div className="flex items-center gap-3 mb-4">
           <h2 className="text-bone-white font-heading font-semibold text-lg">Angler Reviews</h2>
           {reviewCount > 0 && avgRating !== null && (
-            <span className="text-sm font-body text-storm">
-              <span className="text-cast-orange">{"★".repeat(Math.round(avgRating))}</span>
+            <span className="text-sm font-body text-storm-text">
+              <span className="text-cast-orange-text">{"★".repeat(Math.round(avgRating))}</span>
               {" "}{avgRating.toFixed(1)} · {reviewCount} review{reviewCount !== 1 ? "s" : ""}
             </span>
           )}
@@ -714,12 +714,12 @@ export default function VenueContent() {
             <div className="flex gap-1 mb-3">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button key={star} type="button" onClick={() => setDraftRating(star)}
-                  className={`text-2xl leading-none transition-colors ${star <= draftRating ? "text-cast-orange" : "text-storm hover:text-pale-water"}`}>
+                  className={`text-2xl leading-none transition-colors ${star <= draftRating ? "text-cast-orange" : "text-storm-text hover:text-pale-water"}`}>
                   ★
                 </button>
               ))}
               {draftRating > 0 && (
-                <span className="ml-2 text-storm text-sm font-body self-center">
+                <span className="ml-2 text-storm-text text-sm font-body self-center">
                   {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][draftRating]}
                 </span>
               )}
@@ -734,14 +734,14 @@ export default function VenueContent() {
             <div className="flex items-center justify-between mt-3">
               {myReview && (
                 <button onClick={handleDeleteReview} disabled={reviewSubmitting}
-                  className="text-storm hover:text-red-400 text-xs font-body transition-colors">
+                  className="text-storm-text hover:text-red-400 text-xs font-body transition-colors">
                   Remove review
                 </button>
               )}
               <button
                 onClick={handleSubmitReview}
                 disabled={draftRating === 0 || reviewSubmitting}
-                className="ml-auto bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
+                className="ml-auto bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded transition-colors"
               >
                 {reviewSubmitting ? "Saving…" : myReview ? "Update Review" : "Post Review"}
               </button>
@@ -749,8 +749,8 @@ export default function VenueContent() {
           </div>
         ) : (
           <div className="bg-deep-water-light border border-surface-teal rounded-lg p-4 mb-4 text-center">
-            <p className="text-storm font-body text-sm">
-              <Link href="/login" className="text-cast-orange hover:underline">Sign in</Link> to leave a review.
+            <p className="text-storm-text font-body text-sm">
+              <Link href="/login" className="text-cast-orange-text hover:underline">Sign in</Link> to leave a review.
             </p>
           </div>
         )}
@@ -765,21 +765,21 @@ export default function VenueContent() {
                   <div className="flex items-center justify-between mb-1">
                     <Link
                       href={`/profile?username=${encodeURIComponent(r.profiles?.username ?? "")}`}
-                      className="text-pale-water hover:text-cast-orange font-body font-semibold text-sm transition-colors"
+                      className="text-pale-water hover:text-cast-orange-text font-body font-semibold text-sm transition-colors"
                     >
                       {r.profiles?.username ?? "Angler"}
                     </Link>
                     <Stars n={r.rating} />
                   </div>
-                  {r.body && <p className="text-storm font-body text-sm leading-relaxed mt-1">{r.body}</p>}
-                  <p className="text-storm/60 text-xs mt-2">
+                  {r.body && <p className="text-storm-text font-body text-sm leading-relaxed mt-1">{r.body}</p>}
+                  <p className="text-storm-text/60 text-xs mt-2">
                     {new Date(r.created_at).toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })}
                   </p>
                 </div>
               ))}
           </div>
         ) : reviewCount === 0 && !currentUser ? (
-          <p className="text-storm font-body text-sm">No reviews yet — be the first!</p>
+          <p className="text-storm-text font-body text-sm">No reviews yet — be the first!</p>
         ) : null}
       </div>
 
@@ -796,10 +796,10 @@ export default function VenueContent() {
                 href={`/venues/${v.slug}`}
                 className="group bg-deep-water-light border border-surface-teal hover:border-cast-orange rounded-lg p-4 transition-colors block"
               >
-                <p className="text-bone-white font-heading font-semibold text-sm group-hover:text-cast-orange transition-colors leading-tight mb-1">
+                <p className="text-bone-white font-heading font-semibold text-sm group-hover:text-cast-orange-text transition-colors leading-tight mb-1">
                   {v.name}
                 </p>
-                <p className="text-storm text-xs font-body capitalize mb-2">{v.type}</p>
+                <p className="text-storm-text text-xs font-body capitalize mb-2">{v.type}</p>
                 <div className="flex flex-wrap gap-1">
                   {v.species.slice(0, 3).map((s) => (
                     <span key={s} className="bg-surface-teal/20 text-pale-water text-xs font-body px-2 py-0.5 rounded-full">
@@ -817,7 +817,7 @@ export default function VenueContent() {
       <div className="bg-surface-teal/10 border border-surface-teal/40 rounded-lg p-5 mb-6 flex items-center justify-between gap-4">
         <div>
           <p className="text-bone-white font-body font-medium text-sm">Know a great fishing spot not on The Map?</p>
-          <p className="text-storm font-body text-xs mt-0.5">Submit it and we&apos;ll review it.</p>
+          <p className="text-storm-text font-body text-xs mt-0.5">Submit it and we&apos;ll review it.</p>
         </div>
         <Link
           href="/venues/suggest"
@@ -828,7 +828,7 @@ export default function VenueContent() {
       </div>
 
       <div className="mt-2">
-        <Link href="/venues" className="text-storm hover:text-pale-water text-sm font-body transition-colors">
+        <Link href="/venues" className="text-storm-text hover:text-pale-water text-sm font-body transition-colors">
           ← Back to The Map
         </Link>
       </div>

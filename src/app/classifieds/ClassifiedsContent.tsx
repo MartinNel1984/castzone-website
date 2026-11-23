@@ -67,13 +67,13 @@ function ListingCard({ listing }: { listing: Listing }) {
         </span>
       </div>
       <div className="p-4 flex-1 flex flex-col">
-        <p className="text-cast-orange font-heading font-bold text-xl leading-none mb-1">
+        <p className="text-cast-orange-text font-heading font-bold text-xl leading-none mb-1">
           {formatPrice(listing.price)}
         </p>
-        <h3 className="text-bone-white font-body font-medium leading-snug line-clamp-2 group-hover:text-cast-orange transition-colors">
+        <h3 className="text-bone-white font-body font-medium leading-snug line-clamp-2 group-hover:text-cast-orange-text transition-colors">
           {listing.title}
         </h3>
-        <div className="mt-auto pt-3 flex items-center justify-between text-xs text-storm font-body">
+        <div className="mt-auto pt-3 flex items-center justify-between text-xs text-storm-text font-body">
           <span>{conditionLabel(listing.condition)} · {listing.province}</span>
           <div className="flex flex-col items-end gap-0.5">
             <span>{timeAgo(listing.created_at)}</span>
@@ -127,13 +127,13 @@ export default function ClassifiedsContent() {
       <div className="flex flex-wrap items-start justify-between gap-4 mb-2">
         <div>
           <h1 className="text-5xl font-heading font-semibold text-bone-white ">Tackle Box</h1>
-          <p className="text-cast-orange font-heading font-semibold text-sm mt-1">
+          <p className="text-cast-orange-text font-heading font-semibold text-sm mt-1">
             Buy &amp; Sell with SA Anglers
           </p>
         </div>
         <Link
           href={postHref}
-          className="flex-shrink-0 self-center bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
+          className="flex-shrink-0 self-center bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-5 py-3 rounded transition-colors text-sm"
         >
           + Post a Listing
         </Link>
@@ -159,8 +159,8 @@ export default function ClassifiedsContent() {
           onClick={() => setFilter("all")}
           className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
             filter === "all"
-              ? "bg-cast-orange border-cast-orange text-white"
-              : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
+              ? "bg-cast-orange-deep border-cast-orange text-white"
+              : "border-surface-teal text-storm-text hover:border-pale-water/50 hover:text-pale-water"
           }`}
         >
           All
@@ -171,8 +171,8 @@ export default function ClassifiedsContent() {
             onClick={() => setFilter(c.value)}
             className={`font-mono font-semibold uppercase tracking-wider text-xs px-4 py-2 rounded border transition-colors ${
               filter === c.value
-                ? "bg-cast-orange border-cast-orange text-white"
-                : "border-surface-teal text-storm hover:border-pale-water/50 hover:text-pale-water"
+                ? "bg-cast-orange-deep border-cast-orange text-white"
+                : "border-surface-teal text-storm-text hover:border-pale-water/50 hover:text-pale-water"
             }`}
           >
             {c.icon} {c.label}
@@ -199,16 +199,16 @@ export default function ClassifiedsContent() {
           {listings.length === 0 ? (
             <>
               <p className="text-pale-water font-mono font-semibold uppercase text-lg mb-2">No listings yet</p>
-              <p className="text-storm font-body text-sm mb-6">Be the first to list your gear in the Tackle Box.</p>
+              <p className="text-storm-text font-body text-sm mb-6">Be the first to list your gear in the Tackle Box.</p>
               <Link
                 href={postHref}
-                className="inline-block bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors text-sm"
+                className="inline-block bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors text-sm"
               >
                 + Post the First Listing
               </Link>
             </>
           ) : (
-            <p className="text-storm font-body">No listings match your search.</p>
+            <p className="text-storm-text font-body">No listings match your search.</p>
           )}
         </div>
       ) : (

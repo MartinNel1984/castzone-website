@@ -64,7 +64,7 @@ export default function RulesPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">Community Rules</h1>
-      <p className="text-storm font-body mb-10">
+      <p className="text-storm-text font-body mb-10">
         CastZone is built on mutual respect between anglers. These rules keep it that way.
         Breaking them may result in warnings, post removal, or a ban at the discretion of the moderation team.
       </p>
@@ -84,10 +84,10 @@ export default function RulesPage() {
       </div>
 
       <div className="border-t border-surface-teal mt-10 pt-8">
-        <p className="text-storm font-body text-sm mb-4">
+        <p className="text-storm-text font-body text-sm mb-4">
           Questions about the rules or a moderation decision?
         </p>
-        <Link href="/contact" className="text-cast-orange hover:underline font-body text-sm">
+        <Link href="/contact" className="text-cast-orange-text hover:underline font-body text-sm">
           Contact the moderation team →
         </Link>
       </div>

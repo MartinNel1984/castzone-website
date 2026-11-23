@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       <h1 className="text-5xl font-heading font-semibold text-bone-white mb-2">About CastZone</h1>
-      <p className="text-cast-orange font-heading font-semibold text-sm mb-10">
+      <p className="text-cast-orange-text font-heading font-semibold text-sm mb-10">
         Where South Africa Fishes
       </p>
 
@@ -34,9 +34,9 @@ export default function AboutPage() {
           </p>
           <p className="mb-4">We cover the three biggest disciplines in South African angling:</p>
           <ul className="space-y-2 ml-4">
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Bass Fishing</strong> — tackle, techniques, tournaments, dams and reports</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Saltwater</strong> — shore, offshore, lure, kayak and ski-boat</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Specimen & Carp</strong> — rigs, bait, European-style specimen fishing</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Bass Fishing</strong> — tackle, techniques, tournaments, dams and reports</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Saltwater</strong> — shore, offshore, lure, kayak and ski-boat</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Specimen & Carp</strong> — rigs, bait, European-style specimen fishing</span></li>
           </ul>
         </section>
 
@@ -44,13 +44,13 @@ export default function AboutPage() {
           <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">What&apos;s Live</h2>
           <p className="mb-4">CastZone is already packed with features built for SA anglers:</p>
           <ul className="space-y-2 ml-4">
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Forum</strong> — bass, saltwater, specimen and general angling — all in one place</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Tackle Box</strong> — buy and sell fishing gear directly with other SA anglers</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">The Map</strong> — 67 SA dams and venues across all 9 provinces, with species, permits and GPS</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Water Conditions</strong> — live DWS dam levels for ~196 dams, Vaal system gate alerts updated daily</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Trophy Room</strong> — log your catches, track personal bests, compete on the leaderboard</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Tournaments</strong> — the SA angling calendar: bass, saltwater, specimen, fly fishing</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Best Bite Times</strong> — solunar forecast and 7-day outlook for any venue</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Forum</strong> — bass, saltwater, specimen and general angling — all in one place</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Tackle Box</strong> — buy and sell fishing gear directly with other SA anglers</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">The Map</strong> — 67 SA dams and venues across all 9 provinces, with species, permits and GPS</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Water Conditions</strong> — live DWS dam levels for ~196 dams, Vaal system gate alerts updated daily</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Trophy Room</strong> — log your catches, track personal bests, compete on the leaderboard</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Tournaments</strong> — the SA angling calendar: bass, saltwater, specimen, fly fishing</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Best Bite Times</strong> — solunar forecast and 7-day outlook for any venue</span></li>
           </ul>
         </section>
 
@@ -58,24 +58,24 @@ export default function AboutPage() {
           <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">What&apos;s Coming</h2>
           <p className="mb-4">We&apos;re building CastZone for the long haul. On the roadmap:</p>
           <ul className="space-y-2 ml-4">
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Sponsored brand zones</strong> — dedicated spaces for SA tackle brands to reach their people</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Featured Tackle Box listings</strong> — paid promotion for retailers and serious sellers</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span><strong className="text-bone-white">Premium membership</strong> — perks for the most active community members</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Sponsored brand zones</strong> — dedicated spaces for SA tackle brands to reach their people</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Featured Tackle Box listings</strong> — paid promotion for retailers and serious sellers</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span><strong className="text-bone-white">Premium membership</strong> — perks for the most active community members</span></li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-heading font-semibold text-bone-white mb-4">Our Values</h2>
           <ul className="space-y-2 ml-4">
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span>Anglers first — every feature we build is for the community, not the advertiser</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span>South African — built here, for here, by people who fish here</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span>Respect the sport — conservation, ethics and fair play matter</span></li>
-            <li className="flex items-start gap-2"><span className="text-cast-orange mt-1">›</span><span>No gatekeeping — beginners are as welcome as old hands</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span>Anglers first — every feature we build is for the community, not the advertiser</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span>South African — built here, for here, by people who fish here</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span>Respect the sport — conservation, ethics and fair play matter</span></li>
+            <li className="flex items-start gap-2"><span className="text-cast-orange-text mt-1">›</span><span>No gatekeeping — beginners are as welcome as old hands</span></li>
           </ul>
         </section>
 
         <div className="border-t border-surface-teal pt-8 flex flex-wrap gap-4">
-          <Link href="/register" className="bg-cast-orange hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
+          <Link href="/register" className="bg-cast-orange-deep hover:bg-cast-orange-hover text-white font-mono font-semibold uppercase tracking-wider px-6 py-3 rounded transition-colors">
             Join the Community
           </Link>
           <Link href="/contact" className="border border-surface-teal hover:border-pale-water text-pale-water hover:text-bone-white font-heading font-semibold px-6 py-3 rounded transition-colors">

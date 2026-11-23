@@ -38,7 +38,7 @@ export default function LoginContent() {
             <span className="text-bone-white text-2xl font-heading font-semibold">Cast<em className="italic text-cast-orange">Zone</em></span>
           </Link>
           <h1 className="text-4xl font-heading font-semibold text-bone-white ">Welcome Back</h1>
-          <p className="text-storm mt-2 font-body">Sign in to your account</p>
+          <p className="text-storm-text mt-2 font-body">Sign in to your account</p>
         </div>
 
         {/* Form */}
@@ -80,18 +80,18 @@ export default function LoginContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-cast-orange hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
+            className="w-full bg-cast-orange-deep hover:bg-cast-orange-hover disabled:opacity-50 text-white font-mono font-semibold uppercase tracking-wider py-4 rounded text-lg transition-colors"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
 
-          <div className="flex items-center justify-between text-sm font-body text-storm">
+          <div className="flex items-center justify-between text-sm font-body text-storm-text">
             <Link href="/forgot-password" className="hover:text-pale-water transition-colors">
               Forgot password?
             </Link>
             <span>
               Not a member?{" "}
-              <Link href="/register" className="text-cast-orange hover:underline">
+              <Link href="/register" className="text-cast-orange-text hover:underline">
                 Join free
               </Link>
             </span>
