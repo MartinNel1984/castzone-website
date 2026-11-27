@@ -1,24 +1,24 @@
 {
- "fetchedAt": "2026-11-27T16:10:09+00:00",
+ "fetchedAt": "2026-11-27T22:10:08+00:00",
  "source": "https://www.dws.gov.za/hydrology/Unverified",
  "vaalDamCapacity": {
   "station": "C1R001",
-  "time": "2026-11-27 16:00",
-  "value": 113.27
+  "time": "2026-11-27 22:00",
+  "value": 113.4
  },
  "vaalDamOutflow": {
   "station": "C2H122",
-  "time": "2026-11-27 16:00",
+  "time": "2026-11-27 20:00",
   "value": 307.42
  },
  "bloemhofOutflow": {
   "station": "C9H021",
-  "time": "2026-11-27 16:00",
-  "value": 400.0
+  "time": "2026-11-27 20:00",
+  "value": 401.94
  },
  "bloemhofCapacity": {
   "station": "C9R002",
-  "time": "2026-11-27 16:00",
-  "value": 89.19
+  "time": "2026-11-27 20:00",
+  "value": 89.3
  }
 }
